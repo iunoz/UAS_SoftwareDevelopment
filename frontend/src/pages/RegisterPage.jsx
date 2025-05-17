@@ -1,34 +1,54 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/ForgotPassword.css';
+import '../styles/AuthPages.css';
 import chandelierImg from '../assets/images/chandelier.jpg';
+import googleLogo from '../assets/images/google.png';
 
-
-const ForgotPasswordPage = () => {
+const RegisterPage = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      alert("Passwords don't match");
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
       return;
     }
-    console.log('Password reset for:', { email, newPassword });
-    navigate('/login');
+    console.log('Register attempt with:', { firstName, lastName, email, password });
+    navigate('/');
   };
 
   return (
-    <div className="forgot-container">
-      <div className="forgot-left">
+    <div className="login-container">
+      <div className="login-left">
         <img src={chandelierImg} alt="Chandelier" />
       </div>
-      <div className="forgot-right">
-        <div className="forgot-logo">👑</div>
-        <h2 className="forgot-title">Change Password</h2>
-        <form onSubmit={handleSubmit} className="forgot-form">
+      <div className="login-right">
+        <div className="login-logo">👑</div>
+        <h2 className="login-title">Create Account</h2>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
           <div className="form-group">
             <input
               type="email"
@@ -41,29 +61,33 @@ const ForgotPasswordPage = () => {
           <div className="form-group">
             <input
               type="password"
-              placeholder="Enter New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter Your Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <div className="form-group">
             <input
               type="password"
-              placeholder="Confirm New Password"
+              placeholder="Confirm Your Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="forgot-button">CHANGE PASSWORD</button>
+          <button type="submit" className="login-button">CREATE</button>
+          <div className="divider">OR</div>
+          <button type="button" className="google-login">
+            <img src={googleLogo} alt="Google Logo" />
+          </button>
         </form>
-        <p className="forgot-redirect">
-          <Link to="/login">BACK TO LOGIN</Link>
+        <p className="login-redirect">
+          Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default ForgotPasswordPage;
+export default RegisterPage;
