@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/AuthPages.css';
 import chandelierImg from '../assets/images/chandelier.jpg';
-import googleLogo from '../assets/images/google.png'; // ✅ ini cara benar import gambar
+import googleLogo from '../assets/images/google.png';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -41,6 +41,11 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
+          <div className="form-actions">
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot Password?
+            </Link>
           </div>
           <button type="submit" className="login-button">LOGIN</button>
           <div className="divider">OR</div>

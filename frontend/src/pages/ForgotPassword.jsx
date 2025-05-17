@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/ForgotPassword.css';
-import chandelierImg from '../assets/images/chandelier.jpg';
 
-
-const ForgotPasswordPage = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -13,57 +11,70 @@ const ForgotPasswordPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      alert("Passwords don't match");
+      alert('Passwords do not match');
       return;
     }
-    console.log('Password reset for:', { email, newPassword });
+    console.log('Password change requested for:', { email, newPassword });
     navigate('/login');
   };
 
   return (
-    <div className="forgot-container">
-      <div className="forgot-left">
-        <img src={chandelierImg} alt="Chandelier" />
-      </div>
-      <div className="forgot-right">
-        <div className="forgot-logo">👑</div>
-        <h2 className="forgot-title">Change Password</h2>
-        <form onSubmit={handleSubmit} className="forgot-form">
-          <div className="form-group">
+    <div className="auth-container">
+      <div className="auth-form-section">
+        <div className="auth-header">
+          <h2 className="auth-title">Change Password</h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {/* Email */}
+          <div className="input-group">
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="form-input"
             />
           </div>
-          <div className="form-group">
+
+          {/* New Password */}
+          <div className="input-group">
             <input
               type="password"
               placeholder="Enter New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+              className="form-input"
             />
           </div>
-          <div className="form-group">
+
+          {/* Confirm Password */}
+          <div className="input-group">
             <input
               type="password"
               placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              className="form-input"
             />
           </div>
-          <button type="submit" className="forgot-button">CHANGE PASSWORD</button>
+
+          <button type="submit" className="submit-button">
+            CHANGE PASSWORD
+          </button>
         </form>
-        <p className="forgot-redirect">
-          <Link to="/login">BACK TO LOGIN</Link>
-        </p>
+
+        <div className="auth-footer">
+          <Link to="/login" className="auth-link">
+            BACK TO LOGIN
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
-export default ForgotPasswordPage;
+export default ForgotPassword;

@@ -131,13 +131,38 @@ body, html {
 }
 
 
+
+.forgot-password-container {
+  text-align: right;
+  margin: -0.5rem 0 1rem 0;
+}
+
+.forgot-password-link {
+  color: #e0c69a;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+  color: #b5946a;
+}
+
+/* Adjust the existing login redirect text */
 .login-redirect {
+  margin-top: 1.5rem;
   text-align: center;
-  margin-top: 20px;
+  font-size: 0.9rem;
   color: #ccc;
 }
 
 .login-redirect a {
-  color: #f0f0f0;
+  color: #e0c69a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-redirect a:hover {
   text-decoration: underline;
 }
