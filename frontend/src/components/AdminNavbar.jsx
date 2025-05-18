@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import '../styles/AdminNavbar.css';
 
 const AdminNavbar = () => {
@@ -10,15 +10,19 @@ const AdminNavbar = () => {
       </div>
       <ul className="admin-navbar-links">
         <li>
-          <Link to="/admindashboard" className="active">
+          <NavLink to="/admindashboard" className={({ isActive }) => isActive ? 'active' : ''} end>
             Dashboard
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/admin/products">Products</Link>
+          <NavLink to="/productadmin" className={({ isActive }) => isActive ? 'active' : ''} end>
+            Products
+          </NavLink>
         </li>
         <li>
-          <Link to="/admin/orders">Orders</Link>
+          <NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'active' : ''} end>
+            Orders
+          </NavLink>
         </li>
       </ul>
     </nav>

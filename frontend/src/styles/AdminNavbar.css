@@ -6,6 +6,11 @@
   padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  font-family: 'Cinzel', serif;
 }
 
 .admin-navbar-brand {
@@ -17,6 +22,7 @@
   color: #e0c69a;
   margin: 0;
   font-size: 1.3rem;
+  font-family: 'Cinzel', serif;
 }
 
 .admin-navbar-links {
@@ -32,6 +38,7 @@
   padding: 0.75rem 1.5rem;
   transition: all 0.3s;
   font-size: 0.95rem;
+  font-family: 'Cinzel', serif;
 }
 
 .admin-navbar-links li a:hover,
@@ -58,4 +65,9 @@
 
 .logout-btn:hover {
   background-color: #e6be7b;
+}
+
+.dashboard-content {
+  margin-left: 250px;
+  /* agar konten tidak tertutup navbar */
 }

@@ -6,11 +6,12 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ProductPage from './pages/ProductPage';
 import DashboardAdmin from './pages/DashboardAdmin';
+import ProductAdmin from './pages/ProductAdmin';
 import './App.css';
 
 function AppContent() {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/register'  || location.pathname === '/admindashboard';
+  const hideNavbar = location.pathname === '/login' || location.pathname === '/register'  || location.pathname === '/admindashboard' || location.pathname === '/productadmin';
   return (
     <div className="App">
       {!hideNavbar && <Navbar />}
@@ -21,6 +22,7 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/admindashboard" element={<DashboardAdmin />} />
+        <Route path="/productadmin" element={<ProductAdmin />} />
       </Routes>
     </div>
   );
