@@ -166,3 +166,9 @@ body, html {
 .login-redirect a:hover {
   text-decoration: underline;
 }
+
+.error-text{
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebase.config';
+import axios from 'axios';
 import '../styles/RegisterPage.css';
 import chandelierImg from '../assets/images/chandelier.jpg';
 import googleLogo from '../assets/images/google.png';
@@ -10,16 +13,39 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
+      return setErrors({ confirmPassword: 'Passwords do not match' });
     }
-    console.log('Register attempt with:', { firstName, lastName, email, password });
-    navigate('/');
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+      const idToken = await userCredential.user.getIdToken();
+
+      await axios.post('http://localhost:4000/api/user/register', {
+        fname: firstName,
+        lname: lastName,
+      }, {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      navigate('/');
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setErrors({ email: 'Email Already Registered' });
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -55,6 +81,7 @@ const RegisterPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {errors.email && <small className="error-text">{errors.email}</small>}
           </div>
           <div className="form-group">
             <input
@@ -73,6 +100,7 @@ const RegisterPage = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
           </div>
           <button type="submit" className="login-button">CREATE</button>
           <div className="divider">OR</div>
