@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/AuthPages.css';
+import '../styles/RegisterPage.css';
 import chandelierImg from '../assets/images/chandelier.jpg';
 import googleLogo from '../assets/images/google.png';
 
@@ -31,7 +31,7 @@ const RegisterPage = () => {
         <div className="login-logo">👑</div>
         <h2 className="login-title">Create Account</h2>
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
+          <div className="form-group form-group-row">
             <input
               type="text"
               placeholder="First Name"
@@ -39,8 +39,6 @@ const RegisterPage = () => {
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
-          </div>
-          <div className="form-group">
             <input
               type="text"
               placeholder="Last Name"

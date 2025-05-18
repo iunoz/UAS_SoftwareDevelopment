@@ -62,7 +62,4 @@
   background-color: #d4af37;
 }
 
-/* Add padding to body to prevent content from hiding under navbar */
-body {
-  padding-top: 4rem;
-} 
+
