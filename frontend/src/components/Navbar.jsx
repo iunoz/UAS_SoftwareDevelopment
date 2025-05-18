@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import '../styles/Navbar.css';
+import logo from '../assets/images/DecorLighting.png';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -29,28 +31,22 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-brand">
-        <Link to="/" className="logo">DecorLighting</Link>
+        <Link to="/" className="logo">
+          <img src={logo} alt="DecorLighting Logo" className="logo-image" />
+        </Link>
       </div>
-      <div className="navbar-menu">
-        <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
-          Home
-        </Link>
-        <Link to="/products" className={`nav-link ${location.pathname === '/products' ? 'active' : ''}`}>
-          Products
-        </Link>
-        <Link to="/categories" className={`nav-link ${location.pathname === '/categories' ? 'active' : ''}`}>
-          Categories
+      <div className="navbar-title">
+        <Link to="/" className="title-link">
+          DecorLighting
         </Link>
       </div>
       <div className="navbar-end">
-        <Link to="/cart" className={`nav-link ${location.pathname === '/cart' ? 'active' : ''}`}>
-          Cart (0)
+        <Link to="/cart" className="nav-icon-link">
+          <FaShoppingCart className="nav-icon" />
+          <span className="cart-count">0</span>
         </Link>
-        <Link to="/register" className={`nav-link ${location.pathname === '/register' ? 'active' : ''}`}>
-          Register
-        </Link>
-        <Link to="/login" className={`nav-link ${location.pathname === '/login' ? 'active' : ''}`}>
-          Login
+        <Link to="/login" className="nav-icon-link">
+          <FaUser className="nav-icon" />
         </Link>
       </div>
     </nav>

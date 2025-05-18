@@ -7,6 +7,7 @@ import ForgotPasswordPage from './pages/ForgotPassword';
 import ProductPage from './pages/ProductPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import ProductAdmin from './pages/ProductAdmin';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
 function AppContent() {
@@ -22,6 +23,7 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/admindashboard" element={<DashboardAdmin />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/productadmin" element={<ProductAdmin />} />
       </Routes>
     </div>

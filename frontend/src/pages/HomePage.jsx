@@ -2,6 +2,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Carousel } from 'react-bootstrap';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 
@@ -149,6 +150,11 @@ const HomePage = () => {
     }
   };
 
+  const scrollToCollection = () => {
+    const element = document.getElementById('our-collection');
+    element.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="home-page">
       {/* Hero Section with Parallax */}
@@ -171,6 +177,7 @@ const HomePage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="btn btn-warning btn-lg mt-4 px-5"
+              onClick={scrollToCollection}
             >
               Explore Collection
             </motion.button>
@@ -214,6 +221,7 @@ const HomePage = () => {
 
       {/* Product Collection */}
       <motion.section 
+        id="our-collection"
         className="product-collection py-5"
         variants={staggerContainer}
         initial="initial"
@@ -258,9 +266,11 @@ const HomePage = () => {
             ))}
           </Row>
           <div className="text-center mt-5">
-            <Button variant="outline-warning" className="see-all-btn px-4 py-2 mb-5">
-              SEE ALL PRODUCT →
-            </Button>
+            <Link to="/products">
+              <Button variant="outline-warning" className="see-all-btn px-4 py-2 mb-5">
+                SEE ALL PRODUCT →
+              </Button>
+            </Link>
             <motion.div 
               className="service-quality-text mt-5"
               initial={{ opacity: 0, y: 20 }}

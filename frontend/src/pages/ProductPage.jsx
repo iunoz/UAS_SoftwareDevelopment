@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import '../styles/ProductPage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 
@@ -154,81 +154,99 @@ const ProductPage = () => {
   });
 
   return (
-    <div className="product-page">
+    <div className="product-page py-5">
       <Container>
-        <h1 className="page-title">OUR PRODUCT</h1>
+        <h1 className="text-center page-title mb-4">OUR PRODUCT</h1>
         
         {/* Search Bar */}
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search Here..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          <button className="search-button">Search</button>
-        </div>
+        <Row className="justify-content-center mb-4">
+          <Col md={8} lg={6}>
+            <Form className="d-flex">
+              <Form.Control
+                type="text"
+                placeholder="Search Here..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input me-2"
+              />
+              <Button variant="warning" className="search-button">Search</Button>
+            </Form>
+          </Col>
+        </Row>
 
         {/* Collection Filter */}
-        <div className="filter-section">
-          <h2>Collection</h2>
-          <div className="filter-buttons">
+        <div className="filter-section mb-4">
+          <h2 className="text-white mb-3">Collection</h2>
+          <div className="d-flex flex-wrap gap-2">
             {collections.map((collection) => (
-              <button
+              <Button
                 key={collection}
-                className={`filter-btn ${selectedCollection === collection ? 'active' : ''}`}
+                variant={selectedCollection === collection ? 'warning' : 'outline-warning'}
                 onClick={() => setSelectedCollection(collection)}
+                className="text-nowrap"
               >
                 {collection}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
         {/* Categories Filter */}
-        <div className="filter-section">
-          <h2>Categories</h2>
-          <div className="filter-buttons">
+        <div className="filter-section mb-4">
+          <h2 className="text-white mb-3">Categories</h2>
+          <div className="d-flex flex-wrap gap-2">
             {categories.map((category) => (
-              <button
+              <Button
                 key={category}
-                className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
+                variant={selectedCategory === category ? 'warning' : 'outline-warning'}
                 onClick={() => setSelectedCategory(category)}
+                className="text-nowrap"
               >
                 {category}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
         {/* Products Grid */}
-        <div className="products-grid">
+        <Row className="g-4 mb-4">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="product-item">
-              <img src={chandelier} alt={product.name} className="product-icon" />
-              <h3>{product.name}</h3>
-              <p className="price">Rp {product.price.toLocaleString()}</p>
-            </div>
+            <Col key={product.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+              <Card className="h-100 product-item">
+                <Card.Img 
+                  variant="top" 
+                  src={chandelier} 
+                  alt={product.name} 
+                  className="product-icon"
+                />
+                <Card.Body className="text-center">
+                  <Card.Title className="h6">{product.name}</Card.Title>
+                  <Card.Text className="price">
+                    Rp {product.price.toLocaleString()}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
           ))}
-        </div>
+        </Row>
 
         {/* Pagination */}
-        <div className="pagination">
+        <div className="d-flex justify-content-center gap-2 mb-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((page) => (
-            <button
+            <Button
               key={page}
-              className={`page-btn ${currentPage === page ? 'active' : ''}`}
+              variant={currentPage === page ? 'warning' : 'outline-warning'}
               onClick={() => setCurrentPage(page)}
+              className="page-btn"
             >
               {page}
-            </button>
+            </Button>
           ))}
-          <button className="page-btn">→</button>
+          <Button variant="outline-warning" className="page-btn">→</Button>
         </div>
 
         {/* Bottom Tagline */}
-        <p className="bottom-tagline">
+        <p className="text-center bottom-tagline">
           Add a touch of elegance to your space with our stunning lighting pieces
         </p>
       </Container>
