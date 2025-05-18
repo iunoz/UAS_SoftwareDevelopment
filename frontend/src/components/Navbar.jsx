@@ -21,6 +21,11 @@ const Navbar = () => {
     };
   }, [scrolled]);
 
+  // Hide navbar on login and register pages
+  if (location.pathname === '/login' || location.pathname === '/register') {
+    return null;
+  }
+
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-brand">
