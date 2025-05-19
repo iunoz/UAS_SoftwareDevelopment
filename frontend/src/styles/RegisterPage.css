@@ -38,40 +38,58 @@
 .login-form {
   width: 100%;
   max-width: 400px;
+  margin: 0 auto;
 }
 
-.form-group {
-  display: flex;
-  gap: 1rem;
+.form-group,
+.form-group-row {
+  width: 100%;
   margin-bottom: 1.2rem;
-  flex-direction: column; /* default column */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .form-group-row {
-  display: flex;           /* tambahkan ini */
-  flex-direction: row;     /* row untuk firstname + lastname */
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 0.7rem;
 }
 
+.form-group-row input,
 .form-group input {
-  flex: 1;
-  padding: 0.8rem 1rem;
+  border: 1.5px solid #e0c69a;
+  background-color: #2e3a6c;
+  color: #e0c69a;
   border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.3s;
-  background-color: #2E3A6C;
-  border: none;
+  padding: 0.8rem 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  height: 48px;
+  width: 100%;
 }
 
+.form-group-row input:focus,
 .form-group input:focus {
-  border-color: #4a90e2;
+  border-color: #e0c69a;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(224, 198, 154, 0.15);
+}
+
+.form-group-row input::placeholder,
+.form-group input::placeholder {
+  color: #e0c69a99;
+  opacity: 1;
 }
 
 .login-button {
   width: 50%;
   padding: 0.85rem;
   background-color: #e0c69a;
-  color: #2E3A6C;
+  color: #2e3a6c;
   font-weight: 700;
   border: none;
   border-radius: 6px;
@@ -144,4 +162,3 @@
 .login-redirect a {
   color: #e0c69a !important;
 }
-

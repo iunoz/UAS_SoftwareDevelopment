@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AdminNavbar from '../components/AdminNavbar';
 import '../styles/AddProduct.css';
+import axios from 'axios';
 
 const categories = [
   'Hanging Lamp', 'Ceiling Lamp', 'Wall Lamp', 'Standing Lamp', 'Table Lamp', 'Uncategorized'
@@ -20,6 +21,7 @@ const AddProduct = () => {
     image: null,
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -38,10 +40,36 @@ const AddProduct = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Submit logic (API call)
-    alert('Product added!');
+    setLoading(true);
+    const productData = new FormData();
+    for (let key in form) {
+      // Pastikan description dikirim sebagai string (bukan array)
+      if (key === 'description' && Array.isArray(form[key])) {
+        productData.append('description', form[key].join('\n'));
+      } else {
+        productData.append(key, form[key]);
+      }
+    }
+    try {
+      await axios.post('http://localhost:4000/api/products/add', productData);
+      alert('Product added!');
+      setForm({
+        name: '',
+        description: '',
+        price: '',
+        quantity: '',
+        category: '',
+        collection: '',
+        image: null,
+      });
+      setImagePreview(null);
+    } catch (error) {
+      alert('Error adding product');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -125,7 +153,9 @@ const AddProduct = () => {
               </div>
               <div className="add-product-action-btns">
                 <button type="button" className="cancel-btn" onClick={() => window.history.back()}>Cancel</button>
-                <button type="submit" className="save-btn">Save</button>
+                <button type="submit" className="save-btn" disabled={loading}>
+                  {loading ? 'Adding...' : 'Save'}
+                </button>
               </div>
             </div>
           </div>

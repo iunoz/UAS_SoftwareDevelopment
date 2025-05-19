@@ -57,7 +57,7 @@ const RegisterPage = () => {
         <div className="login-logo">👑</div>
         <h2 className="login-title">Create Account</h2>
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group form-group-row">
+          <div className="form-group-row">
             <input
               type="text"
               placeholder="First Name"

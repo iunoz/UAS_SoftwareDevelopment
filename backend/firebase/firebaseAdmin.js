@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
-import serviceAccount from './serviceAccountKey.json' assert { type: "json" }; // path ke file credential JSON
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const serviceAccount = require('./serviceAccountKey.json');
 
 // Inisialisasi Firebase Admin SDK
 if (!admin.apps.length) {
