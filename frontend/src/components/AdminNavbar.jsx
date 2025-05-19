@@ -20,7 +20,7 @@ const AdminNavbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'active' : ''} end>
+          <NavLink to="/adminorders" className={({ isActive }) => isActive ? 'active' : ''} end>
             Orders
           </NavLink>
         </li>

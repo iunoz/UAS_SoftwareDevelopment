@@ -8,11 +8,13 @@ import ProductPage from './pages/ProductPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import ProductAdmin from './pages/ProductAdmin';
 import ProfilePage from './pages/ProfilePage';
+import AddProduct from './pages/AddProduct';
+import AdminOrders from './pages/AdminOrders';
 import './App.css';
 
 function AppContent() {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/register'  || location.pathname === '/admindashboard' || location.pathname === '/productadmin';
+  const hideNavbar = location.pathname === '/login' || location.pathname === '/register'  || location.pathname === '/admindashboard' || location.pathname === '/productadmin' || location.pathname === '/addproduct' || location.pathname === '/adminorders';
   return (
     <div className="App">
       {!hideNavbar && <Navbar />}
@@ -25,6 +27,8 @@ function AppContent() {
         <Route path="/admindashboard" element={<DashboardAdmin />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/productadmin" element={<ProductAdmin />} />
+        <Route path="/addproduct" element={<AddProduct />} />
+        <Route path="/adminorders" element={<AdminOrders />} />
       </Routes>
     </div>
   );
