@@ -26,11 +26,15 @@ const LoginPage = () => {
 
       navigate('/');
     } catch (error) {
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        setErrors({ general: 'Invalid email or password' });
+      const errorCode = error?.code;
+      if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
+        setErrors({ general: 'Invalid Email or Password' });
       } else {
         console.error('Login error:', error);
         setErrors({ general: 'Something went wrong. Please try again.' });
+
+        console.log('Error:', error);
+        console.log('Error code:', error?.code);
       }
     }
   };

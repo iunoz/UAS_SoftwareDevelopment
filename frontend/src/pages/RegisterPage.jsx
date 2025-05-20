@@ -94,7 +94,6 @@ const RegisterPage = () => {
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              required
             />
           </div>
           <div className="form-group">
