@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase.config';
 import axios from 'axios';
 import '../styles/RegisterPage.css';
@@ -45,6 +45,30 @@ const RegisterPage = () => {
       } else {
         console.error(error);
       }
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+
+      const fullName = result.user.displayName || '';
+      const [fname, ...lnameArr] = fullName.split(' ');
+      const lname = lnameArr.join(' ');
+
+      await axios.post('http://localhost:4000/api/user/register', {
+        fname: fname || '',
+        lname: lname || '',
+      }, {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      navigate('/');
+    } catch (error) {
+      console.error('Google registration failed:', error);
+      setErrors({ general: 'Google registration failed. Please try again.' });
     }
   };
 
@@ -102,9 +126,10 @@ const RegisterPage = () => {
             />
             {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
           </div>
+          {errors.general && <small className="error-text">{errors.general}</small>}
           <button type="submit" className="login-button">CREATE</button>
           <div className="divider">OR</div>
-          <button type="button" className="google-login">
+          <button type="button" className="google-login" onClick={handleGoogleRegister}>
             <img src={googleLogo} alt="Google Logo" />
           </button>
         </form>
