@@ -5,16 +5,26 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ProductPage from './pages/ProductPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import ProductAdmin from './pages/ProductAdmin';
 import ProfilePage from './pages/ProfilePage';
 import AddProduct from './pages/AddProduct';
 import AdminOrders from './pages/AdminOrders';
+import CartPage from './pages/CartPage';
 import './App.css';
 
 function AppContent() {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/register'  || location.pathname === '/admindashboard' || location.pathname === '/productadmin' || location.pathname === '/addproduct' || location.pathname === '/adminorders';
+  const hideNavbar = location.pathname === '/login' || 
+    location.pathname === '/register' || 
+    location.pathname === '/admindashboard' || 
+    location.pathname === '/productadmin' || 
+    location.pathname === '/addproduct' || 
+    location.pathname === '/adminorders' || 
+    location.pathname === '/cart' ||
+    location.pathname.startsWith('/product/');
+    
   return (
     <div className="App">
       {!hideNavbar && <Navbar />}
@@ -24,11 +34,13 @@ function AppContent() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
         <Route path="/admindashboard" element={<DashboardAdmin />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/productadmin" element={<ProductAdmin />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/adminorders" element={<AdminOrders />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </div>
   );

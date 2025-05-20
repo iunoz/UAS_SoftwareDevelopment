@@ -1,150 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/ProductPage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 
 const ProductPage = () => {
+  const navigate = useNavigate();
   const [selectedCollection, setSelectedCollection] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const collections = ['ALL', 'MINIMALIST COLLECTION', 'MODERN COLLECTION', 'CLASSIC COLLECTION'];
   const categories = ['ALL', 'HANGING LAMP', 'STANDING LAMP', 'WALL LAMP', 'TABLE LAMP', 'NIGHT LIGHTS'];
 
-  const products = [
-    // Modern Collection - Hanging Lamps
-    {
-      id: 1,
-      name: 'Modern Crystal Chandelier',
-      price: 2175000,
-      collection: 'MODERN COLLECTION',
-      category: 'HANGING LAMP',
-      image: chandelier
-    },
-    {
-      id: 2,
-      name: 'Modern Glass Pendant',
-      price: 1960000,
-      collection: 'MODERN COLLECTION',
-      category: 'HANGING LAMP',
-      image: chandelier
-    },
-    // Modern Collection - Wall Lamps
-    {
-      id: 3,
-      name: 'Modern Wall Sconce',
-      price: 850000,
-      collection: 'MODERN COLLECTION',
-      category: 'WALL LAMP',
-      image: chandelier
-    },
-    {
-      id: 4,
-      name: 'LED Wall Light',
-      price: 920000,
-      collection: 'MODERN COLLECTION',
-      category: 'WALL LAMP',
-      image: chandelier
-    },
-    // Modern Collection - Table Lamps
-    {
-      id: 5,
-      name: 'Modern Table Light',
-      price: 750000,
-      collection: 'MODERN COLLECTION',
-      category: 'TABLE LAMP',
-      image: chandelier
-    },
-    // Minimalist Collection - Standing Lamps
-    {
-      id: 6,
-      name: 'Minimalist Floor Lamp',
-      price: 1250000,
-      collection: 'MINIMALIST COLLECTION',
-      category: 'STANDING LAMP',
-      image: chandelier
-    },
-    {
-      id: 7,
-      name: 'Simple Stand Light',
-      price: 980000,
-      collection: 'MINIMALIST COLLECTION',
-      category: 'STANDING LAMP',
-      image: chandelier
-    },
-    // Minimalist Collection - Table Lamps
-    {
-      id: 8,
-      name: 'Minimalist Desk Lamp',
-      price: 650000,
-      collection: 'MINIMALIST COLLECTION',
-      category: 'TABLE LAMP',
-      image: chandelier
-    },
-    // Minimalist Collection - Night Lights
-    {
-      id: 9,
-      name: 'Simple Night Light',
-      price: 325000,
-      collection: 'MINIMALIST COLLECTION',
-      category: 'NIGHT LIGHTS',
-      image: chandelier
-    },
-    // Classic Collection - Hanging Lamps
-    {
-      id: 10,
-      name: 'Victorian Chandelier',
-      price: 3250000,
-      collection: 'CLASSIC COLLECTION',
-      category: 'HANGING LAMP',
-      image: chandelier
-    },
-    {
-      id: 11,
-      name: 'Antique Crystal Light',
-      price: 2850000,
-      collection: 'CLASSIC COLLECTION',
-      category: 'HANGING LAMP',
-      image: chandelier
-    },
-    // Classic Collection - Wall Lamps
-    {
-      id: 12,
-      name: 'Classic Wall Light',
-      price: 1150000,
-      collection: 'CLASSIC COLLECTION',
-      category: 'WALL LAMP',
-      image: chandelier
-    },
-    // Classic Collection - Table Lamps
-    {
-      id: 13,
-      name: 'Vintage Table Lamp',
-      price: 950000,
-      collection: 'CLASSIC COLLECTION',
-      category: 'TABLE LAMP',
-      image: chandelier
-    },
-    // Classic Collection - Night Lights
-    {
-      id: 14,
-      name: 'Classic Night Light',
-      price: 450000,
-      collection: 'CLASSIC COLLECTION',
-      category: 'NIGHT LIGHTS',
-      image: chandelier
-    },
-    // Modern Collection - Night Lights
-    {
-      id: 15,
-      name: 'Modern Night Lamp',
-      price: 375000,
-      collection: 'MODERN COLLECTION',
-      category: 'NIGHT LIGHTS',
-      image: chandelier
-    }
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:4000/api/products');
+        if (response.data.success) {
+          setProducts(response.data.products);
+          setError(null);
+        } else {
+          setError('Failed to fetch products');
+        }
+      } catch (err) {
+        setError('Error: ' + (err.response?.data?.message || 'Failed to fetch products'));
+        console.error('Error fetching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => {
     const matchesCollection = selectedCollection === 'ALL' || product.collection === selectedCollection;
@@ -153,10 +47,43 @@ const ProductPage = () => {
     return matchesCollection && matchesCategory && matchesSearch;
   });
 
+  if (loading) {
+    return (
+      <div className="product-page py-5">
+        <Container>
+          <div className="text-center">
+            <div className="spinner-border text-warning" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-white">Loading products...</p>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="product-page py-5">
+        <Container>
+          <div className="text-center">
+            <div className="text-danger mb-3">⚠️ {error}</div>
+            <Button 
+              variant="warning" 
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </Button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   return (
     <div className="product-page py-5">
-      <Container>
-        <h1 className="text-center page-title mb-4">OUR PRODUCT</h1>
+      <Container className="mt-5 pt-4">
+        <h1 className="text-center page-title mb-5">OUR PRODUCT</h1>
         
         {/* Search Bar */}
         <Row className="justify-content-center mb-4">
@@ -210,40 +137,63 @@ const ProductPage = () => {
 
         {/* Products Grid */}
         <Row className="g-4 mb-4">
-          {filteredProducts.map((product) => (
-            <Col key={product.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-              <Card className="h-100 product-item">
-                <Card.Img 
-                  variant="top" 
-                  src={chandelier} 
-                  alt={product.name} 
-                  className="product-icon"
-                />
-                <Card.Body className="text-center">
-                  <Card.Title className="h6">{product.name}</Card.Title>
-                  <Card.Text className="price">
-                    Rp {product.price.toLocaleString()}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+          {filteredProducts.length === 0 ? (
+            <Col xs={12}>
+              <div className="text-center text-white py-5">
+                <h3>No products found</h3>
+                <p>Try adjusting your filters or search query</p>
+              </div>
             </Col>
-          ))}
+          ) : (
+            filteredProducts.map((product) => (
+              <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
+                <Card 
+                  className="h-100 product-item"
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="product-img-container">
+                    <Card.Img 
+                      variant="top" 
+                      src={product.image || chandelier} 
+                      alt={product.name} 
+                      className="product-icon"
+                      onError={(e) => {
+                        e.target.src = chandelier;
+                        e.target.onerror = null;
+                      }}
+                    />
+                  </div>
+                  <Card.Body>
+                    <div>
+                      <Card.Title className="h6">{product.name}</Card.Title>
+                      <Card.Text className="mb-2">{product.category}</Card.Text>
+                    </div>
+                    <Card.Text className="price">
+                      Rp {parseInt(product.price).toLocaleString()}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          )}
         </Row>
 
-        {/* Pagination */}
-        <div className="d-flex justify-content-center gap-2 mb-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((page) => (
-            <Button
-              key={page}
-              variant={currentPage === page ? 'warning' : 'outline-warning'}
-              onClick={() => setCurrentPage(page)}
-              className="page-btn"
-            >
-              {page}
-            </Button>
-          ))}
-          <Button variant="outline-warning" className="page-btn">→</Button>
-        </div>
+        {/* Pagination - Only show if there are products */}
+        {filteredProducts.length > 0 && (
+          <div className="d-flex justify-content-center gap-2 mb-4">
+            {[1, 2, 3, 4, 5].map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? 'warning' : 'outline-warning'}
+                onClick={() => setCurrentPage(page)}
+                className="page-btn"
+              >
+                {page}
+              </Button>
+            ))}
+          </div>
+        )}
 
         {/* Bottom Tagline */}
         <p className="text-center bottom-tagline">
