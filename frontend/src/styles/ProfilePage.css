@@ -87,16 +87,19 @@ label {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.edit-btn {
-  background: none;
-  border: none;
-  color: #0d6efd;
-  padding: 0;
-  font-size: 0.9rem;
+.change-address-btn {
+  font-size: 0.8rem !important;
+  padding: 0.25rem 0.75rem !important;
+  border-color: #d4af37 !important;
+  color: #d4af37 !important;
+  background: transparent !important;
+  transition: all 0.3s ease !important;
 }
 
-.edit-btn:hover {
-  color: #0a58ca;
+.change-address-btn:hover {
+  background: #d4af37 !important;
+  color: #1a2238 !important;
+  transform: translateY(-1px);
 }
 
 /* Action Buttons */
@@ -152,4 +155,39 @@ label {
   .profile-actions {
     padding: 0 1rem;
   }
+}
+
+/* Modal Styling */
+.modal-dark .modal-content {
+  background-color: #262f60;
+  color: white;
+}
+
+.modal-dark .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-dark .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-dark .close {
+  color: white;
+}
+
+.modal-input {
+  background-color: #1a2238 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.modal-input:focus {
+  background-color: #1a2238 !important;
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25) !important;
+  color: white !important;
+}
+
+.modal-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
 } 

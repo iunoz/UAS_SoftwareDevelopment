@@ -97,3 +97,49 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Failed to delete user" });
   }
 };
+
+/**
+ * Get user data
+ */
+export const getUserData = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await User.findOne({ uid });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Update user address
+ */
+export const updateAddress = async (req, res) => {
+  const { uid } = req.params;
+  const { address } = req.body;
+
+  if (!address) {
+    return res.status(400).json({ success: false, message: "Address is required" });
+  }
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { address },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

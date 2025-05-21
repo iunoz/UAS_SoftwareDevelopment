@@ -1,120 +1,37 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Carousel } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 
 const HomePage = () => {
   const { uid } = useParams();
-  const lightingProducts = [
-    {
-      id: 1,
-      image: chandelier,
-      name: 'Modern Crystal Chandelier',
-      price: 2525000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 2,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 900000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 3,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 1295000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 4,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 3250000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 5,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 3250000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 6,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 1250000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 7,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 920000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 8,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 2195000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 9,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 12195000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 10,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 3250000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 11,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 2195000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 12,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 14500000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 13,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 4550000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 14,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 3250000,
-      category: 'Chandeliers'
-    },
-    {
-      id: 15,
-      image: chandelier,
-      name: 'Modern Crystal Room',
-      price: 3250000,
-      category: 'Chandeliers'
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/products');
+        if (response.data.success) {
+          setProducts(response.data.products);
+        } else {
+          setError('Failed to fetch products');
+        }
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch products');
+        setLoading(false);
+        console.error('Error fetching products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const carouselItems = [
     {
@@ -236,36 +153,46 @@ const HomePage = () => {
           >
             Our Collection
           </motion.h2>
-          <Row className="g-4">
-            {lightingProducts.map((product, index) => (
-              <Col md={6} lg={4} key={product.id}>
-                <motion.div
-                  variants={fadeInUp}
-                  whileHover={{ y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="h-100 bg-dark text-white border-0 shadow product-card">
-                    <div className="card-img-wrapper">
-                      <Card.Img variant="top" src={product.image} alt={product.name} className="img-fluid" />
-                      <div className="card-overlay">
-                        <Button variant="warning" className="view-details-btn">View Details</Button>
+          {loading ? (
+            <div className="text-center">
+              <div className="spinner-border text-warning" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="text-center text-danger">{error}</div>
+          ) : (
+            <Row className="g-4">
+              {products.map((product) => (
+                <Col md={6} lg={4} key={product._id}>
+                  <motion.div
+                    variants={fadeInUp}
+                    whileHover={{ y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card className="h-100 bg-dark text-white border-0 shadow product-card">
+                      <div className="card-img-wrapper">
+                        <Card.Img variant="top" src={product.image} alt={product.name} className="img-fluid" />
+                        <div className="card-overlay">
+                          <Button variant="warning" className="view-details-btn">View Details</Button>
+                        </div>
                       </div>
-                    </div>
-                    <Card.Body className="text-center">
-                      <div className="category-badge">{product.category}</div>
-                      <Card.Title className="h4 mb-3">{product.name}</Card.Title>
-                      <Card.Text className="text-warning fs-4 fw-bold">
-                        Rp {product.price.toLocaleString()}
-                      </Card.Text>
-                      <Button variant="outline-warning" className="w-100 mt-3">
-                        Add to Cart
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+                      <Card.Body className="text-center">
+                        <div className="category-badge">{product.category}</div>
+                        <Card.Title className="product-title">{product.name}</Card.Title>
+                        <Card.Text className="product-price">
+                          Rp {product.price.toLocaleString()}
+                        </Card.Text>
+                        <Button variant="outline-warning" className="w-100 mt-3">
+                          Add to Cart
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </motion.div>
+                </Col>
+              ))}
+            </Row>
+          )}
           <div className="text-center mt-5">
             <Link to={uid ? `/${uid}/products` : "/products"}>
               <Button variant="outline-warning" className="see-all-btn px-4 py-2 mb-5">

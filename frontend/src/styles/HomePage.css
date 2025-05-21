@@ -330,19 +330,22 @@
 }
 
 .product-title {
-  font-size: 0.9rem !important;
+  font-size: 1.1rem !important;
   color: #d2b48c !important;
   margin-bottom: 0.5rem !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .product-price {
-  font-size: 0.85rem !important;
+  font-size: 1rem !important;
   color: #d2b48c !important;
-  font-weight: bold !important;
+  font-weight: 600 !important;
   margin-bottom: 0.5rem !important;
+  letter-spacing: 0.5px !important;
 }
 
 /* Responsive Styles */
