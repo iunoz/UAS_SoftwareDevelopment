@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import '../styles/CartPage.css';
 
 const CartPage = () => {
@@ -29,6 +30,7 @@ const CartPage = () => {
   ]);
 
   const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -98,7 +100,7 @@ const CartPage = () => {
             <span className="cart-total-text">Total Price:</span>
             <span className="cart-total-value">RP. {total.toLocaleString()}</span>
           </div>
-          <Button className="cart-checkout-btn">
+          <Button className="cart-checkout-btn" onClick={() => navigate('/payment')}>
             Checkout
           </Button>
         </div>
@@ -107,4 +109,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage; 
+export default CartPage;

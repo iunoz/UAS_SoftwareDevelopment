@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import AddProduct from './pages/AddProduct';
 import AdminOrders from './pages/AdminOrders';
 import CartPage from './pages/CartPage';
+import Payment from './pages/Payment';
 import './App.css';
 
 function AppContent() {
@@ -24,6 +25,7 @@ function AppContent() {
     location.pathname === '/adminorders' || 
     location.pathname === '/cart' ||
     location.pathname === '/profile' ||
+    location.pathname === '/payment' ||
     /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
     /^\/[^/]+\/productadmin$/.test(location.pathname) ||
     /^\/[^/]+\/addproduct$/.test(location.pathname) ||
@@ -47,7 +49,8 @@ function AppContent() {
         <Route path="/productadmin" element={<ProductAdmin />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/adminorders" element={<AdminOrders />} />
-        <Route path="/cart" element={<LoginPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/:uid" element={<HomePage />} />
         <Route path="/:uid/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/:uid/products" element={<ProductPage />} />

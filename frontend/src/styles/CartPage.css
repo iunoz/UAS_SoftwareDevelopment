@@ -165,14 +165,14 @@
 }
 
 .cart-total-value {
-  color: #d4af37;
+  color: #e6d5b8;
   font-size: 1.3rem;
   font-weight: 500;
   margin-left: 0.5rem;
 }
 
 .cart-checkout-btn {
-  background: #e8e3d5 !important;
+  background: #e6d5b8 !important;
   color: #1a2238 !important;
   border: none !important;
   font-family: 'Cinzel', serif;
@@ -187,6 +187,30 @@
   background: #d4af37 !important;
   color: #fff !important;
   transform: translateY(-2px);
+}
+
+.form-group select, .cart-shipping-select {
+  background: #222d52;
+  color: #e6d5b8;
+  border: 2px solid #e6d5b8;
+  border-radius: 10px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  transition: border 0.2s;
+}
+
+.form-group select:focus, .cart-shipping-select:focus {
+  border: 2px solid #d4af37;
+  outline: none;
+}
+
+.form-group label {
+  color: #e6d5b8;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
 @media (max-width: 768px) {
@@ -219,4 +243,4 @@
     font-size: 1rem;
     padding: 0.5rem 1.5rem !important;
   }
-} 
+}
