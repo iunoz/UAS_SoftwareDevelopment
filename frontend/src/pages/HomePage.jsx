@@ -2,11 +2,12 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Carousel } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 
 const HomePage = () => {
+  const { uid } = useParams();
   const lightingProducts = [
     {
       id: 1,
@@ -266,7 +267,7 @@ const HomePage = () => {
             ))}
           </Row>
           <div className="text-center mt-5">
-            <Link to="/products">
+            <Link to={uid ? `/${uid}/products` : "/products"}>
               <Button variant="outline-warning" className="see-all-btn px-4 py-2 mb-5">
                 SEE ALL PRODUCT →
               </Button>

@@ -20,11 +20,22 @@ const LoginPage = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      await axios.post('http://localhost:4000/api/user/login', {}, {
+      // Ambil data user dari backend
+      const response = await axios.post('http://localhost:4000/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
-      navigate('/');
+      const { user } = response.data;
+      // Simpan user dan role ke localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', user.role);
+
+      // Redirect sesuai role
+      if (user.role === 'admin') {
+        navigate(`/${user.uid}/admindashboard`);
+      } else {
+        navigate(`/${user.uid}`);
+      }      
     } catch (error) {
       const errorCode = error?.code;
       if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
@@ -45,12 +56,20 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // Kirim data user ke backend untuk disimpan di MongoDB jika belum ada
-      await axios.post('http://localhost:4000/api/user/login', {}, {
+      // Ambil data user dari backend
+      const response = await axios.post('http://localhost:4000/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
-      navigate('/');
+      const { user } = response.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', user.role);
+      // Redirect sesuai role
+      if (user.role === 'admin') {
+        navigate(`/${user.uid}/admindashboard`);
+      } else {
+      navigate(`/${user.uid}`);
+      }
     } catch (error) {
       console.error('Google login failed:', error);
       setErrors({ general: 'Google login failed' });

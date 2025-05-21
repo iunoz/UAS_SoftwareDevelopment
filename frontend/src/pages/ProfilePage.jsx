@@ -1,10 +1,23 @@
 import React from 'react';
 import { Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaMapMarkerAlt, FaPen } from 'react-icons/fa';
 import '../styles/ProfilePage.css';
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+  const { uid } = useParams();
+
+  const handleChangePassword = () => {
+    navigate(`/${uid}/forgot-password`);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    navigate('/');
+  };
+
   return (
     <div className="profile-page">
       <Container className="profile-container text-center py-5">
@@ -67,10 +80,10 @@ const ProfilePage = () => {
 
         {/* Action Buttons */}
         <div className="profile-actions mt-4">
-          <Button variant="outline-primary" className="change-password-btn mb-2 w-100">
+          <Button variant="outline-primary" className="change-password-btn mb-2 w-100" onClick={handleChangePassword}>
             CHANGE PASSWORD
           </Button>
-          <Button variant="outline-danger" className="sign-out-btn w-100">
+          <Button variant="outline-danger" className="sign-out-btn w-100" onClick={handleSignOut}>
             SIGN OUT
           </Button>
         </div>

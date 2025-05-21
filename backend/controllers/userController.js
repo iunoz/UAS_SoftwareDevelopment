@@ -12,19 +12,22 @@ export const register = async (req, res) => {
 
   try {
     const decoded = await admin.auth().verifyIdToken(idToken);
-    const { uid, email, name } = decoded;
+    const { uid, email } = decoded;
     const { fname, lname } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(200).json({ success: true, message: "User already exists" });
+      return res.status(200).json({ success: true, user: existingUser });
     }
 
+    const role = email.toUpperCase().includes('ADM1N') ? 'admin' : 'user';
+
     const user = await User.create({
+      uid,
       fname,
       lname,
       email,
-      password: uid,
+      role,
     });
 
     res.status(201).json({ success: true, user });
@@ -34,6 +37,9 @@ export const register = async (req, res) => {
   }
 };
 
+/**
+ * Login user dari Firebase Auth ke MongoDB
+ */
 export const login = async (req, res) => {
   const idToken = req.headers.authorization?.split('Bearer ')[1];
   if (!idToken) return res.status(401).json({ message: "No token" });
@@ -51,5 +57,43 @@ export const login = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+/**
+ * Update password user
+ */
+export const updatePassword = async (req, res) => {
+  const { uid } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password required" });
+  }
+
+  try {
+    // Update password di Firebase
+    await admin.auth().updateUser(uid, { password: newPassword });
+    // Update password di MongoDB jika simpan password hash
+    await User.findOneAndUpdate({ uid }, { password: newPassword });
+    res.status(200).json({ success: true, message: "Password updated" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update password" });
+  }
+};
+
+/**
+ * Delete password user
+ */
+export const deleteUser = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    // Hapus user di Firebase
+    await admin.auth().deleteUser(uid);
+    // Hapus user di MongoDB
+    await User.findOneAndDelete({ uid });
+    res.status(200).json({ success: true, message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete user" });
   }
 };

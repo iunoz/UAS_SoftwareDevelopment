@@ -1,8 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import '../styles/AdminNavbar.css';
 
 const AdminNavbar = () => {
+  const { uid } = useParams();
+
   return (
     <nav className="admin-navbar">
       <div className="admin-navbar-brand">
@@ -10,17 +12,17 @@ const AdminNavbar = () => {
       </div>
       <ul className="admin-navbar-links">
         <li>
-          <NavLink to="/admindashboard" className={({ isActive }) => isActive ? 'active' : ''} end>
+          <NavLink to={`/${uid}/admindashboard`} className={({ isActive }) => isActive ? 'active' : ''} end>
             Dashboard
           </NavLink>
         </li>
         <li>
-          <NavLink to="/productadmin" className={({ isActive }) => isActive ? 'active' : ''} end>
+          <NavLink to={`/${uid}/productadmin`} className={({ isActive }) => isActive ? 'active' : ''} end>
             Products
           </NavLink>
         </li>
         <li>
-          <NavLink to="/adminorders" className={({ isActive }) => isActive ? 'active' : ''} end>
+          <NavLink to={`/${uid}/adminorders`} className={({ isActive }) => isActive ? 'active' : ''} end>
             Orders
           </NavLink>
         </li>

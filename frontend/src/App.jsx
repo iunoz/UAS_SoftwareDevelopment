@@ -23,6 +23,13 @@ function AppContent() {
     location.pathname === '/addproduct' || 
     location.pathname === '/adminorders' || 
     location.pathname === '/cart' ||
+    location.pathname === '/profile' ||
+    /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
+    /^\/[^/]+\/productadmin$/.test(location.pathname) ||
+    /^\/[^/]+\/addproduct$/.test(location.pathname) ||
+    /^\/[^/]+\/adminorders$/.test(location.pathname) ||
+    /^\/[^/]+\/cart$/.test(location.pathname) ||
+    /^\/[^/]+\/profile$/.test(location.pathname) ||
     location.pathname.startsWith('/product/');
     
   return (
@@ -40,7 +47,16 @@ function AppContent() {
         <Route path="/productadmin" element={<ProductAdmin />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/adminorders" element={<AdminOrders />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart" element={<LoginPage />} />
+        <Route path="/:uid" element={<HomePage />} />
+        <Route path="/:uid/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/:uid/products" element={<ProductPage />} />
+        <Route path="/:uid/admindashboard" element={<DashboardAdmin />} />
+        <Route path="/:uid/profile" element={<ProfilePage />} />
+        <Route path="/:uid/productadmin" element={<ProductAdmin />} />
+        <Route path="/:uid/addproduct" element={<AddProduct />} />
+        <Route path="/:uid/adminorders" element={<AdminOrders />} />
+        <Route path="/:uid/cart" element={<CartPage />} />
       </Routes>
     </div>
   );

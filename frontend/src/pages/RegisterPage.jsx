@@ -31,14 +31,25 @@ const RegisterPage = () => {
       });
       const idToken = await userCredential.user.getIdToken();
 
-      await axios.post('http://localhost:4000/api/user/register', {
+      // Ambil data user dari backend
+      const response = await axios.post('http://localhost:4000/api/user/register', {
         fname: firstName,
         lname: lastName,
       }, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
-      navigate('/');
+      const { user } = response.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', user.role);
+
+      
+      // Redirect sesuai role
+      if (user.role === 'admin') {
+        navigate(`/${user.uid}/admindashboard`);
+      } else {
+        navigate(`/${user.uid}`);
+      }
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
         setErrors({ email: 'Email Already Registered' });
@@ -58,14 +69,24 @@ const RegisterPage = () => {
       const [fname, ...lnameArr] = fullName.split(' ');
       const lname = lnameArr.join(' ');
 
-      await axios.post('http://localhost:4000/api/user/register', {
+      // Ambil data user dari backend
+      const response = await axios.post('http://localhost:4000/api/user/register', {
         fname: fname || '',
         lname: lname || '',
       }, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
-      navigate('/');
+      const { user } = response.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', user.role);
+
+      // Redirect sesuai role
+      if (user.role === 'admin') {
+        navigate(`/${user.uid}/admindashboard`);
+      } else {
+        navigate(`/${user.uid}`);
+      }
     } catch (error) {
       console.error('Google registration failed:', error);
       setErrors({ general: 'Google registration failed. Please try again.' });
