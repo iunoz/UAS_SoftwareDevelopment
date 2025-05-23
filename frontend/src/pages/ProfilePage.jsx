@@ -41,6 +41,9 @@ const ProfilePage = () => {
   const handleSignOut = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('role');
+    localStorage.removeItem('rememberMe');
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('role');
     navigate('/');
   };
 

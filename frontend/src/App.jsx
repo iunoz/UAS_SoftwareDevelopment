@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -17,6 +18,31 @@ import './App.css';
 
 function AppContent() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const rememberMe = localStorage.getItem('rememberMe');
+    const user = rememberMe
+      ? JSON.parse(localStorage.getItem('user') || '{}')
+      : JSON.parse(sessionStorage.getItem('user') || '{}');
+
+    if (rememberMe && user?.uid) {
+      // Jika belum di path dengan uid, redirect ke /:uid
+      if (
+        location.pathname === '/' ||
+        location.pathname === '/login' ||
+        location.pathname === '/register'
+      ) {
+        navigate(`/${user.uid}`, { replace: true });
+      }
+    } else {
+      // Jika tidak rememberMe, hapus user dari localStorage
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
+      localStorage.removeItem('rememberMe');
+    }
+  }, [location.pathname, navigate]); // hanya saat mount
+
   const hideNavbar = location.pathname === '/login' || 
     location.pathname === '/register' || 
     location.pathname === '/admindashboard' || 

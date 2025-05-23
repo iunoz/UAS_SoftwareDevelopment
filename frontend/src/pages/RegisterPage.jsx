@@ -40,8 +40,12 @@ const RegisterPage = () => {
       });
 
       const { user } = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', user.role);
+      // Register: selalu sessionStorage, tidak pernah rememberMe
+      localStorage.removeItem('rememberMe');
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
+      sessionStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('role', user.role);
 
       
       // Redirect sesuai role

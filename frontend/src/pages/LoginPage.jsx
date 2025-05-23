@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,9 +27,21 @@ const LoginPage = () => {
       });
 
       const { user } = response.data;
-      // Simpan user dan role ke localStorage
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', user.role);
+
+      // Simpan user dan role ke localStorage/sessionStorage sesuai rememberMe
+      if (rememberMe) {
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('rememberMe', 'true');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('role');
+      } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('role', user.role);
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
+        localStorage.removeItem('rememberMe');
+      }
 
       // Redirect sesuai role
       if (user.role === 'admin') {
@@ -43,7 +56,6 @@ const LoginPage = () => {
       } else {
         console.error('Login error:', error);
         setErrors({ general: 'Something went wrong. Please try again.' });
-
         console.log('Error:', error);
         console.log('Error code:', error?.code);
       }
@@ -62,8 +74,22 @@ const LoginPage = () => {
       });
 
       const { user } = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', user.role);
+
+      // Google login: treat as rememberMe if checked, else session only
+      if (rememberMe) {
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('rememberMe', 'true');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('role');
+      } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('role', user.role);
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
+        localStorage.removeItem('rememberMe');
+      }
+
       // Redirect sesuai role
       if (user.role === 'admin') {
         navigate(`/${user.uid}/admindashboard`);
@@ -107,6 +133,16 @@ const LoginPage = () => {
             <Link to="/forgot-password" className="forgot-password-link">
               Forgot Password?
             </Link>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+              style={{ marginRight: '8px' }}
+            />
+            <label htmlFor="rememberMe" style={{ marginBottom: 0 }}>Remember Me</label>
           </div>
           {errors.general && <small className="error-text">{errors.general}</small>}
           <button type="submit" className="login-button">LOGIN</button>

@@ -8,7 +8,11 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // Ambil user dari localStorage/sessionStorage sesuai rememberMe
+  const rememberMe = localStorage.getItem('rememberMe');
+  const user = rememberMe
+    ? JSON.parse(localStorage.getItem('user') || '{}')
+    : JSON.parse(sessionStorage.getItem('user') || '{}');
   const uid = user?.uid;
 
   useEffect(() => {
@@ -31,10 +35,12 @@ const Navbar = () => {
     return null;
   }
 
-    // Handler untuk klik ikon user
+  // Handler untuk klik ikon user
   const handleProfileClick = (e) => {
     if (!uid) {
       // Belum login, biarkan ke /login
+      e.preventDefault();
+      navigate('/login');
       return;
     }
     // Sudah login, cek apakah path sudah mengandung uid
