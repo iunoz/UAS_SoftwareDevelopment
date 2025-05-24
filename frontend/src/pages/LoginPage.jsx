@@ -74,16 +74,19 @@ const LoginPage = () => {
       });
 
       const { user } = response.data;
+      // Tambahkan providerId dari Firebase user
+      const providerId = result.user.providerData[0]?.providerId;
+      const userData = { ...user, providerId };
 
       // Google login: treat as rememberMe if checked, else session only
       if (rememberMe) {
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('role', user.role);
         localStorage.setItem('rememberMe', 'true');
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('role');
       } else {
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(userData));
         sessionStorage.setItem('role', user.role);
         localStorage.removeItem('user');
         localStorage.removeItem('role');

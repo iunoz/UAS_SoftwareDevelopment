@@ -5,6 +5,7 @@ const userRouter = express.Router();
 
 userRouter.post('/register', register)
 userRouter.post('/login', login);
+userRouter.put('/forgot-password', updatePassword); // update password (blm login)
 userRouter.put('/:uid/forgot-password', updatePassword); // update password
 userRouter.delete('/:uid', deleteUser); // delete user
 userRouter.get('/:uid', getUserData); // get user profile data

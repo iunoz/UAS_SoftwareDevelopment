@@ -82,7 +82,10 @@ const RegisterPage = () => {
       });
 
       const { user } = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
+      // Tambahkan providerId dari Firebase user
+      const providerId = result.user.providerData[0]?.providerId;
+      const userData = { ...user, providerId };
+      localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('role', user.role);
 
       // Redirect sesuai role

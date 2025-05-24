@@ -52,12 +52,14 @@ function AppContent() {
     location.pathname === '/cart' ||
     location.pathname === '/profile' ||
     location.pathname === '/payment' ||
+    location.pathname === '/forgot-password' ||
     /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
     /^\/[^/]+\/productadmin$/.test(location.pathname) ||
     /^\/[^/]+\/addproduct$/.test(location.pathname) ||
     /^\/[^/]+\/adminorders$/.test(location.pathname) ||
     /^\/[^/]+\/cart$/.test(location.pathname) ||
     /^\/[^/]+\/profile$/.test(location.pathname) ||
+    /^\/[^/]+\/forgot-password$/.test(location.pathname) ||
     location.pathname.startsWith('/product/');
     
   return (
