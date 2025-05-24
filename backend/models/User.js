@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   profileImage: { type: String, default: '' },
   address: { type: String, default: '' },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' }
+  role: { type: String, enum: ['user', 'admin', 'superadmin'], default: 'user' }
 });
 
 

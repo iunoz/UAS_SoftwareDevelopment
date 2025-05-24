@@ -4,6 +4,10 @@ import '../styles/AdminNavbar.css';
 
 const AdminNavbar = () => {
   const { uid } = useParams();
+  // Ambil user dari localStorage/sessionStorage
+  const user =
+    JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+  const isSuperAdmin = user?.email === 'superadmin@gmail.com';
 
   return (
     <nav className="admin-navbar">
@@ -26,6 +30,13 @@ const AdminNavbar = () => {
             Orders
           </NavLink>
         </li>
+        {isSuperAdmin && (
+          <li>
+            <NavLink to={`/${uid}/setrole`} className={({ isActive }) => isActive ? 'active' : ''} end>
+              Set Role
+            </NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );

@@ -106,7 +106,7 @@ export const updatePassword = async (req, res) => {
       }
       // Update password di Firebase
       await admin.auth().updateUser(uid, { password: newPassword });
-      await User.findOneAndUpdate({ uid }, { password: newPassword });
+      await User.findOneAndUpdate({ uid }, { password: '' });
       return res.status(200).json({ success: true, message: "Password updated" });
     }
 
@@ -194,4 +194,49 @@ export const updateAddress = async (req, res) => {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
   }
+};
+
+/**
+ * Set Admin Role
+ * Hanya untuk superadmin
+ */
+export const setAdmin = async (req, res) => {
+  const { uid } = req.params; // uid user yang akan diubah
+  const { role } = req.body; // 'admin' atau 'user'
+  const requesterUid = req.user.uid; // uid superadmin (dari middleware auth)
+
+  // Pastikan requester adalah superadmin
+  const requester = await User.findOne({ uid: requesterUid });
+  if (!requester || requester.role !== 'superadmin') {
+    return res.status(403).json({ message: "Forbidden: Only superadmin can do this" });
+  }
+
+  // Tidak boleh mengubah role superadmin lain
+  const user = await User.findOne({ uid });
+  if (!user || user.role === 'superadmin') {
+    return res.status(400).json({ message: "Cannot modify this user" });
+  }
+
+  user.role = role;
+  await user.save();
+  res.status(200).json({ success: true, user });
+};
+
+/**
+ * Get all users
+ * Hanya untuk superadmin
+ */
+export const getAllUsers = async (req, res) => {
+  const requesterUid = req.user.uid;
+  console.log('Requester UID:', requesterUid); // LOG: UID dari token
+  const requester = await User.findOne({ uid: requesterUid });
+  console.log('Requester user from DB:', requester); // LOG: Data user dari MongoDB
+
+  if (!requester || requester.role !== 'superadmin') {
+    console.log('Access denied. Not superadmin or not found.');
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  const users = await User.find({});
+  console.log('All users:', users); // LOG: Semua user yang ditemukan
+  res.status(200).json({ users });
 };

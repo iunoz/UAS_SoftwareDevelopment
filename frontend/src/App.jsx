@@ -14,6 +14,7 @@ import AddProduct from './pages/AddProduct';
 import AdminOrders from './pages/AdminOrders';
 import CartPage from './pages/CartPage';
 import Payment from './pages/Payment';
+import SetRolePage from './pages/SetRolePage';
 import './App.css';
 
 function AppContent() {
@@ -27,13 +28,17 @@ function AppContent() {
       : JSON.parse(sessionStorage.getItem('user') || '{}');
 
     if (rememberMe && user?.uid) {
-      // Jika belum di path dengan uid, redirect ke /:uid
+      // Jika di halaman root, login, atau register, redirect sesuai role
       if (
         location.pathname === '/' ||
         location.pathname === '/login' ||
         location.pathname === '/register'
       ) {
-        navigate(`/${user.uid}`, { replace: true });
+        if (user.role === 'admin' || user.role === 'superadmin') {
+          navigate(`/${user.uid}/admindashboard`, { replace: true });
+        } else {
+          navigate(`/${user.uid}`, { replace: true });
+        }
       }
     } else {
       // Jika tidak rememberMe, hapus user dari localStorage
@@ -60,6 +65,7 @@ function AppContent() {
     /^\/[^/]+\/cart$/.test(location.pathname) ||
     /^\/[^/]+\/profile$/.test(location.pathname) ||
     /^\/[^/]+\/forgot-password$/.test(location.pathname) ||
+    /^\/[^/]+\/setrole$/.test(location.pathname) ||
     location.pathname.startsWith('/product/');
     
   return (
@@ -88,6 +94,7 @@ function AppContent() {
         <Route path="/:uid/addproduct" element={<AddProduct />} />
         <Route path="/:uid/adminorders" element={<AdminOrders />} />
         <Route path="/:uid/cart" element={<CartPage />} />
+        <Route path="/:uid/setrole" element={<SetRolePage />} />
       </Routes>
     </div>
   );
