@@ -138,15 +138,15 @@ const LoginPage = () => {
               Forgot Password?
             </Link>
           </div>
-          <div>
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
-              style={{ marginRight: '8px' }}
-            />
-            <label htmlFor="rememberMe" style={{ marginBottom: 0 }}>Remember Me</label>
+          <div className="remember-me-container">
+            <label className="remember-me">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />
+              <span>Remember Me</span>
+            </label>
           </div>
           {errors.general && <small className="error-text">{errors.general}</small>}
           <button type="submit" className="login-button">LOGIN</button>

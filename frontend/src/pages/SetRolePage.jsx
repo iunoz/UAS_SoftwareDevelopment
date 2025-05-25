@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AdminNavbar from '../components/AdminNavbar';
+import '../styles/SetRolePage.css';
 
 const SetRolePage = () => {
   const [users, setUsers] = useState([]);
@@ -58,41 +60,44 @@ const SetRolePage = () => {
 
   return (
     <div className="set-role-page">
-      <h2>Set Admin Role</h2>
-      {error && <div className="error-text">{error}</div>}
-      {info && <div className="info-text">{info}</div>}
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Current Role</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users
-            .filter((u) => u.role !== 'superadmin')
-            .map((user) => (
-              <tr key={user.uid}>
-                <td>{user.fname} {user.lname}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  {user.role === 'admin' ? (
-                    <button onClick={() => handleSetRole(user.uid, 'user')}>
-                      Remove Admin
-                    </button>
-                  ) : (
-                    <button onClick={() => handleSetRole(user.uid, 'admin')}>
-                      Make Admin
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <AdminNavbar />
+      <div className="set-role-content">
+        <h2>Set Admin Role</h2>
+        {error && <div className="error-text">{error}</div>}
+        {info && <div className="info-text">{info}</div>}
+        <table className="set-role-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Current Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users
+              .filter((u) => u.role !== 'superadmin')
+              .map((user) => (
+                <tr key={user.uid}>
+                  <td>{user.fname} {user.lname}</td>
+                  <td>{user.email}</td>
+                  <td>{user.role}</td>
+                  <td>
+                    {user.role === 'admin' ? (
+                        <button className="set-role-btn remove" onClick={() => handleSetRole(user.uid, 'user')}>
+                          Remove Admin
+                        </button>
+                      ) : (
+                        <button className="set-role-btn make" onClick={() => handleSetRole(user.uid, 'admin')}>
+                          Make Admin
+                        </button>
+                      )}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

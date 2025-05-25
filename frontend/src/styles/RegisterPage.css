@@ -44,7 +44,7 @@
 .form-group,
 .form-group-row {
   width: 100%;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -52,11 +52,13 @@
 
 .form-group-row {
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.7rem;
   align-items: stretch;
-  width: 100%;
-  margin-bottom: 0.7rem;
+  width: 105%;
+  margin-bottom: 2rem;
 }
+
+
 
 .form-group-row input,
 .form-group input {

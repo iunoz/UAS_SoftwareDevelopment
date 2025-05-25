@@ -1,0 +1,108 @@
+/* SetRolePage.css */
+
+.set-role-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background-color: #222d52; /* background lembut */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 4rem;
+  padding-left: 15rem;
+}
+
+.set-role-content {
+  width: 90%;
+  max-width: 1000px;
+  background-color: #2E3A6C;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(34, 45, 82, 0.1);
+  border: none; /* border dihapus */
+}
+
+.set-role-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e0c69a;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-family: 'Cinzel', serif; /* hanya di sini pakai Cinzel */
+}
+
+.set-role-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  background-color: #e0c69a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.set-role-table thead {
+  background-color: #222d52;
+  color: #f5cf8f;
+}
+
+.set-role-table th {
+  font-family: 'Cinzel', serif; /* hanya header pakai Cinzel */
+}
+
+.set-role-table th,
+.set-role-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.set-role-table tbody tr:hover {
+  background-color: #e0bd7f;
+}
+
+.set-role-btn {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #fff;
+}
+
+.set-role-btn.make {
+  background-color: #222d52;
+}
+
+.set-role-btn.make:hover {
+  background-color: #1a2442;
+}
+
+.set-role-btn.remove {
+  background-color: #b26565;
+}
+
+.set-role-btn.remove:hover {
+  background-color: #9a5050;
+}
+
+.error-text {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.info-text {
+  background-color: #e6d5b8;
+  color: #222d52;
+  border: 1px solid #cbb89a;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
