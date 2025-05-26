@@ -88,6 +88,7 @@ function AppContent() {
         <Route path="/:uid" element={<HomePage />} />
         <Route path="/:uid/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/:uid/products" element={<ProductPage />} />
+        <Route path="/:uid/product/:id" element={<ProductDetailPage />} />
         <Route path="/:uid/admindashboard" element={<DashboardAdmin />} />
         <Route path="/:uid/profile" element={<ProfilePage />} />
         <Route path="/:uid/productadmin" element={<ProductAdmin />} />

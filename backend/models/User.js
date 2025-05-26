@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+const cartItemSchema = new mongoose.Schema({
+  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, required: true, min: 1 }
+});
+
 const userSchema = new mongoose.Schema({
   uid: { type: String, required: true, unique: true },
   fname: { type: String, required: true },
@@ -8,7 +13,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   profileImage: { type: String, default: '' },
   address: { type: String, default: '' },
-  role: { type: String, enum: ['user', 'admin', 'superadmin'], default: 'user' }
+  role: { type: String, enum: ['user', 'admin', 'superadmin'], default: 'user' },
+  cart: [cartItemSchema]
 });
 
 

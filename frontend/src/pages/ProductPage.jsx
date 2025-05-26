@@ -18,6 +18,17 @@ const ProductPage = () => {
   const collections = ['ALL', 'MINIMALIST COLLECTION', 'MODERN COLLECTION', 'CLASSIC COLLECTION'];
   const categories = ['ALL', 'HANGING LAMP', 'STANDING LAMP', 'WALL LAMP', 'TABLE LAMP', 'NIGHT LIGHTS'];
 
+    // Ambil uid dari localStorage/sessionStorage jika ada
+  let userUid = null;
+  const rememberMe = localStorage.getItem('rememberMe');
+  if (rememberMe) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    userUid = user?.uid;
+  } else {
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    userUid = user?.uid;
+  }
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -149,7 +160,13 @@ const ProductPage = () => {
               <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
                 <Card 
                   className="h-100 product-item"
-                  onClick={() => navigate(`/product/${product._id}`)}
+                  onClick={() => {
+                    if (userUid) {
+                      navigate(`/${userUid}/product/${product._id}`);
+                    } else {
+                      navigate(`/product/${product._id}`);
+                    }
+                  }}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="product-img-container">
