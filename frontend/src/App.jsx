@@ -15,6 +15,7 @@ import AdminOrders from './pages/AdminOrders';
 import CartPage from './pages/CartPage';
 import Payment from './pages/Payment';
 import SetRolePage from './pages/SetRolePage';
+import Cartes from './pages/carttes';
 import './App.css';
 
 function AppContent() {
@@ -96,6 +97,7 @@ function AppContent() {
         <Route path="/:uid/adminorders" element={<AdminOrders />} />
         <Route path="/:uid/cart" element={<CartPage />} />
         <Route path="/:uid/setrole" element={<SetRolePage />} />
+        <Route path="/:uid/cartes" element={<Cartes />} />
       </Routes>
     </div>
   );
