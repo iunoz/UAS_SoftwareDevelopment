@@ -58,12 +58,10 @@
   margin-bottom: 2rem;
 }
 
-
-
 .form-group-row input,
 .form-group input {
-  border: 1.5px solid #e0c69a;
-  background-color: #2e3a6c;
+  border: 1.5px solid #ccc;
+  background-color: #222d52;
   color: #e0c69a;
   border-radius: 6px;
   font-size: 1rem;
