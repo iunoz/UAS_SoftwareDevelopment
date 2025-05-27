@@ -119,12 +119,14 @@ const RegisterPage = () => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
+              className={firstName ? 'filled' : ''}
             />
             <input
               type="text"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              className={lastName ? 'filled' : ''}
             />
           </div>
           <div className="form-group">
@@ -134,6 +136,7 @@ const RegisterPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className={email ? 'filled' : ''}
             />
             {errors.email && <small className="error-text">{errors.email}</small>}
           </div>
@@ -144,6 +147,7 @@ const RegisterPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className={password ? 'filled' : ''}
             />
           </div>
           <div className="form-group">
@@ -153,6 +157,7 @@ const RegisterPage = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              className={confirmPassword ? 'filled' : ''}
             />
             {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
           </div>

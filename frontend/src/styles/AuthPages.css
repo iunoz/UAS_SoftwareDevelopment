@@ -24,14 +24,14 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1px; /* diperkecil dari 20px */
-  margin-top: 0.1rem; /* diperkecil dari 1rem */
+  margin-bottom: 8px;
+  margin-top: 0.3rem;
 }
 
 .login-logo {
-  font-size: 36px;
+  font-size: 32px;
   text-align: center;
-  margin-bottom: 1px; /* diperkecil dari 10px */
+  margin-bottom: 4px;
 }
 
 .login-left {
@@ -56,37 +56,54 @@ body, html {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 0.1rem; /* diperkecil dari 3rem 2rem */
-  padding-top: 0.1rem; /* diperkecil dari 2rem */
+  padding: 2vw;
+  padding-top: 1rem;
   overflow-y: auto;
   max-height: 100vh;
-  gap: 0.1rem; /* diperkecil dari 1.2rem */
+  gap: 0.4rem;
 }
 
 .login-title {
   text-align: center;
-  font-size: 22px; /* sedikit diperkecil agar proporsional */
-  margin-bottom: 6px; /* diperkecil dari 10px */
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
 .login-form {
   width: 100%;
   max-width: 30vw;
   margin: 0 auto;
+  /* Perkecil jarak antar baris */
+  gap: 0.25rem;
 }
 
 .form-group {
-  margin-bottom: 6px; /* diperkecil dari 10px */
+  margin-bottom: 0.25rem;
 }
 
-.form-group input {
+.form-group input,
+.register-form input,
+.form-group-row input {
   width: 100%;
-  padding: 0.8vw;
-  border: none;
+  padding: 0.7vw;
+  border: 1.5px solid #fff; /* Samakan ketebalan border dengan input lain */
   background-color: #222d52;
   color: white;
   border-radius: 5px;
   font-size: 1vw;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.register-form input:focus,
+.form-group-row input:focus {
+  border-color: #e0c69a;
+}
+
+.form-group input.filled,
+.register-form input.filled,
+.form-group-row input.filled {
+  border-color: #e0c69a;
 }
 
 .login-button {
@@ -97,14 +114,14 @@ body, html {
   border: none;
   border-radius: 20px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 0.5rem;
   cursor: pointer;
   font-size: 1vw;
 }
 
 .divider {
   text-align: center;
-  margin: 20px 0;
+  margin: 10px 0;
   position: relative;
   color: #bbb;
 }
@@ -153,8 +170,12 @@ body, html {
 }
 
 .forgot-password-container {
-  text-align: right;
-  margin: 0.5rem 0 1rem 0;  /* Adjust margin to create proper spacing */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
 }
 
 .forgot-password-link {
@@ -202,9 +223,12 @@ body, html {
 
 .remember-me-container {
   display: flex;
-  justify-content: flex-start;  /* Change from center to flex-start */
-  margin-bottom: 5px;
-  margin-top: -10px;  /* Add negative margin to move it up */
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0;
+  margin-top: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
 }
 
 .remember-me {
@@ -225,13 +249,16 @@ body, html {
 
 .login-options-row {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  margin-top: 0.2rem;
   width: 100%;
+  margin-bottom: 0.5rem;
+  margin-top: 0.1rem;
+  gap: 0;
+  padding: 0;
 }
+
 .form-row-vertical {
   display: flex;
   flex-direction: column;

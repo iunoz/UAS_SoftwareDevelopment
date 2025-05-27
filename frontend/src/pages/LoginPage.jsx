@@ -128,18 +128,22 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="form-row-vertical">
-            <label className="remember-me">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
-              />
-              <span>Remember Me</span>
-            </label>
-            <Link to="/forgot-password" className="forgot-password-link forgot-password-vertical">
-              Forgot Password?
-            </Link>
+          <div className="login-options-row">
+            <div className="remember-me-container">
+              <label className="remember-me">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                />
+                <span>Remember Me</span>
+              </label>
+            </div>
+            <div className="forgot-password-container">
+              <Link to="/forgot-password" className="forgot-password-link">
+                Forgot Password?
+              </Link>
+            </div>
           </div>
           {errors.general && <small className="error-text">{errors.general}</small>}
           <button type="submit" className="login-button">LOGIN</button>
