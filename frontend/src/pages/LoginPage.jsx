@@ -21,7 +21,6 @@ const LoginPage = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      // Ambil data user dari backend
       const response = await axios.post('http://localhost:4000/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
@@ -29,7 +28,6 @@ const LoginPage = () => {
       const { user } = response.data;
       const userData = { ...user, idToken };
 
-      // Simpan user dan role ke localStorage/sessionStorage sesuai rememberMe
       if (rememberMe) {
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('role', user.role);
@@ -44,21 +42,22 @@ const LoginPage = () => {
         localStorage.removeItem('rememberMe');
       }
 
-      // Redirect sesuai role
-      if (user.role === 'admin' || user.role === 'superadmin') {  
+      if (user.role === 'admin' || user.role === 'superadmin') {
         navigate(`/${user.uid}/admindashboard`);
       } else {
         navigate(`/${user.uid}`);
-      }      
+      }
     } catch (error) {
       const errorCode = error?.code;
-      if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
+      if (
+        errorCode === 'auth/user-not-found' ||
+        errorCode === 'auth/wrong-password' ||
+        errorCode === 'auth/invalid-credential'
+      ) {
         setErrors({ general: 'Invalid Email or Password' });
       } else {
         console.error('Login error:', error);
         setErrors({ general: 'Something went wrong. Please try again.' });
-        console.log('Error:', error);
-        console.log('Error code:', error?.code);
       }
     }
   };
@@ -69,17 +68,14 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // Ambil data user dari backend
       const response = await axios.post('http://localhost:4000/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
       const { user } = response.data;
-      // Tambahkan providerId dari Firebase user
       const providerId = result.user.providerData[0]?.providerId;
       const userData = { ...user, providerId, idToken };
 
-      // Google login: treat as rememberMe if checked, else session only
       if (rememberMe) {
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('role', user.role);
@@ -94,11 +90,10 @@ const LoginPage = () => {
         localStorage.removeItem('rememberMe');
       }
 
-      // Redirect sesuai role
       if (user.role === 'admin' || user.role === 'superadmin') {
         navigate(`/${user.uid}/admindashboard`);
       } else {
-      navigate(`/${user.uid}`);
+        navigate(`/${user.uid}`);
       }
     } catch (error) {
       console.error('Google login failed:', error);
@@ -133,12 +128,7 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="form-actions">
-            <Link to="/forgot-password" className="forgot-password-link">
-              Forgot Password?
-            </Link>
-          </div>
-          <div className="remember-me-container">
+          <div className="form-row-vertical">
             <label className="remember-me">
               <input
                 type="checkbox"
@@ -147,6 +137,9 @@ const LoginPage = () => {
               />
               <span>Remember Me</span>
             </label>
+            <Link to="/forgot-password" className="forgot-password-link forgot-password-vertical">
+              Forgot Password?
+            </Link>
           </div>
           {errors.general && <small className="error-text">{errors.general}</small>}
           <button type="submit" className="login-button">LOGIN</button>

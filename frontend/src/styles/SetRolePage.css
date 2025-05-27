@@ -88,21 +88,25 @@
 }
 
 .error-text {
-  background-color: #f8d7da;
-  color: #842029;
-  border: 1px solid #f5c2c7;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
+  color: red !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
+  display: block;
+  box-shadow: none !important;
 }
 
 .info-text {
-  background-color: #e6d5b8;
-  color: #222d52;
-  border: 1px solid #cbb89a;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
+  background: none !important;
+  color: #222d52 !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
+  display: block;
+  box-shadow: none !important;
 }
