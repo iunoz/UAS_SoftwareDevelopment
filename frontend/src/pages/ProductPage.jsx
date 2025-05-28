@@ -15,10 +15,11 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const collections = ['ALL', 'MINIMALIST COLLECTION', 'MODERN COLLECTION', 'CLASSIC COLLECTION'];
-  const categories = ['ALL', 'HANGING LAMP', 'STANDING LAMP', 'WALL LAMP', 'TABLE LAMP', 'NIGHT LIGHTS'];
+  // Match exactly with database model enums
+  const collections = ['ALL', 'Minimalist Collection', 'Modern Collection', 'Classic Collection'];
+  const categories = ['ALL', 'Hanging Lamp', 'Ceiling Lamp', 'Wall Lamp', 'Standing Lamp', 'Table Lamp', 'Uncategorized'];
 
-    // Ambil uid dari localStorage/sessionStorage jika ada
+  // Ambil uid dari localStorage/sessionStorage jika ada
   let userUid = null;
   const rememberMe = localStorage.getItem('rememberMe');
   if (rememberMe) {
@@ -35,6 +36,8 @@ const ProductPage = () => {
         setLoading(true);
         const response = await axios.get('http://localhost:4000/api/products');
         if (response.data.success) {
+          // Log the received products for debugging
+          console.log('Received products:', response.data.products);
           setProducts(response.data.products);
           setError(null);
         } else {
@@ -52,11 +55,36 @@ const ProductPage = () => {
   }, []);
 
   const filteredProducts = products.filter(product => {
+    // For debugging
+    if (selectedCategory !== 'ALL') {
+      console.log(`Comparing: Product Category "${product.category}" with Selected "${selectedCategory}"`);
+    }
+
     const matchesCollection = selectedCollection === 'ALL' || product.collection === selectedCollection;
     const matchesCategory = selectedCategory === 'ALL' || product.category === selectedCategory;
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
     return matchesCollection && matchesCategory && matchesSearch;
   });
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  // Handle category selection with debug log
+  const handleCategorySelect = (category) => {
+    console.log('Selecting category:', category);
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+
+  // Handle collection selection
+  const handleCollectionSelect = (collection) => {
+    setSelectedCollection(collection);
+    setCurrentPage(1); // Reset to first page when changing collection
+  };
 
   if (loading) {
     return (
@@ -104,7 +132,7 @@ const ProductPage = () => {
                 type="text"
                 placeholder="Search Here..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="search-input me-2"
               />
               <Button variant="warning" className="search-button">Search</Button>
@@ -120,7 +148,7 @@ const ProductPage = () => {
               <Button
                 key={collection}
                 variant={selectedCollection === collection ? 'warning' : 'outline-warning'}
-                onClick={() => setSelectedCollection(collection)}
+                onClick={() => handleCollectionSelect(collection)}
                 className="text-nowrap"
               >
                 {collection}
@@ -137,7 +165,7 @@ const ProductPage = () => {
               <Button
                 key={category}
                 variant={selectedCategory === category ? 'warning' : 'outline-warning'}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => handleCategorySelect(category)}
                 className="text-nowrap"
               >
                 {category}
@@ -153,6 +181,16 @@ const ProductPage = () => {
               <div className="text-center text-white py-5">
                 <h3>No products found</h3>
                 <p>Try adjusting your filters or search query</p>
+                <Button 
+                  variant="outline-warning" 
+                  onClick={() => {
+                    setSelectedCategory('ALL');
+                    setSelectedCollection('ALL');
+                    setSearchQuery('');
+                  }}
+                >
+                  Clear Filters
+                </Button>
               </div>
             </Col>
           ) : (
