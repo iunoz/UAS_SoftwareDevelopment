@@ -8,21 +8,45 @@
 body, html {
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #222D52;
+  overflow: auto; /* Ubah dari hidden ke auto agar bisa scroll */
 }
 
 .login-container {
   display: flex;
   height: 100vh;
+  width: 100vw;
+  background: #222D52 !important;
+  position: relative;
+}
+
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-top: 0.3rem;
+}
+
+.login-logo {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 4px;
 }
 
 .login-left {
   flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  position: relative;
 }
 
 .login-left img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .login-right {
@@ -31,58 +55,73 @@ body, html {
   color: #e6d5b8;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 40px;
-  position: relative;
-}
-
-.login-logo {
-  font-size: 36px;
-  text-align: center;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  padding: 2vw;
+  padding-top: 1rem;
+  overflow-y: auto;
+  max-height: 100vh;
+  gap: 0.4rem;
 }
 
 .login-title {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 30px;
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
 .login-form {
   width: 100%;
-  max-width: 400px;
+  max-width: 30vw;
   margin: 0 auto;
+  /* Perkecil jarak antar baris */
+  gap: 0.25rem;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 0.25rem;
 }
 
-.form-group input {
+.form-group input,
+.register-form input,
+.form-group-row input {
   width: 100%;
-  padding: 12px;
-  border: none;
+  padding: 0.7vw;
+  border: 1.5px solid #fff; /* Samakan ketebalan border dengan input lain */
   background-color: #222d52;
   color: white;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 1vw;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.register-form input:focus,
+.form-group-row input:focus {
+  border-color: #e0c69a;
+}
+
+.form-group input.filled,
+.register-form input.filled,
+.form-group-row input.filled {
+  border-color: #e0c69a;
 }
 
 .login-button {
   width: 50%;
-  padding: 12px;
+  padding: 0.8vw 2vw;
   background-color: #d2b48c;
   color: #222D52;
   border: none;
   border-radius: 20px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 0.5rem;
   cursor: pointer;
+  font-size: 1vw;
 }
 
 .divider {
   text-align: center;
-  margin: 20px 0;
+  margin: 10px 0;
   position: relative;
   color: #bbb;
 }
@@ -130,11 +169,13 @@ body, html {
   width: 24px;
 }
 
-
-
 .forgot-password-container {
-  text-align: right;
-  margin: -0.5rem 0 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
 }
 
 .forgot-password-link {
@@ -149,9 +190,8 @@ body, html {
   color: #b5946a;
 }
 
-/* Adjust the existing login redirect text */
 .login-redirect {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   text-align: center;
   font-size: 0.9rem;
   color: #ccc;
@@ -167,17 +207,28 @@ body, html {
   text-decoration: underline;
 }
 
-.error-text{
+.error-text {
   color: red;
-  font-size: 0.8rem;
-  margin-top: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  display: block;
+}
+
+.info-text {
+  color: #222d52;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
   display: block;
 }
 
 .remember-me-container {
   display: flex;
-  justify-content: center; /* Tengahkan seluruh elemen */
-  margin-bottom: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0;
+  margin-top: 0;
+  flex-basis: 50%;
+  flex-shrink: 0;
 }
 
 .remember-me {
@@ -187,6 +238,7 @@ body, html {
   color: #e0c69a;
   font-size: 0.9rem;
   cursor: pointer;
+  margin-left: 0;  /* Align to the left */
 }
 
 .remember-me input[type="checkbox"] {
@@ -195,3 +247,39 @@ body, html {
   height: 16px;
 }
 
+.login-options-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  margin-top: 0.1rem;
+  gap: 0;
+  padding: 0;
+}
+
+.form-row-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* biar kiri semua */
+  gap: 0.5rem; /* jarak antar elemen */
+  margin-bottom: 1rem;
+}
+
+.forgot-password-vertical {
+  align-self: center;
+  font-size: 0.9rem;
+  color: #e0c69a;
+}
+
+
+/* Hilangkan bar abu-abu bawaan dari extension atau elemen luar yang menyusup */
+body > div[style*="background: rgb(36, 36, 36)"] {
+  display: none !important;
+}
+
+/* Untuk RegisterPage agar tidak menempel ke atas dan menghindari abu-abu */
+.register-container {
+  padding-top: 2rem;
+}

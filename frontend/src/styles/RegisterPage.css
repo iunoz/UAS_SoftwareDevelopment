@@ -1,24 +1,31 @@
 .login-container {
   display: flex;
-  height: 100vh;
+  height: auto;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .login-left {
-  flex: 1;
-  overflow: hidden;
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
 }
 
 .login-left img {
-  width: 100%;
-  height: 100%;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 0;
+  min-height: 0;
   object-fit: cover;
+  display: block;
 }
 
 .login-right {
   flex: 1;
   background-color: #1a2238;
-  padding: 3rem 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +34,7 @@
 
 .login-logo {
   font-size: 3rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.1rem;
 }
 
 .login-title {
@@ -39,23 +46,29 @@
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  gap: 0;
 }
 
 .form-group,
 .form-group-row {
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.1rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
+.form-group:nth-of-type(2),
+.form-group:nth-of-type(3) {
+  margin-bottom: 0.6rem !important;
+}
+
 .form-group-row {
   flex-direction: row;
-  gap: 0.7rem;
+  gap: 0.5rem;
   align-items: stretch;
   width: 105%;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-group-row input,
@@ -65,7 +78,7 @@
   color: #e0c69a;
   border-radius: 6px;
   font-size: 1rem;
-  padding: 0.8rem 1rem;
+  padding: 1rem;
   transition: border-color 0.3s, box-shadow 0.3s;
   box-sizing: border-box;
   height: 48px;
@@ -97,6 +110,7 @@
   margin-top: 0.5rem;
   font-size: 1.1rem;
   transition: background-color 0.3s;
+  margin-bottom: 0.7rem;
 }
 
 .login-button:hover {
@@ -105,7 +119,7 @@
 
 .divider {
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 0.7rem 0;
   font-weight: 600;
   color: #e0c69a !important;
 }
@@ -121,6 +135,7 @@
   align-items: center;
   justify-content: center;
   transition: box-shadow 0.3s;
+  margin-bottom: 0.7rem;
 }
 
 .google-login img {
@@ -149,6 +164,94 @@
   text-decoration: underline;
 }
 
+/* Hapus efek box abu-abu pada input saat zoom/focus di login/register */
+.form-group input,
+.form-group-row input {
+  background-color: #222d52 !important;
+  color: #e0c69a !important;
+  box-shadow: none !important;
+}
+
+.form-group input:focus,
+.form-group-row input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #222d52 !important;
+}
+
+/* Hilangkan efek browser default pada zoom/focus */
+input[type="email"],
+input[type="password"] {
+  background: #222d52 !important;
+  color: #e0c69a !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  background: #222d52 !important;
+  color: #e0c69a !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Tambahan fix: Hilangkan border dan background default browser pada input saat zoom besar (high zoom/Windows scaling) */
+.form-group input,
+.form-group-row input,
+input[type="email"],
+input[type="password"] {
+  background: #222d52 !important;
+  color: #e0c69a !important;
+  box-shadow: none !important;
+  outline: none !important;
+  caret-color: #e0c69a !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+.form-group input:focus,
+.form-group-row input:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  background: #222d52 !important;
+  color: #e0c69a !important;
+  box-shadow: none !important;
+  outline: none !important;
+  caret-color: #e0c69a !important;
+}
+
+/* Hilangkan autofill background kuning/abu-abu pada Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px #1a2238 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #1a2238 inset !important;
+  background-color: #1a2238 !important;
+  color: #e0c69a !important;
+  -webkit-text-fill-color: #e0c69a !important;
+}
+
+input:-internal-autofill-selected {
+  background-color: #1a2238 !important;
+  color: #e0c69a !important;
+  border: 1.5px solid #e0c69a !important;
+}
+
+/* Hilangkan border browser Windows high contrast mode */
+@media screen and (-ms-high-contrast: active) {
+  .form-group input,
+  .form-group-row input,
+  input[type="email"],
+  input[type="password"] {
+    border: 1.5px solid #e0c69a !important;
+    background: #222d52 !important;
+    color: #e0c69a !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
 /* Ubah semua warna teks menjadi #e0c69a */
 .login-container,
 .login-right,
@@ -161,4 +264,17 @@
 .login-redirect,
 .login-redirect a {
   color: #e0c69a !important;
+}
+
+.register-form input {
+  border: 2px solid #fff;
+  transition: border-color 0.3s;
+}
+
+.register-form input:focus {
+  border-color: #e0c69a;
+}
+
+.register-form input.filled {
+  border-color: #e0c69a;
 }
