@@ -235,7 +235,7 @@ const HomePage = () => {
             <div className="text-center text-danger">{error}</div>
           ) : (
             <Row className="g-4">
-              {products.map((product) => (
+              {products.slice(0, 6).map((product) => (
                 <Col md={6} lg={4} key={product._id}>
                   <motion.div
                     variants={fadeInUp}
