@@ -261,11 +261,16 @@ const ProductDetailPage = () => {
       </Container>
 
       {/* Success Modal */}
-      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
-        <Modal.Header closeButton className="bg-dark text-white border-bottom-0">
+      <Modal 
+        show={showSuccessModal} 
+        onHide={() => setShowSuccessModal(false)} 
+        centered
+        className="success-modal"
+      >
+        <Modal.Header closeButton>
           <Modal.Title>Added to Cart!</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-white">
+        <Modal.Body>
           {product && (
             <div className="d-flex align-items-center">
               <img 
@@ -278,18 +283,26 @@ const ProductDetailPage = () => {
                 }}
               />
               <div className="ms-3">
-                <h5>{product.name}</h5>
-                <p className="text-warning">Rp {product.price.toLocaleString()}</p>
-                <p className="text-light mb-0">Quantity: {quantity}</p>
+                <h5 className="product-name">{product.name}</h5>
+                <p className="product-price">Rp {product.price.toLocaleString()}</p>
+                <p className="product-quantity mb-0">Quantity: {quantity}</p>
               </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer className="bg-dark text-white border-top-0">
-          <Button variant="outline-light" onClick={() => setShowSuccessModal(false)}>
+        <Modal.Footer>
+          <Button 
+            variant="outline-light" 
+            onClick={() => setShowSuccessModal(false)}
+            className="btn-continue"
+          >
             Continue Shopping
           </Button>
-          <Button variant="warning" onClick={navigateToCart}>
+          <Button 
+            variant="warning" 
+            onClick={navigateToCart}
+            className="btn-view-cart"
+          >
             View Cart
           </Button>
         </Modal.Footer>
