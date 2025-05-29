@@ -1,17 +1,25 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Carousel } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Carousel, Modal } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
+import { toast } from 'react-toastify';
+import { auth } from '../firebase.config';
+import { useCart } from '../contexts/CartContext';
 
 const HomePage = () => {
   const { uid } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [addedProduct, setAddedProduct] = useState(null);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const navigate = useNavigate();
+  const { fetchCartCount } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -71,6 +79,74 @@ const HomePage = () => {
   const scrollToCollection = () => {
     const element = document.getElementById('our-collection');
     element.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleAddToCart = async (product) => {
+    try {
+      console.log('Starting add to cart process...');
+      const currentUser = auth.currentUser;
+      console.log('Current user:', currentUser);
+      
+      if (!currentUser) {
+        console.log('No user found, redirecting to login');
+        toast.error('Please login to add items to cart');
+        navigate('/login');
+        return;
+      }
+
+      setAddingToCart(true);
+      console.log('Getting Firebase token...');
+      const token = await currentUser.getIdToken();
+      console.log('Token received');
+      
+      console.log('Sending request to backend...', {
+        productId: product._id,
+        quantity: 1
+      });
+      
+      const response = await axios.post('http://localhost:4000/api/cart/add', {
+        productId: product._id,
+        quantity: 1
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      console.log('Backend response:', response.data);
+
+      if (response.data.success) {
+        setAddedProduct(product);
+        setShowSuccessModal(true);
+        toast.success('Product added to cart successfully!');
+        fetchCartCount();
+      }
+    } catch (err) {
+      console.error('Add to cart error details:', {
+        error: err,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      const errorMessage = err.response?.data?.message || 'Failed to add to cart';
+      toast.error(errorMessage);
+      
+      if (err.response?.status === 401) {
+        console.log('Unauthorized, signing out...');
+        await auth.signOut();
+        navigate('/login');
+      }
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const navigateToCart = () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      navigate(`/${currentUser.uid}/cart`);
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -174,7 +250,13 @@ const HomePage = () => {
                       <div className="card-img-wrapper">
                         <Card.Img variant="top" src={product.image} alt={product.name} className="img-fluid" />
                         <div className="card-overlay">
-                          <Button variant="warning" className="view-details-btn">View Details</Button>
+                          <Button 
+                            variant="warning" 
+                            className="view-details-btn"
+                            onClick={() => navigate(`/product/${product._id}`)}
+                          >
+                            View Details
+                          </Button>
                         </div>
                       </div>
                       <Card.Body className="text-center">
@@ -183,8 +265,13 @@ const HomePage = () => {
                         <Card.Text className="product-price">
                           Rp {product.price.toLocaleString()}
                         </Card.Text>
-                        <Button variant="outline-warning" className="w-100 mt-3">
-                          Add to Cart
+                        <Button 
+                          variant="outline-warning" 
+                          className="w-100 mt-3"
+                          onClick={() => handleAddToCart(product)}
+                          disabled={addingToCart}
+                        >
+                          {addingToCart ? 'Adding...' : 'Add to Cart'}
                         </Button>
                       </Card.Body>
                     </Card>
@@ -394,6 +481,36 @@ const HomePage = () => {
           </div>
         </Container>
       </footer>
+
+      {/* Success Modal */}
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
+        <Modal.Header closeButton className="bg-dark text-white border-bottom-0">
+          <Modal.Title>Added to Cart!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-white">
+          {addedProduct && (
+            <div className="d-flex align-items-center">
+              <img 
+                src={addedProduct.image} 
+                alt={addedProduct.name} 
+                style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+              />
+              <div className="ms-3">
+                <h5>{addedProduct.name}</h5>
+                <p className="text-warning">Rp {addedProduct.price.toLocaleString()}</p>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="bg-dark text-white border-top-0">
+          <Button variant="outline-light" onClick={() => setShowSuccessModal(false)}>
+            Continue Shopping
+          </Button>
+          <Button variant="warning" onClick={navigateToCart}>
+            View Cart
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

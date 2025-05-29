@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { CartProvider } from './contexts/CartContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -12,10 +13,9 @@ import ProductAdmin from './pages/ProductAdmin';
 import ProfilePage from './pages/ProfilePage';
 import AddProduct from './pages/AddProduct';
 import AdminOrders from './pages/AdminOrders';
-import CartPage from './pages/CartPage';
+import Cart from './pages/cart';
 import Payment from './pages/Payment';
 import SetRolePage from './pages/SetRolePage';
-import Cartes from './pages/carttes';
 import './App.css';
 
 function AppContent() {
@@ -84,7 +84,7 @@ function AppContent() {
         <Route path="/productadmin" element={<ProductAdmin />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/adminorders" element={<AdminOrders />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/:uid" element={<HomePage />} />
         <Route path="/:uid/forgot-password" element={<ForgotPasswordPage />} />
@@ -95,9 +95,8 @@ function AppContent() {
         <Route path="/:uid/productadmin" element={<ProductAdmin />} />
         <Route path="/:uid/addproduct" element={<AddProduct />} />
         <Route path="/:uid/adminorders" element={<AdminOrders />} />
-        <Route path="/:uid/cart" element={<CartPage />} />
+        <Route path="/:uid/cart" element={<Cart />} />
         <Route path="/:uid/setrole" element={<SetRolePage />} />
-        <Route path="/:uid/cartes" element={<Cartes />} />
       </Routes>
     </div>
   );
@@ -106,7 +105,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </Router>
   );
 }

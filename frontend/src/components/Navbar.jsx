@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { useCart } from '../contexts/CartContext';
 import '../styles/Navbar.css';
 import logo from '../assets/images/DecorLighting.png';
 
@@ -8,6 +9,8 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { cartCount } = useCart();
+  
   // Ambil user dari localStorage/sessionStorage sesuai rememberMe
   const rememberMe = localStorage.getItem('rememberMe');
   const user = rememberMe
@@ -67,7 +70,7 @@ const Navbar = () => {
       <div className="navbar-end">
         <Link to={uid ? `/${uid}/cart` : "/login"} className="nav-icon-link">
           <FaShoppingCart className="nav-icon" />
-          <span className="cart-count">0</span>
+          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
         </Link>
         <Link to={uid ? `/${uid}/profile` : "/login"} className="nav-icon-link" onClick={handleProfileClick}>
           <FaUser className="nav-icon" />

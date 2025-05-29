@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaWhatsapp, FaShoppingCart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { auth } from '../firebase.config';
+import { useCart } from '../contexts/CartContext';
 import chandelier from '../assets/images/chandelier.jpg';
 import '../styles/ProductDetailPage.css';
 
@@ -14,6 +16,8 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const { fetchCartCount } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -50,13 +54,16 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
         toast.error('Please login to add items to cart');
         navigate('/login');
         return;
       }
 
+      setAddingToCart(true);
+      const token = await currentUser.getIdToken();
+      
       const response = await axios.post('http://localhost:4000/api/cart/add', {
         productId: product._id,
         quantity: quantity
@@ -68,12 +75,19 @@ const ProductDetailPage = () => {
 
       if (response.data.success) {
         toast.success('Added to cart successfully!');
-      } else {
-        toast.error(response.data.message || 'Failed to add to cart');
+        fetchCartCount(); // Update cart count in navbar
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add to cart');
       console.error('Add to cart error:', err);
+      const errorMessage = err.response?.data?.message || 'Failed to add to cart';
+      toast.error(errorMessage);
+      
+      if (err.response?.status === 401) {
+        await auth.signOut();
+        navigate('/login');
+      }
+    } finally {
+      setAddingToCart(false);
     }
   };
 
@@ -183,8 +197,9 @@ const ProductDetailPage = () => {
                       variant="outline-warning" 
                       className="add-cart-btn"
                       onClick={handleAddToCart}
+                      disabled={addingToCart}
                     >
-                      <FaShoppingCart /> Add to Cart
+                      <FaShoppingCart /> {addingToCart ? 'Adding...' : 'Add to Cart'}
                     </Button>
                   </div>
 

@@ -55,7 +55,7 @@
 
 .cart-items-list::-webkit-scrollbar {
   width: 6px;
-  background: rgba(255, 255, 255, 0.782);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .cart-items-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.848);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   margin: 4px 0;
 }
@@ -132,6 +132,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px !important;
+  transition: background-color 0.2s ease;
 }
 
 .cart-qty-btn:hover {
@@ -143,10 +144,24 @@
   color: #fff;
   font-size: 1.1rem;
   font-weight: 500;
-  padding: 0.25rem 1rem;
+  padding: 0.25rem;
   border-radius: 4px;
-  min-width: 45px;
+  width: 45px;
   text-align: center;
+  border: none;
+  outline: none;
+}
+
+/* Style for number input arrows */
+.cart-qty-num::-webkit-inner-spin-button,
+.cart-qty-num::-webkit-outer-spin-button {
+  opacity: 0;
+  height: 28px;
+  cursor: pointer;
+}
+
+.cart-qty-num:focus {
+  outline: 1px solid #d4af37;
 }
 
 .cart-bottom-row {
@@ -189,28 +204,22 @@
   transform: translateY(-2px);
 }
 
-.form-group select, .cart-shipping-select {
-  background: #222d52;
-  color: #e6d5b8;
-  border: 2px solid #e6d5b8;
-  border-radius: 10px;
-  padding: 0.8rem 1.2rem;
-  font-size: 1.1rem;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  transition: border 0.2s;
+.cart-delete-btn {
+  color: #fff !important;
+  background: #dc3545 !important;
+  border: none !important;
+  width: 32px;
+  height: 32px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px !important;
+  transition: background-color 0.2s ease;
 }
 
-.form-group select:focus, .cart-shipping-select:focus {
-  border: 2px solid #d4af37;
-  outline: none;
-}
-
-.form-group label {
-  color: #e6d5b8;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  display: block;
+.cart-delete-btn:hover {
+  background: #bb2d3b !important;
 }
 
 @media (max-width: 768px) {
@@ -243,4 +252,9 @@
     font-size: 1rem;
     padding: 0.5rem 1.5rem !important;
   }
-}
+
+  .cart-qty-num {
+    width: 35px;
+    font-size: 1rem;
+  }
+} 

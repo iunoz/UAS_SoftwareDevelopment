@@ -14,26 +14,42 @@ export const getCart = async (req, res) => {
 // POST /api/cart/add - Add product to cart or update quantity
 export const addToCart = async (req, res) => {
   try {
+    console.log('Add to cart request received:', {
+      body: req.body,
+      user: req.user
+    });
+
     const { productId, quantity } = req.body;
     if (!productId || !quantity || quantity < 1) {
+      console.log('Invalid request data');
       return res.status(400).json({ success: false, message: 'Product and quantity required' });
     }
 
+    console.log('Finding user with uid:', req.user.uid);
     const user = await User.findOne({ uid: req.user.uid });
     if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
+      console.log('User not found');
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
+    console.log('User found:', user.email);
 
     const existingItem = user.cart.find(item => item.product.toString() === productId);
     if (existingItem) {
+      console.log('Updating existing cart item');
       existingItem.quantity += quantity;
     } else {
+      console.log('Adding new cart item');
       user.cart.push({ product: productId, quantity });
     }
+
+    console.log('Saving cart changes...');
     await user.save();
+    console.log('Cart updated successfully');
+
     res.json({ success: true, cart: user.cart });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Server error in addToCart:', err);
+    res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }
 };
 
