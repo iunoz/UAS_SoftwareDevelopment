@@ -36,6 +36,9 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Fungsi reset cart count
+  const resetCartCount = () => setCartCount(0);
+
   useEffect(() => {
     // Set up auth state listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -51,7 +54,8 @@ export const CartProvider = ({ children }) => {
 
   const value = {
     cartCount,
-    fetchCartCount
+    fetchCartCount,
+    resetCartCount
   };
 
   return (
