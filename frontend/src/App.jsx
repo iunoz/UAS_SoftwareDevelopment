@@ -16,6 +16,8 @@ import AdminOrders from './pages/AdminOrders';
 import Cart from './pages/cart';
 import Payment from './pages/Payment';
 import SetRolePage from './pages/SetRolePage';
+import OrderSummary from './pages/OrderSummary';
+import OrderReceipt from './pages/OrderReceipt'; // Import OrderReceipt page
 import './App.css';
 
 function AppContent() {
@@ -58,7 +60,9 @@ function AppContent() {
     location.pathname === '/cart' ||
     location.pathname === '/profile' ||
     location.pathname === '/payment' ||
+    location.pathname === '/order-summary' || // hide navbar on order summary
     location.pathname === '/forgot-password' ||
+    location.pathname === '/order-receipt' || // hide navbar on order receipt
     /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
     /^\/[^/]+\/productadmin$/.test(location.pathname) ||
     /^\/[^/]+\/addproduct$/.test(location.pathname) ||
@@ -86,6 +90,8 @@ function AppContent() {
         <Route path="/adminorders" element={<AdminOrders />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/order-summary" element={<OrderSummary />} />
+        <Route path="/order-receipt" element={<OrderReceipt />} /> {/* New route for OrderReceipt */}
         <Route path="/:uid" element={<HomePage />} />
         <Route path="/:uid/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/:uid/products" element={<ProductPage />} />

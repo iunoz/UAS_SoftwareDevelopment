@@ -174,11 +174,7 @@ const Cart = () => {
 
   // Handle checkout
   const handleCheckout = () => {
-    if (uid) {
-      navigate(`/${uid}/payment`);
-    } else {
-      navigate('/payment');
-    }
+    navigate('/payment');
   };
 
   if (loading) {
@@ -220,14 +216,14 @@ const Cart = () => {
   return (
     <div className="cartpage-bg">
       <Container className="cartpage-container">
+        <h2 className="cart-title global-title">Shopping Cart</h2>
         <div className="d-flex justify-content-between align-items-center">
-          <h2 className="cart-title">Shopping Cart</h2>
+          <div></div>
           <div className="text-end">
             <span className="cart-qty-label">Quantity:</span>
             <span className="cart-qty-value">{cartItems.reduce((sum, item) => sum + item.quantity, 0)} Items</span>
           </div>
         </div>
-        
         <hr className="cart-divider" />
         
         <div className="cart-items-list">
@@ -292,4 +288,4 @@ const Cart = () => {
   );
 };
 
-export default Cart; 
+export default Cart;
