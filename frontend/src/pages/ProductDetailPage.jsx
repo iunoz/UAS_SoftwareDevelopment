@@ -61,17 +61,27 @@ const ProductDetailPage = () => {
   };
 
   const handleAddToCart = async () => {
-    try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        toast.error('Please login to add items to cart');
-        navigate('/login');
-        return;
-      }
+    // Cek login: auth.currentUser dan uid di storage
+    const currentUser = auth.currentUser;
+    let uid = null;
+    const rememberMe = localStorage.getItem('rememberMe');
+    if (rememberMe) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      uid = user?.uid;
+    } else {
+      const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+      uid = user?.uid;
+    }
 
+    if (!currentUser || !uid) {
+      toast.error('Please login to add items to cart');
+      navigate('/login');
+      return;
+    }
+
+    try {
       setAddingToCart(true);
       const token = await currentUser.getIdToken();
-      
       const response = await axios.post('http://localhost:4000/api/cart/add', {
         productId: product._id,
         quantity: quantity
@@ -89,7 +99,7 @@ const ProductDetailPage = () => {
       console.error('Add to cart error:', err);
       const errorMessage = err.response?.data?.message || 'Failed to add to cart';
       toast.error(errorMessage);
-      
+
       if (err.response?.status === 401) {
         await auth.signOut();
         navigate('/login');

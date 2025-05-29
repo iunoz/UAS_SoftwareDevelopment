@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Button, Modal, Form } from 'react-bootstrap';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaMapMarkerAlt, FaPen } from 'react-icons/fa';
+import { auth } from '../firebase.config';
+import { useCart } from '../contexts/CartContext';
 import axios from 'axios';
 import '../styles/ProfilePage.css';
 
@@ -13,6 +15,7 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [newAddress, setNewAddress] = useState('');
+  const { resetCartCount } = useCart();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -38,12 +41,18 @@ const ProfilePage = () => {
     navigate(`/${uid}/forgot-password`);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
     localStorage.removeItem('user');
     localStorage.removeItem('role');
     localStorage.removeItem('rememberMe');
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('role');
+    resetCartCount();
     navigate('/');
   };
 

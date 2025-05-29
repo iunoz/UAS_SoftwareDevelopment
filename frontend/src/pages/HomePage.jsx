@@ -82,28 +82,27 @@ const HomePage = () => {
   };
 
   const handleAddToCart = async (product) => {
-    try {
-      console.log('Starting add to cart process...');
-      const currentUser = auth.currentUser;
-      console.log('Current user:', currentUser);
-      
-      if (!currentUser) {
-        console.log('No user found, redirecting to login');
-        toast.error('Please login to add items to cart');
-        navigate('/login');
-        return;
-      }
+    // Cek login: auth.currentUser dan uid di storage
+    const currentUser = auth.currentUser;
+    let uid = null;
+    const rememberMe = localStorage.getItem('rememberMe');
+    if (rememberMe) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      uid = user?.uid;
+    } else {
+      const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+      uid = user?.uid;
+    }
 
+    if (!currentUser || !uid) {
+      toast.error('Please login to add items to cart');
+      navigate('/login');
+      return;
+    }
+
+    try {
       setAddingToCart(true);
-      console.log('Getting Firebase token...');
       const token = await currentUser.getIdToken();
-      console.log('Token received');
-      
-      console.log('Sending request to backend...', {
-        productId: product._id,
-        quantity: 1
-      });
-      
       const response = await axios.post('http://localhost:4000/api/cart/add', {
         productId: product._id,
         quantity: 1
@@ -112,8 +111,6 @@ const HomePage = () => {
           Authorization: `Bearer ${token}`
         }
       });
-
-      console.log('Backend response:', response.data);
 
       if (response.data.success) {
         setAddedProduct(product);
@@ -129,9 +126,8 @@ const HomePage = () => {
       });
       const errorMessage = err.response?.data?.message || 'Failed to add to cart';
       toast.error(errorMessage);
-      
+
       if (err.response?.status === 401) {
-        console.log('Unauthorized, signing out...');
         await auth.signOut();
         navigate('/login');
       }
