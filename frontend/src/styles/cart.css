@@ -206,7 +206,7 @@
 
 .cart-delete-btn {
   color: #fff !important;
-  background: #dc3545 !important;
+  background: #1d2440 !important;
   border: none !important;
   width: 32px;
   height: 32px;
@@ -219,7 +219,7 @@
 }
 
 .cart-delete-btn:hover {
-  background: #bb2d3b !important;
+  background: #db1818 !important;
 }
 
 @media (max-width: 768px) {

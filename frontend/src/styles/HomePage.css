@@ -763,3 +763,91 @@
     height: 36px;
   }
 }
+
+/* Success Modal Styles */
+.success-modal .modal-content {
+  background-color: #1a2238;
+  border: 2px solid #d4af37;
+  border-radius: 12px;
+}
+
+.success-modal .modal-header {
+  background-color: #1f2847;
+  border-bottom: 1px solid #d4af37;
+  padding: 1rem 1.5rem;
+}
+
+.success-modal .modal-title {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+}
+
+.success-modal .modal-header .btn-close {
+  color: #d4af37;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23d4af37'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  opacity: 1;
+}
+
+.success-modal .modal-header .btn-close:hover {
+  opacity: 0.75;
+}
+
+.success-modal .modal-body {
+  background-color: #1a2238;
+  padding: 1.5rem;
+}
+
+.success-modal .modal-footer {
+  background-color: #1f2847;
+  border-top: 1px solid #d4af37;
+  padding: 1rem 1.5rem;
+}
+
+.success-modal .product-name {
+  color: #d4af37;
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-modal .product-price {
+  color: #e6d5b8;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-modal .product-quantity {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.success-modal .btn-continue {
+  background: transparent;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  padding: 0.5rem 1.5rem;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s ease;
+}
+
+.success-modal .btn-continue:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #e6d5b8;
+  color: #e6d5b8;
+}
+
+.success-modal .btn-view-cart {
+  background: #d4af37;
+  border: 2px solid #d4af37;
+  color: #1a2238;
+  padding: 0.5rem 1.5rem;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s ease;
+}
+
+.success-modal .btn-view-cart:hover {
+  background: #e6d5b8;
+  border-color: #e6d5b8;
+  color: #1a2238;
+}

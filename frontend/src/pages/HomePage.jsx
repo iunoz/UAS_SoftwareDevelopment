@@ -479,30 +479,48 @@ const HomePage = () => {
       </footer>
 
       {/* Success Modal */}
-      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
-        <Modal.Header closeButton className="bg-dark text-white border-bottom-0">
+      <Modal 
+        show={showSuccessModal} 
+        onHide={() => setShowSuccessModal(false)} 
+        centered
+        className="success-modal"
+      >
+        <Modal.Header closeButton>
           <Modal.Title>Added to Cart!</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-white">
+        <Modal.Body>
           {addedProduct && (
             <div className="d-flex align-items-center">
               <img 
-                src={addedProduct.image} 
-                alt={addedProduct.name} 
+                src={addedProduct.image || chandelier} 
+                alt={addedProduct.name}
                 style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+                onError={(e) => {
+                  e.target.src = chandelier;
+                  e.target.onerror = null;
+                }}
               />
               <div className="ms-3">
-                <h5>{addedProduct.name}</h5>
-                <p className="text-warning">Rp {addedProduct.price.toLocaleString()}</p>
+                <h5 className="product-name">{addedProduct.name}</h5>
+                <p className="product-price">Rp {addedProduct.price.toLocaleString()}</p>
+                <p className="product-quantity mb-0">Quantity: 1</p>
               </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer className="bg-dark text-white border-top-0">
-          <Button variant="outline-light" onClick={() => setShowSuccessModal(false)}>
+        <Modal.Footer>
+          <Button 
+            variant="outline-light" 
+            onClick={() => setShowSuccessModal(false)}
+            className="btn-continue"
+          >
             Continue Shopping
           </Button>
-          <Button variant="warning" onClick={navigateToCart}>
+          <Button 
+            variant="warning" 
+            onClick={navigateToCart}
+            className="btn-view-cart"
+          >
             View Cart
           </Button>
         </Modal.Footer>
