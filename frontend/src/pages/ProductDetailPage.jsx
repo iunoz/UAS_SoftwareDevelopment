@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaWhatsapp, FaShoppingCart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -17,6 +17,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { fetchCartCount } = useCart();
 
   useEffect(() => {
@@ -48,6 +49,13 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleDirectQuantityChange = (value) => {
+    const newQuantity = parseInt(value, 10);
+    if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= (product?.quantity || 1)) {
+      setQuantity(newQuantity);
+    }
+  };
+
   const calculateTotalPrice = () => {
     return parseInt(product?.price || 0) * quantity;
   };
@@ -74,7 +82,7 @@ const ProductDetailPage = () => {
       });
 
       if (response.data.success) {
-        toast.success('Added to cart successfully!');
+        setShowSuccessModal(true);
         fetchCartCount(); // Update cart count in navbar
       }
     } catch (err) {
@@ -95,6 +103,15 @@ const ProductDetailPage = () => {
     const message = `Halo, saya tertarik dengan produk ${product.name}. Apakah masih tersedia?`;
     const whatsappUrl = `https://wa.me/+6281234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const navigateToCart = () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      navigate(`/${currentUser.uid}/cart`);
+    } else {
+      navigate('/login');
+    }
   };
 
   if (loading) {
@@ -169,15 +186,25 @@ const ProductDetailPage = () => {
                       >
                         -
                       </Button>
-                      <span className="quantity-number">{quantity}</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max={product.quantity}
+                        value={quantity}
+                        onChange={(e) => handleDirectQuantityChange(e.target.value)}
+                        className="quantity-number"
+                      />
                       <Button 
                         variant="link" 
                         onClick={() => handleQuantityChange(1)}
-                        disabled={quantity >= (product?.quantity || 1)}
+                        disabled={quantity >= product.quantity}
                         className="quantity-btn"
                       >
                         +
                       </Button>
+                    </div>
+                    <div className="stock-info">
+                      Stock: {product.quantity} units
                     </div>
                     <div className="product-price">
                       Rp {calculateTotalPrice().toLocaleString()}
@@ -190,6 +217,7 @@ const ProductDetailPage = () => {
                     <Button 
                       variant="warning" 
                       className="buy-now-btn"
+                      disabled={product.quantity < 1}
                     >
                       Buy Now
                     </Button>
@@ -197,7 +225,7 @@ const ProductDetailPage = () => {
                       variant="outline-warning" 
                       className="add-cart-btn"
                       onClick={handleAddToCart}
-                      disabled={addingToCart}
+                      disabled={addingToCart || product.quantity < 1}
                     >
                       <FaShoppingCart /> {addingToCart ? 'Adding...' : 'Add to Cart'}
                     </Button>
@@ -221,6 +249,41 @@ const ProductDetailPage = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Success Modal */}
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
+        <Modal.Header closeButton className="bg-dark text-white border-bottom-0">
+          <Modal.Title>Added to Cart!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-white">
+          {product && (
+            <div className="d-flex align-items-center">
+              <img 
+                src={product.image || chandelier} 
+                alt={product.name}
+                style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+                onError={(e) => {
+                  e.target.src = chandelier;
+                  e.target.onerror = null;
+                }}
+              />
+              <div className="ms-3">
+                <h5>{product.name}</h5>
+                <p className="text-warning">Rp {product.price.toLocaleString()}</p>
+                <p className="text-light mb-0">Quantity: {quantity}</p>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="bg-dark text-white border-top-0">
+          <Button variant="outline-light" onClick={() => setShowSuccessModal(false)}>
+            Continue Shopping
+          </Button>
+          <Button variant="warning" onClick={navigateToCart}>
+            View Cart
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
