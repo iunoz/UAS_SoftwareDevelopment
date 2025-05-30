@@ -249,7 +249,7 @@ const HomePage = () => {
                           <Button 
                             variant="warning" 
                             className="view-details-btn"
-                            onClick={() => navigate(`/product/${product._id}`)}
+                            onClick={() => navigate(uid ? `/${uid}/product/${product._id}` : `/product/${product._id}`)}
                           >
                             View Details
                           </Button>

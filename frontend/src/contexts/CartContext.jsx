@@ -40,6 +40,15 @@ export const CartProvider = ({ children }) => {
   const resetCartCount = () => setCartCount(0);
 
   useEffect(() => {
+    // Reset cartCount jika user tidak ada di storage (misal aplikasi dibuka ulang tanpa remember me)
+    const rememberMe = localStorage.getItem('rememberMe');
+    const user = rememberMe
+      ? JSON.parse(localStorage.getItem('user') || '{}')
+      : JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (!user?.uid) {
+      setCartCount(0);
+    }
+
     // Set up auth state listener
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {

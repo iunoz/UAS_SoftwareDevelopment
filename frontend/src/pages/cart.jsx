@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,6 +15,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { uid } = useParams();
   const { fetchCartCount } = useCart();
+  const [prevQuantities, setPrevQuantities] = useState({});
 
   // Navigate to home based on UID
   const navigateToHome = () => {
@@ -26,7 +27,7 @@ const Cart = () => {
   };
 
   // Fetch cart from backend
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     setLoading(true);
     try {
       const currentUser = auth.currentUser;
@@ -59,11 +60,11 @@ const Cart = () => {
       }
     }
     setLoading(false);
-  };
+  }, [navigate]);
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [fetchCart]);
 
   // Calculate total price
   const calculateTotal = (items) => {
@@ -77,7 +78,11 @@ const Cart = () => {
     if (!item) return;
     
     const newQty = item.quantity + change;
-    if (newQty < 1) return;
+    if (newQty < 1) {
+      // Jika hasilnya kurang dari 1, hapus item
+      await handleDeleteItem(id);
+      return;
+    } 
 
     try {
       const currentUser = auth.currentUser;
@@ -110,10 +115,53 @@ const Cart = () => {
   };
 
   // Handle direct quantity input
-  const handleInputChange = async (id, value) => {
+  const handleInputChange = (id, value) => {
+    // Izinkan input kosong agar user bisa menghapus angka
+    let newValue = value;
+    // Hilangkan leading zero, kecuali jika user memang ingin kosong
+    if (newValue.length > 1 && newValue.startsWith("0")) {
+      newValue = newValue.replace(/^0+/, "");
+    }
+    setCartItems(items =>
+      items.map(item =>
+        item.id === id ? { ...item, quantity: newValue } : item
+      )
+    );
+  };
+
+  // Saat input fokus, simpan kuantitas sebelumnya
+  const handleInputFocus = (id, quantity) => {
+    setPrevQuantities(qs => ({ ...qs, [id]: quantity }));
+  };
+
+  // Saat blur, jika field kosong, kembalikan ke kuantitas sebelumnya
+  const handleInputBlur = async (id, value) => {
+    if (value === "") {
+      // Jika kosong, kembalikan ke kuantitas sebelumnya
+      setCartItems(items =>
+        items.map(item =>
+          item.id === id ? { ...item, quantity: prevQuantities[id] || 1 } : item
+        )
+      );
+      return;
+    }
+
     let qty = parseInt(value, 10);
-    if (isNaN(qty) || qty < 1) qty = 1;
-    
+    if (isNaN(qty)) {
+      setCartItems(items =>
+        items.map(item =>
+          item.id === id ? { ...item, quantity: prevQuantities[id] || 1 } : item
+        )
+      );
+      return;
+    }
+
+    if (qty === 0) {
+      await handleDeleteItem(id);
+      return;
+    }
+
+    // Update ke backend hanya saat blur
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) {
@@ -221,7 +269,7 @@ const Cart = () => {
           <div></div>
           <div className="text-end">
             <span className="cart-qty-label">Quantity:</span>
-            <span className="cart-qty-value">{cartItems.reduce((sum, item) => sum + item.quantity, 0)} Items</span>
+            <span className="cart-qty-value">{cartItems.reduce((sum, item) => sum + parseInt(item.quantity || 0, 10), 0)} Items</span>
           </div>
         </div>
         <hr className="cart-divider" />
@@ -249,7 +297,9 @@ const Cart = () => {
                     <input
                       type="number"
                       min="1"
-                      value={item.quantity}
+                      value={item.quantity === "" ? "" : item.quantity}
+                      onFocus={() => handleInputFocus(item.id, item.quantity)}
+                      onBlur={(e) => handleInputBlur(item.id, e.target.value)}
                       onChange={(e) => handleInputChange(item.id, e.target.value)}
                       className="cart-qty-num"
                     />

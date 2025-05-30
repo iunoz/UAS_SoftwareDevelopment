@@ -10,7 +10,7 @@ import chandelier from '../assets/images/chandelier.jpg';
 import '../styles/ProductDetailPage.css';
 
 const ProductDetailPage = () => {
-  const { id } = useParams();
+  const { uid, id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -118,7 +118,7 @@ const ProductDetailPage = () => {
   const navigateToCart = () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      navigate(`/${currentUser.uid}/cart`);
+      navigate(`/${uid}/cart`);
     } else {
       navigate('/login');
     }
