@@ -14,8 +14,44 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
-  const [newAddress, setNewAddress] = useState('');
   const { resetCartCount } = useCart();
+
+  // Autocomplete & dropdown states
+  const [provinceInput, setProvinceInput] = useState('');
+  const [provinceOptions, setProvinceOptions] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState('');
+
+  const [cityOptions, setCityOptions] = useState([]);
+  const [selectedCity, setSelectedCity] = useState('');
+
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+
+  const [subdistrictOptions, setSubdistrictOptions] = useState([]);
+  const [selectedSubdistrict, setSelectedSubdistrict] = useState('');
+
+  const [zipcodeOptions, setZipcodeOptions] = useState([]);
+  const [selectedZipcode, setSelectedZipcode] = useState('');
+
+  // All data for filtering
+  const [allDistricts, setAllDistricts] = useState([]);
+  const [allSubdistricts, setAllSubdistricts] = useState([]);
+  const [allZipcodes, setAllZipcodes] = useState([]);
+
+  const [provinceDropdownActive, setProvinceDropdownActive] = useState(false);
+
+  const [newAddress, setNewAddress] = useState({
+    street: '',
+    province: '',
+    province_id: '',
+    city: '',
+    city_id: '',
+    district: '',
+    district_id: '',
+    subdistrict: '',
+    subdistrict_id: '',
+    zipCode: ''
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,6 +59,18 @@ const ProfilePage = () => {
         const response = await axios.get(`http://localhost:4000/api/user/${uid}`);
         if (response.data.success) {
           setUser(response.data.user);
+          setNewAddress({
+            street: response.data.user.address?.street || '',
+            province: response.data.user.address?.province || '',
+            province_id: response.data.user.address?.province_id || '',
+            city: response.data.user.address?.city || '',
+            city_id: response.data.user.address?.city_id || '',
+            district: response.data.user.address?.district || '',
+            district_id: response.data.user.address?.district_id || '',
+            subdistrict: response.data.user.address?.subdistrict || '',
+            subdistrict_id: response.data.user.address?.subdistrict_id || '',
+            zipCode: response.data.user.address?.zipCode || ''
+          });
         } else {
           setError('Failed to fetch user data');
         }
@@ -36,6 +84,84 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, [uid]);
+
+  useEffect(() => {
+    if (provinceInput.length > 1) {
+      axios.get(`http://localhost:4000/api/ship/search-destination?type=province&search=${provinceInput}`)
+        .then(res => {
+          // Filter hasil agar hanya yang mengandung kata kunci secara case-insensitive
+          const filtered = res.data.filter(opt =>
+            opt.name.toLowerCase().includes(provinceInput.toLowerCase())
+          );
+          setProvinceOptions(filtered);
+        })
+        .catch(() => setProvinceOptions([]));
+    } else {
+      setProvinceOptions([]);
+    }
+  }, [provinceInput]);
+
+  // Fetch all city/district/subdistrict/zipcode when province selected
+  useEffect(() => {
+    if (selectedProvince) {
+      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${selectedProvince}`)
+        .then(res => {
+          setCityOptions(res.data.cities);
+          setAllDistricts(res.data.districts);
+          setAllSubdistricts(res.data.subdistricts);
+          setAllZipcodes(res.data.zipcodes);
+          setSelectedCity('');
+          setSelectedDistrict('');
+          setSelectedSubdistrict('');
+          setSelectedZipcode('');
+          setDistrictOptions([]);
+          setSubdistrictOptions([]);
+          setZipcodeOptions([]);
+        })
+        .catch(() => {
+          setCityOptions([]);
+          setAllDistricts([]);
+          setAllSubdistricts([]);
+          setAllZipcodes([]);
+        });
+    }
+  }, [selectedProvince]);
+
+  // Filter districts when city selected
+  useEffect(() => {
+    if (selectedCity) {
+      const cityObj = cityOptions.find(c => c.id === selectedCity);
+      const filteredDistricts = allDistricts.filter(d => d.city_name === cityObj?.name);
+      setDistrictOptions(filteredDistricts);
+      // Jangan reset selectedDistrict di sini!
+    } else {
+      setDistrictOptions([]);
+      setSelectedDistrict('');
+    }
+  }, [selectedCity, cityOptions, allDistricts]);
+
+  // Filter subdistricts when district selected
+  useEffect(() => {
+    if (selectedDistrict) {
+      const districtObj = districtOptions.find(d => d.id === selectedDistrict);
+      const filteredSubdistricts = allSubdistricts.filter(s => s.district_name === districtObj?.name);
+      setSubdistrictOptions(filteredSubdistricts);
+      // Jangan reset selectedSubdistrict di sini!
+    } else {
+      setSubdistrictOptions([]);
+      setSelectedSubdistrict('');
+    }
+  }, [selectedDistrict, districtOptions, allSubdistricts]);
+
+  // Filter zipcodes when subdistrict selected
+  useEffect(() => {
+    if (selectedSubdistrict) {
+      const subdistrictObj = subdistrictOptions.find(s => s.id === selectedSubdistrict);
+      const filteredZipcodes = allZipcodes.filter(z => z.subdistrict_name === subdistrictObj?.name);
+      setZipcodeOptions(filteredZipcodes);
+      setSelectedZipcode('');
+    }
+  }, [selectedSubdistrict, subdistrictOptions, allZipcodes]);
 
   const handleChangePassword = () => {
     navigate(`/${uid}/forgot-password`);
@@ -58,12 +184,30 @@ const ProfilePage = () => {
 
   const handleAddressUpdate = async () => {
     try {
+      // Ambil nama dari dropdown terpilih
+      const cityName = cityOptions.find(c => c.id === selectedCity)?.name || '';
+      const districtName = districtOptions.find(d => d.id === selectedDistrict)?.name || '';
+      const subdistrictName = subdistrictOptions.find(s => s.id === selectedSubdistrict)?.name || '';
+      const zipCodeName = zipcodeOptions.find(z => z.id === selectedZipcode)?.name || '';
+
+      const updatedAddress = {
+        ...newAddress,
+        province: selectedProvince,
+        city: cityName,
+        district: districtName,
+        subdistrict: subdistrictName,
+        zipCode: zipCodeName
+      };
+
       const response = await axios.put(`http://localhost:4000/api/user/${uid}/update-address`, {
-        address: newAddress
+        address: updatedAddress
       });
-      
+
       if (response.data.success) {
-        setUser(prev => ({ ...prev, address: newAddress }));
+        setUser(prev => ({
+          ...prev,
+          address: updatedAddress
+        }));
         setShowAddressModal(false);
       }
     } catch (error) {
@@ -71,6 +215,16 @@ const ProfilePage = () => {
       alert('Failed to update address');
     }
   };
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (!e.target.closest('.dropdown-autocomplete')) {
+        setProvinceOptions([]);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (loading) {
     return (
@@ -145,7 +299,18 @@ const ProfilePage = () => {
                 Change Address
               </Button>
             </div>
-            <span className="mt-2">{user?.address || 'No address set'}</span>
+            <span className="mt-2">
+              {user?.address
+                ? <>
+                    {user.address.street}<br/>
+                    {user.address.subdistrict && `${user.address.subdistrict}, `}
+                    {user.address.district && `${user.address.district}, `}
+                    {user.address.city && `${user.address.city}, `}
+                    {user.address.province}<br/>
+                    {user.address.zipCode}
+                  </>
+                : 'No address set'}
+            </span>
           </div>
         </div>
 
@@ -166,16 +331,111 @@ const ProfilePage = () => {
           <Modal.Title>Update Address</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-dark">
-          <Form.Group>
+          <Form.Group className='mb-2'>
+            <Form.Label>Street</Form.Label>
             <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter your new address"
-              value={newAddress}
-              onChange={(e) => setNewAddress(e.target.value)}
+              type="text"
+              placeholder="Enter your street address"
+              value={newAddress.street}
+              onChange={e => setNewAddress(addr => ({ ...addr, street: e.target.value }))}
               className="modal-input"
             />
           </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Province</Form.Label>
+            <Form.Control
+              type="text"
+              value={provinceInput}
+              onChange={e => {
+                setProvinceInput(e.target.value);
+                setSelectedProvince('');
+                setCityOptions([]);
+                setDistrictOptions([]);
+                setSubdistrictOptions([]);
+                setZipcodeOptions([]);
+                setProvinceOptions([]);
+                setProvinceDropdownActive(true);
+              }}
+              onFocus={() => setProvinceDropdownActive(true)}
+              onBlur={() => setTimeout(() => setProvinceDropdownActive(false), 150)}
+              autoComplete="off"
+            />
+            {provinceDropdownActive && provinceOptions.length > 0 && (
+              <div className="dropdown-autocomplete">
+                {provinceOptions.map(opt => (
+                  <div
+                    key={opt.id}
+                    onMouseDown={() => {
+                      setProvinceInput(opt.name);
+                      setSelectedProvince(opt.name);
+                      setProvinceOptions([]);
+                    }}
+                    className="dropdown-item"
+                  >
+                    {opt.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>City</Form.Label>
+            <Form.Select
+              value={selectedCity}
+              onChange={e => setSelectedCity(e.target.value)}
+              disabled={!selectedProvince}
+            >
+              <option value="">Select City</option>
+              {cityOptions.map(city => (
+                <option key={city.id} value={city.id}>{city.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>District</Form.Label>
+            <Form.Select
+              value={selectedDistrict}
+              onChange={e => setSelectedDistrict(e.target.value)}
+              disabled={!selectedCity}
+            >
+              <option value="">Select District</option>
+              {districtOptions.map(d => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Subdistrict</Form.Label>
+            <Form.Select
+              value={selectedSubdistrict}
+              onChange={e => setSelectedSubdistrict(e.target.value)}
+              disabled={!selectedDistrict}
+            >
+              <option value="">Select Subdistrict</option>
+              {subdistrictOptions.map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Zip Code</Form.Label>
+            <Form.Select
+              value={selectedZipcode}
+              onChange={e => setSelectedZipcode(e.target.value)}
+              disabled={!selectedSubdistrict}
+            >
+              <option value="">Select Zip Code</option>
+              {zipcodeOptions.map(z => (
+                <option key={z.id} value={z.id}>{z.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
         </Modal.Body>
         <Modal.Footer className="modal-dark">
           <Button variant="secondary" onClick={() => setShowAddressModal(false)}>

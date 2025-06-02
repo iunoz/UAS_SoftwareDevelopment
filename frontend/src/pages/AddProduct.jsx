@@ -66,7 +66,7 @@ const AddProduct = () => {
       });
       setImagePreview(null);
     } catch (error) {
-      alert('Error adding product');
+      alert(error);
     } finally {
       setLoading(false);
     }
@@ -117,6 +117,10 @@ const AddProduct = () => {
                 <div className="form-group">
                   <label>Quantity</label>
                   <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="XX" required />
+                </div>
+                <div className="form-group">
+                  <label>Weight (gram)</label>
+                  <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="XXXX (Gram)" required />
                 </div>
               </div>
               <div className="form-row">

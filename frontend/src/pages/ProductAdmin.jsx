@@ -121,7 +121,7 @@ const ProductAdmin = () => {
       fetchProducts();
       alert('Product updated!');
     } catch (error) {
-      alert('Failed to update product');
+      alert(error, 'Failed to update product');
     }
   };
 
@@ -219,6 +219,10 @@ const ProductAdmin = () => {
                       <div className="product-price">
                         <label>Price Of Product</label>
                         <span className="price-value">Rp {product.price?.toLocaleString()}</span>
+                      </div>
+                      <div className="product-weight">
+                        <label>Weight</label>
+                        <span className="weight-value">{(product.weight / 1000).toFixed(2)} kg</span>
                       </div>
                     </div>
                   </div>

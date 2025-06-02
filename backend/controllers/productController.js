@@ -15,9 +15,9 @@ export const getProducts = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   try {
-    const { name, description, price, quantity, category, collection } = req.body;
+    const { name, description, price, quantity, category, collection, weight } = req.body;
 
-    if (!name || !description || !price || !quantity || !category || !collection || !req.file) {
+    if (!name || !description || !price || !quantity || !category || !collection || !weight || !req.file) {
       return res.status(400).json({ success: false, message: 'All fields including image are required' });
     }
 
@@ -36,7 +36,8 @@ export const addProduct = async (req, res) => {
       price,
       quantity,
       category,
-      collection
+      collection,
+      weight
     });
 
     await newProduct.save();

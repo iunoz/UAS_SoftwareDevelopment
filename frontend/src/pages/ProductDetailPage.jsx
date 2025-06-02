@@ -124,6 +124,26 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (uid) {
+      navigate(`/${uid}/payment`, {
+        state: {
+          buyNow: true,
+          product: {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            image: product.image,
+            weight: product.weight
+          }
+        }
+      });
+    } else {
+      navigate('/login');
+    }
+  };
+
   if (loading) {
     return (
       <div className="product-detail-page">
@@ -228,6 +248,7 @@ const ProductDetailPage = () => {
                       variant="warning" 
                       className="buy-now-btn"
                       disabled={product.quantity < 1}
+                      onClick={handleBuyNow}
                     >
                       Buy Now
                     </Button>

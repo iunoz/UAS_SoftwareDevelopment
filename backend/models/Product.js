@@ -15,7 +15,8 @@ const productSchema = new mongoose.Schema({
     type: String,
     enum: ['Minimalist Collection', 'Modern Collection', 'Classic Collection'],
     required: true,
-  }
+  },
+  weight: { type: Number, required: true }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

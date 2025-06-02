@@ -103,6 +103,7 @@ function AppContent() {
         <Route path="/:uid/adminorders" element={<AdminOrders />} />
         <Route path="/:uid/cart" element={<Cart />} />
         <Route path="/:uid/setrole" element={<SetRolePage />} />
+        <Route path="/:uid/payment" element={<Payment />} />
       </Routes>
     </div>
   );

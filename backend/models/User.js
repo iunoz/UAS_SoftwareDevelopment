@@ -12,7 +12,18 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String },
   profileImage: { type: String, default: '' },
-  address: { type: String, default: '' },
+  address: {
+    street: { type: String, default: '' },
+    province: { type: String, default: '' },
+    province_id: { type: String, default: '' },
+    city: { type: String, default: '' },
+    city_id: { type: String, default: '' },
+    district: { type: String, default: '' },      
+    district_id: { type: String, default: '' },   
+    subdistrict: { type: String, default: '' },   
+    subdistrict_id: { type: String, default: '' },
+    zipCode: { type: String, default: '' }
+   },
   role: { type: String, enum: ['user', 'admin', 'superadmin'], default: 'user' },
   cart: [cartItemSchema]
 });
