@@ -18,6 +18,8 @@ import Payment from './pages/Payment';
 import SetRolePage from './pages/SetRolePage';
 import OrderSummary from './pages/OrderSummary';
 import OrderReceipt from './pages/OrderReceipt'; // Import OrderReceipt page
+import AdminProfilePage from './pages/AdminProfilePage'; // Import AdminProfilePage
+import ChangePasswordPage from './pages/ChangePasswordPage'; // Import ChangePasswordPage
 import './App.css';
 
 function AppContent() {
@@ -59,10 +61,12 @@ function AppContent() {
     location.pathname === '/adminorders' || 
     location.pathname === '/cart' ||
     location.pathname === '/profile' ||
+    location.pathname === '/adminprofile' ||
     location.pathname === '/payment' ||
     location.pathname === '/order-summary' || // hide navbar on order summary
     location.pathname === '/forgot-password' ||
     location.pathname === '/order-receipt' || // hide navbar on order receipt
+    location.pathname === '/changepassword' || // hide navbar on change password
     /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
     /^\/[^/]+\/productadmin$/.test(location.pathname) ||
     /^\/[^/]+\/addproduct$/.test(location.pathname) ||
@@ -71,6 +75,8 @@ function AppContent() {
     /^\/[^/]+\/profile$/.test(location.pathname) ||
     /^\/[^/]+\/forgot-password$/.test(location.pathname) ||
     /^\/[^/]+\/setrole$/.test(location.pathname) ||
+    /^\/[^/]+\/adminprofile$/.test(location.pathname) ||
+    /^\/[^/]+\/payment$/.test(location.pathname) ||
     location.pathname.startsWith('/product/');
     
   return (
@@ -104,6 +110,8 @@ function AppContent() {
         <Route path="/:uid/cart" element={<Cart />} />
         <Route path="/:uid/setrole" element={<SetRolePage />} />
         <Route path="/:uid/payment" element={<Payment />} />
+        <Route path="/:uid/adminprofile" element={<AdminProfilePage />} /> {/* New route for AdminProfilePage */}
+        <Route path="/changepassword" element={<ChangePasswordPage />} /> {/* New route for ChangePasswordPage */}
       </Routes>
     </div>
   );
