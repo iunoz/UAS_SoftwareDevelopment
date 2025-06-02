@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Payment.css';
-import qrisImage from '../assets/images/qris.png';
-import cardImage from '../assets/images/card.jpeg';
-import bankImage from '../assets/images/bank.png';
 import { auth } from '../firebase.config';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -66,6 +63,8 @@ const Payment = () => {
   const cartWeight = location.state?.cartWeight;
   const [totalWeight, setTotalWeight] = useState(0);
 
+  const [cartItems, setCartItems] = useState([]);
+
   // Fetch cart & user address
   useEffect(() => {
     if (buyNowState && buyNowProduct) {
@@ -87,6 +86,14 @@ const Payment = () => {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.data.success) {
+            setCartItems(res.data.cart.map(item => ({
+              id: item.product._id,
+              name: item.product.name,
+              image: item.product.image,
+              price: item.product.price,
+              quantity: item.quantity,
+              weight: item.product.weight
+            })));
             const total = res.data.cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
             setCartTotal(total);
             // Hitung total weight dari cart
@@ -102,6 +109,7 @@ const Payment = () => {
           console.error('Error fetching cart or address:', err);
           setCartTotal(0);
           setTotalWeight(0);
+          setCartItems([]);
         }
       };
       fetchCart();
@@ -382,28 +390,31 @@ const Payment = () => {
     <div className="payment-container">
       <h2 className="global-title">Payment</h2>
       <hr />
-      <div className="payment-methods">
-        <div
-          className={`payment-option ${selectedMethod === 'QRIS' ? 'selected' : ''}`}
-          onClick={() => handleMethodSelect('QRIS')}
-        >
-          <img src={qrisImage} alt="QRIS" />
-          <span className="payment-label">QRIS</span>
-        </div>
-        <div
-          className={`payment-option ${selectedMethod === 'CARD' ? 'selected' : ''}`}
-          onClick={() => handleMethodSelect('CARD')}
-        >
-          <img src={cardImage} alt="Card" />
-          <span className="payment-label">CARD</span>
-        </div>
-        <div
-          className={`payment-option ${selectedMethod === 'BANK' ? 'selected' : ''}`}
-          onClick={() => handleMethodSelect('BANK')}
-        >
-          <img src={bankImage} alt="Bank" />
-          <span className="payment-label">BANK</span>
-        </div>
+      {/* Product List (readonly, mirip cart, tidak bisa diedit) */}
+      <div className="payment-products-list">
+        {buyNowState && buyNowProduct ? (
+          <div className="payment-product-item">
+            <img src={buyNowProduct.image} alt={buyNowProduct.name} className="payment-product-img" />
+            <div className="payment-product-info">
+              <div className="payment-product-name">{buyNowProduct.name}</div>
+              <div className="payment-product-qty">Qty: {buyNowProduct.quantity}</div>
+              <div className="payment-product-price">Rp {buyNowProduct.price.toLocaleString()}</div>
+            </div>
+          </div>
+        ) : (
+          cartItems.length > 0
+            ? cartItems.map(item => (
+                <div className="payment-product-item" key={item.id}>
+                  <img src={item.image} alt={item.name} className="payment-product-img" />
+                  <div className="payment-product-info">
+                    <div className="payment-product-name">{item.name}</div>
+                    <div className="payment-product-qty">Qty: {item.quantity}</div>
+                    <div className="payment-product-price">Rp {item.price.toLocaleString()}</div>
+                  </div>
+                </div>
+              ))
+            : <div className="text-light">No products found.</div>
+        )}
       </div>
 
       <div className="payment-form-grid">
@@ -413,7 +424,7 @@ const Payment = () => {
           Address
         </div>
         <div className="form-input-cell address-input-group">
-          <div className="address-display" style={{ whiteSpace: 'pre-line', border: '1px solid #ccc', borderRadius: 4, padding: 8, minHeight: 48, background: '#f8f9fa', width: '100%' }}>
+          <div className="address-display address-input" style={{ whiteSpace: 'pre-line', minHeight: 48 }}>
             {address
               ? <>
                   {address.street && <>{address.street}<br/></>}
@@ -426,7 +437,7 @@ const Payment = () => {
               : <span style={{ color: '#888' }}>No address set</span>
             }
           </div>
-          <button className="edit-btn" onClick={handleAddressEdit} style={{ marginLeft: 8 }}>Edit</button>
+          <button className="edit-btn" onClick={handleAddressEdit}>Edit</button>
         </div>
 
         {/* Courier */}
@@ -472,7 +483,7 @@ const Payment = () => {
         {/* Total Weight */}
         <div className="form-label-cell">Total Weight</div>
         <div className="form-input-cell">
-          {(totalWeight / 1000).toFixed(2)} kg
+          <span className="weight-display">{(totalWeight / 1000).toFixed(2)} kg</span>
         </div>
       </div>
 

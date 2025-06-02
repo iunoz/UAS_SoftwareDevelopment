@@ -271,7 +271,9 @@ const Cart = () => {
   return (
     <div className="cartpage-bg">
       <Container className="cartpage-container">
-        <h2 className="cart-title global-title">Shopping Cart</h2>
+        <h2 className="cart-title" style={{margin: '0 0 0.5rem 0', paddingTop: '1.2rem', textAlign: 'left', width: '100%'}}>
+          Shopping Cart
+        </h2>
         <div className="d-flex justify-content-between align-items-center">
           <div></div>
           <div className="text-end">
