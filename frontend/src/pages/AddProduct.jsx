@@ -112,15 +112,15 @@ const AddProduct = () => {
               <div className="form-row">
                 <div className="form-group">
                   <label>Price</label>
-                  <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="RP. XXX.XXX.XXX" required />
+                  <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="RP. XXX.XXX.XXX" required min="0" />
                 </div>
                 <div className="form-group">
                   <label>Quantity</label>
-                  <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="XX" required />
+                  <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="XX" required min="0" />
                 </div>
                 <div className="form-group">
                   <label>Weight (gram)</label>
-                  <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="XXXX (Gram)" required />
+                  <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="XXXX (Gram)" required min="0" />
                 </div>
               </div>
               <div className="form-row">

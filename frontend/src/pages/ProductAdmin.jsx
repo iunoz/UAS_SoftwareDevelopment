@@ -150,79 +150,157 @@ const ProductAdmin = () => {
               &#10006;
             </button>
             {editIndex === idx && editProduct ? (
-              <div className="edit-product-form" style={{ padding: '1rem', background: '#e0c69a', borderRadius: 8, marginTop: 10 }}>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2 }}>NAMA PRODUK</div>
-                  <input type="text" name="name" value={editProduct.name} onChange={handleEditChange} className="product-name-input" style={{ width: '100%', marginTop: 4 }} />
+              <>
+                <div className="product-card-header">
+                  <div className="product-image-edit" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 200 }}>
+                    <img
+                      src={imagePreview ? imagePreview : (typeof editProduct.image === 'string' ? editProduct.image : chandelier)}
+                      alt={editProduct.name}
+                      className="product-image"
+                      style={{ width: 200, height: 260, objectFit: 'cover', borderRadius: 10, border: '2px solid #e0c69a', marginBottom: 8 }}
+                    />
+                    <input type="file" name="image" accept="image/*" onChange={handleEditChange} style={{ display: 'none' }} id={`edit-image-upload-${idx}`} />
+                    <label htmlFor={`edit-image-upload-${idx}`} style={{ display: 'block', cursor: 'pointer', color: '#e0c69a', fontWeight: 600, fontFamily: 'Cinzel, serif', textAlign: 'center', marginTop: 8, marginBottom: 0, background: '#222d52', border: '1px solid #e0c69a', borderRadius: 6, padding: '0.3rem 0.8rem', width: 'fit-content' }}>
+                      Pilih Gambar
+                    </label>
+                    {!imagePreview && typeof editProduct.image !== 'string' && (
+                      <div style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1rem', marginTop: 8, textAlign: 'center', background: '#222d52', border: '1px solid #e0c69a', borderRadius: 6, padding: '0.3rem 0.8rem', display: 'inline-block' }}>
+                        No file chosen
+                      </div>
+                    )}
+                  </div>
+                  <div className="product-main-info">
+                    <div className="product-name-row">
+                      <input
+                        type="text"
+                        name="name"
+                        value={editProduct.name}
+                        onChange={handleEditChange}
+                        className="product-name-input"
+                        style={{ fontSize: '1.5rem', color: '#e0c69a', background: '#2e3a6c', border: '1px solid #e0c69a', borderRadius: 6, textAlign: 'center', fontFamily: 'Cinzel, serif', fontWeight: 700, width: '100%' }}
+                      />
+                    </div>
+                    <div className="product-qty-price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2.5rem' }}>
+                      <div className="product-qty" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Quantity Of Product</label>
+                        <input
+                          type="number"
+                          name="quantity"
+                          value={editProduct.quantity}
+                          onChange={handleEditChange}
+                          className="qty-value"
+                          style={{ background: '#222d52', color: '#e0c69a', border: '1px solid #3a436b', borderRadius: 4, padding: '0.3rem 1.2rem', fontSize: '1.2rem', minWidth: 80, textAlign: 'center' }}
+                          min={0}
+                        />
+                      </div>
+                      <div className="product-price" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Price Of Product</label>
+                        <input
+                          type="number"
+                          name="price"
+                          value={editProduct.price}
+                          onChange={handleEditChange}
+                          className="price-value"
+                          style={{ background: '#222d52', color: '#e0c69a', border: '1px solid #3a436b', borderRadius: 4, padding: '0.3rem 1.2rem', fontSize: '1.2rem', minWidth: 80, textAlign: 'center' }}
+                          min={0}
+                        />
+                      </div>
+                      <div className="product-weight" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Weight</label>
+                        <input
+                          type="number"
+                          name="weight"
+                          value={editProduct.weight}
+                          onChange={handleEditChange}
+                          className="qty-value"
+                          style={{ background: '#222d52', color: '#e0c69a', border: '1px solid #3a436b', borderRadius: 4, padding: '0.3rem 1.2rem', fontSize: '1.2rem', minWidth: 80, textAlign: 'center' }}
+                          min={0}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2 }}>HARGA</div>
-                  <input type="number" name="price" value={editProduct.price} onChange={handleEditChange} className="price-input" style={{ width: '100%', marginTop: 4 }} />
+                <div className="product-details-section">
+                  <div className="product-details-header">
+                    <span style={{ color: '#e0c69a', fontWeight: 700 }}>Deskripsi Produk</span>
+                  </div>
+                  <textarea
+                    name="description"
+                    value={editProduct.description}
+                    onChange={handleEditChange}
+                    className="product-description-input"
+                    rows={4}
+                    style={{ width: '100%', color: '#e0c69a', background: '#2E3A6C', border: 'none', borderRadius: 4, padding: '8px 12px', marginTop: 8 }}
+                  />
                 </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2 }}>QUANTITY</div>
-                  <input type="number" name="quantity" value={editProduct.quantity} onChange={handleEditChange} className="qty-value" style={{ width: '100%', marginTop: 4 }} />
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2 }}>DESKRIPSI PRODUK</div>
-                  <textarea name="description" value={editProduct.description} onChange={handleEditChange} className="product-description-input" rows={6} style={{ width: '100%', marginTop: 4, color: '#e0c69a', background: '#2E3A6C', border: 'none', borderRadius: 4, padding: '8px 12px' }} />
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2, textAlign: 'center' }}>KATEGORI</div>
-                  <select name="category" value={editProduct.category} onChange={handleEditChange} style={{ width: '100%', marginTop: 4, background: '#2E3A6C', color: '#e0c69a', border: 'none', borderRadius: 4, padding: '8px 12px', textAlign: 'center', textAlignLast: 'center' }}>
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat} style={{ background: '#2E3A6C', color: '#e0c69a', textAlign: 'center' }}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2, textAlign: 'center' }}>KOLEKSI</div>
-                  <select name="collection" value={editProduct.collection} onChange={handleEditChange} style={{ width: '100%', marginTop: 4, background: '#2E3A6C', color: '#e0c69a', border: 'none', borderRadius: 4, padding: '8px 12px', textAlign: 'center', textAlignLast: 'center' }}>
-                    {collections.map((col) => (
-                      <option key={col} value={col} style={{ background: '#2E3A6C', color: '#e0c69a', textAlign: 'center' }}>{col}</option>
-                    ))}
-                  </select>
-                </div>
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontWeight: 700, color: '#222D52', marginBottom: 2 }}>GAMBAR PRODUK</div>
-                  <input type="file" name="image" accept="image/*" onChange={handleEditChange} style={{ display: 'block', marginTop: 4 }} />
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="image-preview" style={{ width: 100, height: 100, objectFit: 'cover', marginTop: 8 }} />
-                  ) : (
-                    <img src={typeof editProduct.image === 'string' ? editProduct.image : chandelier} alt="Preview" className="image-preview" style={{ width: 100, height: 100, objectFit: 'cover', marginTop: 8 }} />
-                  )}
+                <div className="product-categories-collections">
+                  <div className="categories">
+                    <div className="section-label">Categories</div>
+                    <div className="category-btns grid-2row">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat}
+                          className={`category-btn${cat === editProduct.category ? ' selected' : ''}`}
+                          style={cat === editProduct.category ? {} : { background: '#2e3a6c', color: '#e0c69a', border: '2px solid #e0c69a', cursor: 'pointer' }}
+                          onClick={() => setEditProduct(prev => ({ ...prev, category: cat }))
+                          }
+                          type="button"
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="collections">
+                    <div className="section-label">Collection</div>
+                    <div className="collection-btns">
+                      {collections.map((col) => (
+                        <button
+                          key={col}
+                          className={`collection-btn${col === editProduct.collection ? ' selected' : ''}`}
+                          style={col === editProduct.collection ? {} : { background: '#2e3a6c', color: '#e0c69a', border: '2px solid #e0c69a', cursor: 'pointer' }}
+                          onClick={() => setEditProduct(prev => ({ ...prev, collection: col }))
+                          }
+                          type="button"
+                        >
+                          {col}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div className="product-action-btns" style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
                   <button className="cancel-btn" onClick={cancelEdit} type="button">Cancel</button>
                   <button className="save-btn" onClick={saveEdit} type="button">Save</button>
                 </div>
-              </div>
+              </>
             ) : (
               <>
                 <div className="product-card-header">
-                  <div className="product-image-edit">
+                  <div className="product-image-edit" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 200 }}>
                     <img
                       src={typeof product.image === 'string' ? product.image : chandelier}
                       alt={product.name}
                       className="product-image"
+                      style={{ width: 200, height: 260, objectFit: 'cover', borderRadius: 10, border: '2px solid #e0c69a', marginBottom: 8 }}
                     />
                   </div>
                   <div className="product-main-info">
                     <div className="product-name-row">
                       <span className="product-name">{product.name}</span>
                     </div>
-                    <div className="product-qty-price-row">
-                      <div className="product-qty">
-                        <label>Quantity Of Product</label>
+                    <div className="product-qty-price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2.5rem' }}>
+                      <div className="product-qty" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Quantity Of Product</label>
                         <span className="qty-value">{product.quantity}</span>
                       </div>
-                      <div className="product-price">
-                        <label>Price Of Product</label>
+                      <div className="product-price" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Price Of Product</label>
                         <span className="price-value">Rp {product.price?.toLocaleString()}</span>
                       </div>
-                      <div className="product-weight">
-                        <label>Weight</label>
-                        <span className="weight-value">{(product.weight / 1000).toFixed(2)} kg</span>
+                      <div className="product-weight" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Weight</label>
+                        <span className="qty-value">{(product.weight / 1000).toFixed(2)} kg</span>
                       </div>
                     </div>
                   </div>
@@ -241,13 +319,31 @@ const ProductAdmin = () => {
                   <div className="categories">
                     <div className="section-label">Categories</div>
                     <div className="category-btns grid-2row">
-                      <button className="category-btn selected">{product.category}</button>
+                      {categories.map((cat) => (
+                        <button
+                          key={cat}
+                          className={`category-btn${cat === product.category ? ' selected' : ''}`}
+                          style={cat === product.category ? {} : { background: '#2e3a6c', color: '#e0c69a', border: '2px solid #e0c69a', cursor: 'default' }}
+                          tabIndex={-1}
+                        >
+                          {cat}
+                        </button>
+                      ))}
                     </div>
                   </div>
                   <div className="collections">
                     <div className="section-label">Collection</div>
                     <div className="collection-btns">
-                      <button className="collection-btn selected">{product.collection}</button>
+                      {collections.map((col) => (
+                        <button
+                          key={col}
+                          className={`collection-btn${col === product.collection ? ' selected' : ''}`}
+                          style={col === product.collection ? {} : { background: '#2e3a6c', color: '#e0c69a', border: '2px solid #e0c69a', cursor: 'default' }}
+                          tabIndex={-1}
+                        >
+                          {col}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>

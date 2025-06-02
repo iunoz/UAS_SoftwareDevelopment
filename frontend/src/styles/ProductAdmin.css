@@ -185,18 +185,23 @@
   display: flex;
   gap: 2.5rem;
   margin-bottom: 0.7rem;
+  align-items: center;
 }
 .product-qty label,
-.product-price label {
+.product-price label,
+.product-weight label {
   font-family: 'Cinzel', serif;
   color: #e0c69a;
   font-size: 1.1rem;
   font-weight: 400;
   margin-right: 0.5rem;
+  margin-bottom: 0;
+  line-height: 1;
 }
-.product-qty, .product-price {
+.product-qty, .product-price, .product-weight {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.7rem;
   font-size: 1.1rem;
 }
@@ -219,7 +224,7 @@
   background: #e0c69a;
   color: #2e3a6c;
 }
-.qty-value, .price-value {
+.qty-value, .price-value, .weight-value {
   background: #222d52;
   color: #e0c69a;
   border-radius: 4px;
