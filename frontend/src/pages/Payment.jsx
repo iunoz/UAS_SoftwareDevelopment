@@ -386,6 +386,78 @@ const Payment = () => {
     }
   }, [buyNowState, buyNowProduct, navigate]);
 
+  // Load Midtrans Snap script dynamically
+  const loadMidtransScript = () => {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('midtrans-script')) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+      script.id = 'midtrans-script';
+      script.setAttribute('data-client-key', 'SB-Mid-client-huB53_HU9pUQhE3N');
+      script.onload = () => {
+        resolve();
+      };
+      script.onerror = () => {
+        reject(new Error('Failed to load Midtrans script'));
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  // Handle Make Order button click to integrate Midtrans payment
+  const handleMakeOrder = async () => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        navigate('/login');
+        return;
+      }
+      await loadMidtransScript();
+
+      // Prepare order data
+      const orderId = `order-${Date.now()}`;
+      const amount = (buyNowState ? buyNowTotal : cartTotal) + shippingCost;
+      const name = currentUser.displayName || 'Customer';
+      const email = currentUser.email || '';
+
+      // Call backend to get Snap token
+      const response = await axios.post('http://localhost:4000/api/payment/create-payment', {
+        orderId,
+        amount,
+        name,
+        email
+      });
+
+      const token = response.data.token;
+
+      // Open Midtrans payment popup
+      window.snap.pay(token, {
+        onSuccess: function(result) {
+          alert('Payment success!');
+          // Redirect or update UI accordingly
+          navigate('/order-receipt', { state: { orderId } });
+        },
+        onPending: function(result) {
+          alert('Payment pending!');
+          navigate('/order-receipt', { state: { orderId } });
+        },
+        onError: function(result) {
+          alert('Payment failed!');
+          console.error(result);
+        },
+        onClose: function() {
+          alert('You closed the payment popup without finishing the payment');
+        }
+      });
+    } catch (error) {
+      console.error('Error during payment:', error);
+      alert('Failed to process payment. Please try again.');
+    }
+  };
+
   return (
     <div className="payment-container">
       <h2 className="global-title">Payment</h2>
@@ -491,7 +563,7 @@ const Payment = () => {
       <div className="total-price">
         <strong>Total Price:</strong> RP {((buyNowState ? buyNowTotal : cartTotal) + shippingCost).toLocaleString('id-ID')}
       </div>
-      <button className="order-btn" onClick={() => navigate('/order-summary')}>
+      <button className="order-btn" onClick={handleMakeOrder}>
         Make Order
       </button>
 
