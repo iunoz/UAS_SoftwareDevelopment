@@ -1,0 +1,125 @@
+.profile-orders-page {
+  background-color: #1a2238;
+  min-height: 100vh;
+  color: white;
+}
+
+.profile-orders-container {
+  max-width: 600px !important;
+}
+
+.profile-orders-image-section {
+  padding: 2rem 0;
+}
+
+.profile-orders-image-wrapper {
+  width: 150px;
+  height: 150px;
+}
+
+.profile-orders-image {
+  width: 100%;
+  height: 100%;
+  background-color: #262f60;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-orders-icon {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.profile-orders-nav {
+  margin: 2rem 0;
+}
+
+.profile-orders-btn {
+  min-width: 120px;
+  background-color: #1a2238 !important;
+  border: 2px solid #d4af37 !important;
+  color: #d4af37 !important;
+  transition: all 0.3s ease !important;
+}
+
+.profile-orders-btn:hover {
+  background-color: #d4af37 !important;
+  color: #1a2238 !important;
+}
+
+.profile-orders-btn.active {
+  background-color: #d4af37 !important;
+  border-color: #d4af37 !important;
+  color: #1a2238 !important;
+}
+
+.profile-orders-info {
+  text-align: left;
+  background-color: #262f60;
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.profile-orders-info-item {
+  margin-bottom: 1.5rem;
+}
+
+.profile-orders-info-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.profile-orders-info-icon {
+  margin-right: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.profile-orders-actions {
+  padding: 0 2rem;
+}
+
+.profile-orders-change-password-btn {
+  background-color: #d4af37 !important;
+  border: 2px solid #d4af37 !important;
+  color: #1a2238 !important;
+  transition: transform 0.2s ease !important;
+  padding: 0.8rem;
+  font-weight: 600;
+}
+
+.profile-orders-change-password-btn:hover {
+  transform: scale(1.05);
+}
+
+.profile-orders-sign-out-btn {
+  background-color: #dc3545 !important;
+  border: 2px solid #dc3545 !important;
+  color: #1a2238 !important;
+  transition: transform 0.2s ease !important;
+  padding: 0.8rem;
+  font-weight: 600;
+}
+
+.profile-orders-sign-out-btn:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .profile-orders-container {
+    padding: 1rem;
+  }
+  .profile-orders-image-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+  .profile-orders-icon {
+    font-size: 3rem;
+  }
+  .profile-orders-info {
+    padding: 1.5rem;
+  }
+  .profile-orders-actions {
+    padding: 0 1rem;
+  }
+}

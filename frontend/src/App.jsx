@@ -20,6 +20,7 @@ import OrderSummary from './pages/OrderSummary';
 import OrderReceipt from './pages/OrderReceipt'; // Import OrderReceipt page
 import AdminProfilePage from './pages/AdminProfilePage'; // Import AdminProfilePage
 import ChangePasswordPage from './pages/ChangePasswordPage'; // Import ChangePasswordPage
+import ProfileordersPage from './pages/ProfileordersPage';
 import './App.css';
 
 function AppContent() {
@@ -104,6 +105,7 @@ function AppContent() {
         <Route path="/:uid/product/:id" element={<ProductDetailPage />} />
         <Route path="/:uid/admindashboard" element={<DashboardAdmin />} />
         <Route path="/:uid/profile" element={<ProfilePage />} />
+        <Route path="/:uid/orders" element={<ProfileordersPage />} />
         <Route path="/:uid/productadmin" element={<ProductAdmin />} />
         <Route path="/:uid/addproduct" element={<AddProduct />} />
         <Route path="/:uid/adminorders" element={<AdminOrders />} />
