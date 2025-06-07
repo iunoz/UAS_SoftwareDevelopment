@@ -21,6 +21,7 @@ const Payment = () => {
   const [cartTotal, setCartTotal] = useState(0);
   const navigate = useNavigate();
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [paymentInProgress, setPaymentInProgress] = useState(false);
 
   // Address states
   const [provinceInput, setProvinceInput] = useState('');
@@ -409,10 +410,19 @@ const Payment = () => {
 
   // Handle Make Order button click to integrate Midtrans payment
   const handleMakeOrder = async () => {
+    if (paymentInProgress) {
+      return; // Prevent multiple payment popups
+    }
+    if (!selectedCourier) {
+      alert('Please select a courier before making an order.');
+      return;
+    }
+    setPaymentInProgress(true);
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) {
         navigate('/login');
+        setPaymentInProgress(false);
         return;
       }
       await loadMidtransScript();
@@ -435,26 +445,112 @@ const Payment = () => {
 
       // Open Midtrans payment popup
       window.snap.pay(token, {
-        onSuccess: function(result) {
+        onSuccess: async function(result) {
           alert('Payment success!');
-          // Redirect or update UI accordingly
-          navigate('/order-receipt', { state: { orderId } });
+          try {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+              navigate('/login');
+              setPaymentInProgress(false);
+              return;
+            }
+            // Prepare order data to save
+            const orderData = {
+              userId: currentUser.uid,
+              items: buyNowState && buyNowProduct ? [{
+                product: buyNowProduct.id || buyNowProduct._id,
+                quantity: buyNowProduct.quantity,
+                priceAtPurchase: buyNowProduct.price
+              }] : cartItems.map(item => ({
+                product: item.id,
+                quantity: item.quantity,
+                priceAtPurchase: item.price
+              })),
+              address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
+              courier: selectedCourier,
+              totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost
+            };
+            // Save order to backend
+            const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+            setPaymentInProgress(false);
+            // Remove Midtrans overlay
+            const overlay = document.querySelector('.midtrans-overlay');
+            if (overlay) {
+              overlay.style.display = 'none';
+            }
+            // Redirect to orders page with newOrderId
+            navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
+          } catch (error) {
+            console.error('Error saving order:', error);
+            alert('Failed to save order');
+            setPaymentInProgress(false);
+          }
         },
-        onPending: function(result) {
+        onPending: async function(result) {
           alert('Payment pending!');
-          navigate('/order-receipt', { state: { orderId } });
+          try {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+              navigate('/login');
+              setPaymentInProgress(false);
+              return;
+            }
+            // Prepare order data to save
+            const orderData = {
+              userId: currentUser.uid,
+              items: buyNowState && buyNowProduct ? [{
+                product: buyNowProduct.id || buyNowProduct._id,
+                quantity: buyNowProduct.quantity,
+                priceAtPurchase: buyNowProduct.price
+              }] : cartItems.map(item => ({
+                product: item.id,
+                quantity: item.quantity,
+                priceAtPurchase: item.price
+              })),
+              address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
+              courier: selectedCourier,
+              totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost
+            };
+            // Save order to backend
+            const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+            setPaymentInProgress(false);
+            // Remove Midtrans overlay
+            const overlay = document.querySelector('.midtrans-overlay');
+            if (overlay) {
+              overlay.style.display = 'none';
+            }
+            // Redirect to orders page with newOrderId
+            navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
+          } catch (error) {
+            console.error('Error saving order:', error);
+            alert('Failed to save order');
+            setPaymentInProgress(false);
+          }
         },
         onError: function(result) {
           alert('Payment failed!');
           console.error(result);
+          setPaymentInProgress(false);
+          // Remove Midtrans overlay
+          const overlay = document.querySelector('.midtrans-overlay');
+          if (overlay) {
+            overlay.style.display = 'none';
+          }
         },
         onClose: function() {
           alert('You closed the payment popup without finishing the payment');
+          setPaymentInProgress(false);
+          // Remove Midtrans overlay
+          const overlay = document.querySelector('.midtrans-overlay');
+          if (overlay) {
+            overlay.style.display = 'none';
+          }
         }
       });
     } catch (error) {
       console.error('Error during payment:', error);
       alert('Failed to process payment. Please try again.');
+      setPaymentInProgress(false);
     }
   };
 

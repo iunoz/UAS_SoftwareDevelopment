@@ -64,20 +64,24 @@ function AppContent() {
     location.pathname === '/profile' ||
     location.pathname === '/adminprofile' ||
     location.pathname === '/payment' ||
+    location.pathname === '/orders' ||
+    location.pathname === '/profileorders' ||
     location.pathname === '/order-summary' || // hide navbar on order summary
     location.pathname === '/forgot-password' ||
     location.pathname === '/order-receipt' || // hide navbar on order receipt
     location.pathname === '/changepassword' || // hide navbar on change password
-    /^\/[^/]+\/admindashboard$/.test(location.pathname) ||
-    /^\/[^/]+\/productadmin$/.test(location.pathname) ||
-    /^\/[^/]+\/addproduct$/.test(location.pathname) ||
-    /^\/[^/]+\/adminorders$/.test(location.pathname) ||
-    /^\/[^/]+\/cart$/.test(location.pathname) ||
-    /^\/[^/]+\/profile$/.test(location.pathname) ||
-    /^\/[^/]+\/forgot-password$/.test(location.pathname) ||
-    /^\/[^/]+\/setrole$/.test(location.pathname) ||
-    /^\/[^/]+\/adminprofile$/.test(location.pathname) ||
-    /^\/[^/]+\/payment$/.test(location.pathname) ||
+    /^\/[^\\/]+\/admindashboard$/.test(location.pathname) ||
+    /^\/[^\\/]+\/productadmin$/.test(location.pathname) ||
+    /^\/[^\\/]+\/addproduct$/.test(location.pathname) ||
+    /^\/[^\\/]+\/adminorders$/.test(location.pathname) ||
+    /^\/[^\\/]+\/cart$/.test(location.pathname) ||
+    /^\/[^\\/]+\/profile$/.test(location.pathname) ||
+    /^\/[^\\/]+\/orders$/.test(location.pathname) ||
+    /^\/[^\\/]+\/forgot-password$/.test(location.pathname) ||
+    /^\/[^\\/]+\/setrole$/.test(location.pathname) ||
+    /^\/[^\\/]+\/adminprofile$/.test(location.pathname) ||
+    /^\/[^\\/]+\/payment$/.test(location.pathname) ||
+    /^\/[^\\/]+\/profileorders$/.test(location.pathname) ||
     location.pathname.startsWith('/product/');
     
   return (

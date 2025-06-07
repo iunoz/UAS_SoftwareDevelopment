@@ -21,9 +21,13 @@ const ProfileordersPage = () => {
         if (userRes.data.success) {
           setUser(userRes.data.user);
         }
-        // Fetch orders (dummy: ambil dari cart user, karena transaksi belum live)
-        // Nanti ganti ke endpoint orders user jika sudah ada transaksi
-        setOrders(userRes.data.user.cart || []);
+        // Fetch orders from backend API
+        const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
+        if (ordersRes.data.success) {
+          setOrders(ordersRes.data.orders);
+        } else {
+          setOrders([]);
+        }
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch data');
@@ -64,7 +68,8 @@ const ProfileordersPage = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="profile-nav mb-4">
+        {/* Removed navigation buttons as per user request */}
+        {/* <div className="profile-nav mb-4">
           <Link to={`/${uid}/profile`}>
             <Button variant="outline-primary" className="nav-btn mx-2">
               Personal Info
@@ -73,7 +78,7 @@ const ProfileordersPage = () => {
           <Button variant="outline-primary" className="nav-btn active mx-2">
             Orders
           </Button>
-        </div>
+        </div> */}
 
         {/* Orders Information */}
         <div className="profile-info">
@@ -86,11 +91,16 @@ const ProfileordersPage = () => {
               <span>No orders yet.</span>
             ) : (
               <div>
-                {orders.map((item, idx) => (
+                {orders.map((order, idx) => (
                   <div key={idx} className="mb-3 p-2" style={{ background: '#222a4d', borderRadius: 8 }}>
-                    <div><strong>Product:</strong> {item.product?.name || '-'}</div>
-                    <div><strong>Quantity:</strong> {item.quantity}</div>
-                    <div><strong>Status:</strong> <span className="badge bg-warning text-dark">Pending</span></div>
+                    <div><strong>Order ID:</strong> {order._id}</div>
+                    {order.items.map((item, i) => (
+                      <div key={i}>
+                        <div><strong>Product:</strong> {item.product?.name || item.product}</div>
+                        <div><strong>Quantity:</strong> {item.quantity}</div>
+                      </div>
+                    ))}
+                    <div><strong>Status:</strong> <span className="badge bg-warning text-dark">{order.status}</span></div>
                   </div>
                 ))}
               </div>

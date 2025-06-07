@@ -7,10 +7,10 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: String, required: true },
   items: [orderItemSchema],
   Address: { type: String, required: true },
-  courier: { type: String, enum: ['JNE', 'J&T', 'SiCepat'], required: true },
+  courier: { type: String, enum: ['jne', 'jnt', 'sicepat', 'ninja', 'lion'], required: true },
   totalAmount: { type: Number, required: true },
   status: { type: String, enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
   orderedAt: { type: Date, default: Date.now }
