@@ -105,29 +105,32 @@
   transform: scale(1.05);
 }
 
-.orders-scroll-list {
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 10px;
-  margin-right: -10px;
+.filter-btn {
+  background-color: #1a2238 !important;
+  border: 2px solid #d4af37 !important;
+  color: #d4af37 !important;
+  transition: all 0.3s ease !important;
 }
 
-.orders-scroll-list::-webkit-scrollbar {
-  width: 8px;
+.filter-btn:hover,
+.filter-btn.active {
+  background-color: #d4af37 !important;
+  border: 2px solid #d4af37 !important;
+  color: #1a2238 !important;
 }
 
-.orders-scroll-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+.filter-btn:disabled {
+  background-color: #1a2238 !important;
+  border: 2px solid #666 !important;
+  color: #666 !important;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.orders-scroll-list::-webkit-scrollbar-thumb {
-  background: #d4af37;
-  border-radius: 4px;
-}
-
-.orders-scroll-list::-webkit-scrollbar-thumb:hover {
-  background: #b5941f;
+.filter-btn:disabled:hover {
+  background-color: #1a2238 !important;
+  border: 2px solid #666 !important;
+  color: #666 !important;
 }
 
 @media (max-width: 768px) {
