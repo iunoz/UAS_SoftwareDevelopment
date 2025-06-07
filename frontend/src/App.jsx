@@ -116,6 +116,7 @@ function AppContent() {
         <Route path="/:uid/cart" element={<Cart />} />
         <Route path="/:uid/setrole" element={<SetRolePage />} />
         <Route path="/:uid/payment" element={<Payment />} />
+        <Route path="/:uid/order-receipt" element={<OrderReceipt />} />
         <Route path="/:uid/adminprofile" element={<AdminProfilePage />} /> {/* New route for AdminProfilePage */}
         <Route path="/changepassword" element={<ChangePasswordPage />} /> {/* New route for ChangePasswordPage */}
       </Routes>

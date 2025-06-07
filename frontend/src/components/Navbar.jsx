@@ -23,7 +23,6 @@ const Navbar = () => {
     fetchCartCount();
     // eslint-disable-next-line
   }, [location.pathname]);
-
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 50;
@@ -38,9 +37,16 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [scrolled]);
-
-  // Hide navbar on login and register pages
-  if (location.pathname === '/login' || location.pathname === '/register') {
+  
+  // Hide navbar on specific pages
+  const hideNavbarPaths = [
+    '/login',
+    '/register',
+    'order-receipt',
+    'product-detail'
+  ];
+  
+  if (hideNavbarPaths.some(path => location.pathname.includes(path))) {
     return null;
   }
 

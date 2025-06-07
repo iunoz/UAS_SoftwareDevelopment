@@ -87,7 +87,7 @@ const ProfileordersPage = () => {
           setOrders([]);
         }
         setLoading(false);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch data');
         setLoading(false);
       }
@@ -361,7 +361,7 @@ const ProfileordersPage = () => {
             {orders.length === 0 ? (
               <span>No orders yet.</span>
             ) : (
-              <div>
+              <div className="orders-scroll-list">
                 {orders
                   .filter(order => {
                     const status = order.status.trim().toLowerCase();
@@ -376,32 +376,42 @@ const ProfileordersPage = () => {
                     if (orderFilter === 'Selesai') return status === 'selesai';
                     return true;
                   }).map((order, idx) => (
-                    <div key={idx} className="mb-3 p-2" style={{ background: '#222a4d', borderRadius: 8 }}>
+                    <div key={idx} 
+                      className="mb-3 p-2" 
+                      style={{ 
+                        background: '#222a4d', 
+                        borderRadius: 8,
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s ease',
+                        ':hover': {
+                          transform: 'scale(1.01)'
+                        }
+                      }}                      onClick={() => navigate(`/${uid}/order-receipt`, { 
+                        state: {
+                          items: order.items,
+                          Address: order.address,
+                          courier: order.courier,
+                          totalAmount: order.totalAmount,
+                          status: order.status,
+                          orderId: order._id,
+                          userId: uid
+                        }
+                      })}
+                    >
                       <div><strong>Order ID:</strong> {order._id}</div>
                       {order.items.map((item, i) => (
                         <div key={i}>
                           <div><strong>Product:</strong> {item.product?.name || item.product}</div>
                           <div><strong>Quantity:</strong> {item.quantity}</div>
                         </div>
-                      ))}
-                      <div>
+                      ))}                      <div>
                         <strong>Status:</strong>{' '}
                         <span className="badge bg-warning text-dark">
-                          {status === 'pending' || status === 'sedang dikemas'
+                          {order.status === 'pending' || order.status === 'sedang dikemas'
                             ? 'Sedang Dikemas'
                             : order.status}
                         </span>
                       </div>
-                      {(status === 'belum bayar') && (
-                        <Button
-                          variant="success"
-                          size="sm"
-                          className="mt-2"
-                          onClick={() => navigate(`/${uid}/payment`, { state: { orderId: order._id, fromOrdersPage: true } })}
-                        >
-                          Pay Now
-                        </Button>
-                      )}
                     </div>
                   ))
                 }

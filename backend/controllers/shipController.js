@@ -73,7 +73,7 @@ export const getCitiesByProvince = async (req, res) => {
         limit: 30000,
         offset: 0
       },
-      headers: { 'key': process.env.SHIPPING_COST_API_KEY5}
+      headers: { 'key': process.env.SHIPPING_COST_API_KEY6}
     });
     const all = response.data.data || [];
 

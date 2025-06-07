@@ -1,79 +1,154 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/OrderSummary.css';
+import axios from 'axios';
+import '../styles/OrderReceipt.css';
 
 const OrderReceipt = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const order = location.state;
+  const orderData = location.state;
+  const [currentStatus, setCurrentStatus] = useState(null);
 
   useEffect(() => {
-    if (!order) {
-      // Jika tidak ada data pesanan, redirect ke Order Summary
-      navigate('/order-summary', { replace: true });
+    if (!orderData) {
+      navigate('/profile-orders', { replace: true });
+      return;
     }
-  }, [order, navigate]);
 
-  if (!order) {
-    // Sambil redirect, tampilkan loading
-    return <div className="order-summary-container"><div className="order-summary-content">Loading...</div></div>;
+    // Fetch latest order status
+    const fetchOrderStatus = async () => {
+      try {
+        const orderId = orderData.orderId;
+        if (!orderId) return;
+
+        const response = await axios.get(`http://localhost:4000/api/payment/user-orders/${orderData.userId}`);
+        if (response.data.success) {
+          const order = response.data.orders.find(o => o._id === orderId);
+          if (order) {
+            setCurrentStatus(order.status);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching order status:', error);
+      }
+    };
+
+    fetchOrderStatus();
+  }, [orderData, navigate]);
+
+  if (!orderData) {
+    return (
+      <div className="order-receipt-bg">
+        <div className="order-receipt-box">
+          <div className="order-receipt-title-row">
+            <h2 className="order-receipt-title">Loading...</h2>
+          </div>
+        </div>
+      </div>
+    );
   }
-
-  const { cartItems, address, shipping, total } = order;
-
-  // Extract shipping name and price
-  let shippingName = shipping;
-  let shippingPrice = '';
-  if (shipping && shipping.includes('(')) {
-    const match = shipping.match(/(.+?)\s*\((RP[ .0-9]+)\)/);
-    if (match) {
-      shippingName = match[1].trim();
-      shippingPrice = match[2];
-    }
-  }
+  const { items, Address, courier, totalAmount, orderId } = orderData;
+  const orderStatus = currentStatus || orderData.status;
+  const isPaid = !['belum bayar', 'unpaid', 'pending payment'].includes(orderStatus?.toLowerCase());
 
   return (
-    <div className="order-receipt-bg">
-      <div className="order-receipt-box">
-        <div className="order-receipt-title-row">
-          <span className="order-receipt-title">Order Recipe</span>
+    <div className="order-receipt-bg" style={{paddingTop: 0}}>
+      <div className="order-receipt-box modern-receipt" style={{marginTop: 0}}>
+        <div className="receipt-header">
+          {isPaid ? (
+            <>
+              <div className="receipt-checkmark">
+                <svg width="80" height="80" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="48" fill="#f5e6c5" />
+                  <polyline
+                    points="30,55 46,70 72,38"
+                    fill="none"
+                    stroke="#1a2238"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="receipt-success">Order Successful!</div>
+              <div className="receipt-title">Order Receipt</div>
+            </>
+          ) : (
+            <>
+              <div className="receipt-pending">
+                <svg width="80" height="80" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="48" fill="#f5e6c5" />
+                  <text x="50" y="65" textAnchor="middle" fill="#1a2238" fontSize="60">!</text>
+                </svg>
+              </div>
+              <div className="receipt-warning">Payment Required</div>
+              <div className="receipt-title">Order Confirmation</div>
+            </>
+          )}
         </div>
         <hr className="order-receipt-hr" />
-        <div className="order-receipt-product-list">
-          {cartItems.map((item, idx) => (
-            <div key={item.id} className="order-receipt-product-block">
-              <div className="order-receipt-product-row1">
-                <div className="order-receipt-product-name left-align">{item.name}</div>
-                <div className="order-receipt-product-qty">{item.quantity}</div>
+        <div className="receipt-section">
+          <div className="receipt-label">Products</div>
+          <div className="receipt-products-list">
+            {items.map((item) => (
+              <div className="receipt-product-row" key={item.product._id}>
+                <div className="receipt-product-main">
+                  <span className="receipt-product-name">{item.product.name}</span>
+                  <span className="receipt-product-total">
+                    RP. {(item.priceAtPurchase * item.quantity).toLocaleString('id-ID')}
+                  </span>
+                </div>
+                <div className="receipt-product-details">
+                  <span className="receipt-product-qty">Qty: {item.quantity}</span>
+                  <span className="receipt-product-price">
+                    @ RP. {item.priceAtPurchase.toLocaleString('id-ID')}
+                  </span>
+                </div>
               </div>
-              <div className="order-receipt-product-row2">
-                <div className="order-receipt-product-price left-align">RP. {item.price.toLocaleString('id-ID')}</div>
-              </div>
-            </div>
-          ))}
-          <div className="order-receipt-shipping-row">
-            <div className="order-receipt-shipping-name left-align">{shippingName}</div>
-            <div className="order-receipt-shipping-price">{shippingPrice}</div>
-          </div>
-          <div className="order-receipt-address-row">
-            <div className="order-receipt-address-label left-align">Address</div>
-            <div className="order-receipt-address-value">{address}</div>
+            ))}
           </div>
         </div>
-        <div className="order-receipt-total-row">
-          <span className="order-receipt-total-label">Total Price:</span>
-          <span className="order-receipt-total-value">RP. {total.toLocaleString('id-ID')}</span>
-        </div>
-        <div className="order-receipt-payment-success">PAYMENT SUCCESSFUL</div>
-        <div className="order-receipt-checkmark-wrapper">
-          <div className="order-receipt-checkmark-circle">
-            <svg width="100" height="100" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="48" fill="#f5e6c5" />
-              <polyline points="30,55 46,70 72,38" fill="none" stroke="#222d52" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+        <div className="receipt-section">
+          <div className="receipt-info-row">
+            <span className="receipt-info-label">Shipping:</span>
+            <span className="receipt-info-value">{courier}</span>
           </div>
+          <div className="receipt-info-row">
+            <span className="receipt-info-label">Address:</span>
+            <span className="receipt-info-value address-value">{Address}</span>
+          </div>
+        </div>        <div className="receipt-section receipt-total-section">
+          <div className="receipt-total-label">Total</div>
+          <div className="receipt-total-value">RP. {totalAmount.toLocaleString('id-ID')}</div>
         </div>
-        <div className="order-receipt-thankyou" onClick={() => navigate('/')}>Thank You For Your Order!</div>
+        {isPaid ? (
+          <button
+            className="receipt-back-btn"
+            onClick={() => navigate('/profile-orders')}
+          >
+            Back to Orders
+          </button>
+        ) : (
+          <div className="receipt-buttons">
+            <button
+              className="receipt-payment-btn"
+              onClick={() => navigate(`/payment`, { 
+                state: { 
+                  orderId: orderId, 
+                  fromOrdersPage: true 
+                } 
+              })}
+            >
+              Complete Payment
+            </button>
+            <button
+              className="receipt-back-btn secondary"
+              onClick={() => navigate('/profile-orders')}
+            >
+              Back to Orders
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

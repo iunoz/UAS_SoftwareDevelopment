@@ -105,6 +105,31 @@
   transform: scale(1.05);
 }
 
+.orders-scroll-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-right: -10px;
+}
+
+.orders-scroll-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.orders-scroll-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.orders-scroll-list::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 4px;
+}
+
+.orders-scroll-list::-webkit-scrollbar-thumb:hover {
+  background: #b5941f;
+}
+
 @media (max-width: 768px) {
   .profile-orders-container {
     padding: 1rem;

@@ -169,6 +169,7 @@
   color: #d4af37;
   font-size: 1.3rem;
   padding: 0.25rem;
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
