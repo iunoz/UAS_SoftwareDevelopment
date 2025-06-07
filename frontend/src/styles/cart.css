@@ -19,14 +19,11 @@
 .cart-title {
   color: #e6d5b8;
   font-family: 'Cinzel', serif;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 500;
-  margin: 0 0 0.5rem auto;
-  text-align: right;
-  width: fit-content;
-  display: block;
-  position: relative;
-  top: 2.2rem; 
+  margin-bottom: 1.5rem;
+  text-align: left;
+  width: 100%;
 }
 
 .h2 {
@@ -231,6 +228,27 @@
 
 .cart-delete-btn:hover {
   background: #db1818 !important;
+}
+
+.cart-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #d4af37;
+  margin-right: 8px;
+}
+
+.cart-select-all {
+  display: flex;
+  align-items: center;
+  color: #e6d5b8;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+
+.cart-select-all label {
+  cursor: pointer;
+  margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
