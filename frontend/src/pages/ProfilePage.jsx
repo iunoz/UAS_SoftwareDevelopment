@@ -341,7 +341,7 @@ const ProfilePage = () => {
               <FaUser className="info-icon" />
               <label>Name</label>
             </div>
-            <span>{user?.fname} {user?.lname}</span>
+            <span className='isi'>{user?.fname} {user?.lname}</span>
           </div>
 
           <div className="info-item">
@@ -349,7 +349,7 @@ const ProfilePage = () => {
               <FaEnvelope className="info-icon" />
               <label>Email</label>
             </div>
-            <span>{user?.email}</span>
+            <span className='isi'>{user?.email}</span>
           </div>
 
           <div className="info-item">
@@ -357,7 +357,6 @@ const ProfilePage = () => {
               <FaMapMarkerAlt className="info-icon" />
               <label>Address</label>
               <Button 
-                variant="outline-warning"
                 size="sm"
                 className="change-address-btn ms-2"
                 onClick={() => setShowAddressModal(true)}
@@ -365,7 +364,7 @@ const ProfilePage = () => {
                 Change Address
               </Button>
             </div>
-            <span className="mt-2">
+            <span className="mt-2 isi">
               {user?.address
                 ? <>
                     {user.address.street}<br/>
