@@ -79,17 +79,18 @@
 
 .nav-btn {
   min-width: 120px;
-  background-color: #1a2238;
-  border: 2px solid #d4af37;
-  color: #d4af37;
+  background-color: #1a2238 !important;
+  border: 2px solid #d4af37 !important;
+  color: #d4af37 !important;
   transition: all 0.3s ease;
   margin: 0 0.5rem;
 }
 
 .nav-btn:hover,
 .nav-btn.active {
-  background-color: #d4af37;
-  color: #1a2238;
+  background-color: #d4af37 !important;
+  border: 2px solid #d4af37 !important;
+  color: #1a2238 !important;
 }
 
 /* Profile Info Section */
@@ -114,11 +115,29 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 0.5rem;
-  padding: 0.8rem;
-  background-color: #d4af37;
-  color: #1a2238;
-  border-radius: 5px;
+  border-bottom: 2px solid #d4af37;
+  color: white;
+  border-radius: 0px;
   font-weight: 600;
+  position: relative;
+}
+
+.isi {
+  color: rgb(197, 194, 194);
+}
+
+.change-address-btn {
+  font-size: 0.8rem;
+  background-color: transparent !important;
+  border: none !important;
+  position: absolute !important;
+  right: 0 !important;
+  color: rgb(233, 226, 255) !important;
+  transition: all 0.3s ease !important;
+}
+
+.change-address-btn:hover {
+  color: #9a9a9a !important;
 }
 
 .info-icon {
@@ -135,14 +154,15 @@
 
 .change-password-btn {
   background-color: transparent;
-  border: 2px solid #d4af37;
-  color: #d4af37;
+  border: 2px solid #d4af37 !important;
+  color: #d4af37 !important;
   transition: all 0.3s ease;
 }
 
 .change-password-btn:hover {
-  background-color: #d4af37;
-  color: #d4af37;
+  background-color: #d4af37 !important;
+  border: 2px solid #d4af37 !important;
+  color: white !important;
 }
 
 .sign-out-btn {
