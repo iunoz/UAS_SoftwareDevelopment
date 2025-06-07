@@ -16,6 +16,8 @@ const Cart = () => {
   const { uid } = useParams();
   const { fetchCartCount } = useCart();
   const [prevQuantities, setPrevQuantities] = useState({});
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
 
   // Navigate to home based on UID
   const navigateToHome = () => {
@@ -232,6 +234,50 @@ const Cart = () => {
     });
   };
 
+  // Toggle select all items
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(cartItems.map(item => item.id));
+    }
+    setIsAllSelected(!isAllSelected);
+  };
+
+  // Toggle select single item
+  const toggleSelectItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(itemId => itemId !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  // Delete selected items
+  const handleDeleteSelected = async () => {
+    for (const id of selectedItems) {
+      await handleDeleteItem(id);
+    }
+    setSelectedItems([]);
+    setIsAllSelected(false);
+  };
+
+  const handleSelectItem = (itemId) => {
+    setSelectedItems(prev => {
+      const newSelected = prev.includes(itemId) 
+        ? prev.filter(id => id !== itemId)
+        : [...prev, itemId];
+      
+      setIsAllSelected(newSelected.length === cartItems.length);
+      return newSelected;
+    });
+  };
+
+  const handleSelectAll = (checked) => {
+    setIsAllSelected(checked);
+    setSelectedItems(checked ? cartItems.map(item => item.id) : []);
+  };
+
   if (loading) {
     return (
       <div className="cartpage-bg">
@@ -269,16 +315,24 @@ const Cart = () => {
   }
 
   return (
-    <div className="cartpage-bg">
-      <Container className="cartpage-container">
-        <h2 className="cart-title" style={{margin: '0 0 0.5rem 0', paddingTop: '1.2rem', textAlign: 'left', width: '100%'}}>
-          Shopping Cart
-        </h2>
+    <div className="cartpage-bg">      <Container className="cartpage-container">
+        <h2 className="cart-title">Shopping Cart</h2>
         <div className="d-flex justify-content-between align-items-center">
-          <div></div>
+          <div className="cart-select-all">
+            <input
+              type="checkbox"
+              className="cart-checkbox"
+              checked={isAllSelected}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+              id="selectAll"
+            />
+            <label htmlFor="selectAll">Select All</label>
+          </div>
           <div className="text-end">
             <span className="cart-qty-label">Quantity:</span>
-            <span className="cart-qty-value">{cartItems.reduce((sum, item) => sum + parseInt(item.quantity || 0, 10), 0)} Items</span>
+            <span className="cart-qty-value">
+              {cartItems.reduce((sum, item) => sum + parseInt(item.quantity || 0, 10), 0)} Items
+            </span>
           </div>
         </div>
         <hr className="cart-divider" />
@@ -287,6 +341,15 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div key={item.id} className="cart-item-row">
               <Row className="cart-item-row-inner align-items-center">
+                <Col xs={1}>
+                  <input
+                    type="checkbox"
+                    className="cart-checkbox"
+                    checked={selectedItems.includes(item.id)}
+                    onChange={() => handleSelectItem(item.id)}
+                    id={`item-${item.id}`}
+                  />
+                </Col>
                 <Col xs={2}>
                   <img src={item.image} alt={item.name} className="cart-img" />
                 </Col>
@@ -294,7 +357,7 @@ const Cart = () => {
                   <div className="cart-item-name">{item.name}</div>
                   <div className="cart-item-price">RP. {item.price.toLocaleString()}</div>
                 </Col>
-                <Col xs={3} className="cart-item-qty">
+                <Col xs={2} className="cart-item-qty">
                   <div className="cart-qty-controls">
                     <Button
                       variant="dark"
@@ -336,9 +399,18 @@ const Cart = () => {
         <div className="cart-bottom-row">
           <div>
             <span className="cart-total-text">Total Price:</span>
-            <span className="cart-total-value">RP. {total.toLocaleString()}</span>
+            <span className="cart-total-value">
+              RP. {cartItems
+                .filter(item => selectedItems.includes(item.id))
+                .reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                .toLocaleString()}
+            </span>
           </div>
-          <Button className="cart-checkout-btn" onClick={handleCheckout}>
+          <Button 
+            className="cart-checkout-btn" 
+            onClick={handleCheckout}
+            disabled={selectedItems.length === 0}
+          >
             Checkout
           </Button>
         </div>
