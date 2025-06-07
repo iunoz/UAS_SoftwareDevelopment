@@ -16,6 +16,9 @@ const ProfileordersPage = () => {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const fileInputRef = useRef(null);
 
+  // Order filter state
+  const [orderFilter, setOrderFilter] = useState('Semua');
+
   // Autocomplete & dropdown states
   const [provinceInput, setProvinceInput] = useState('');
   const [provinceOptions, setProvinceOptions] = useState([]);
@@ -78,6 +81,7 @@ const ProfileordersPage = () => {
         // Fetch orders from backend API
         const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
         if (ordersRes.data.success) {
+          console.log('Fetched orders:', ordersRes.data.orders);
           setOrders(ordersRes.data.orders);
         } else {
           setOrders([]);
@@ -326,8 +330,26 @@ const ProfileordersPage = () => {
           </Button>
         </div>
 
-        {/* Profile Information */}
-        {/* Removed as per user request */}
+        {/* Order Filter Buttons */}
+        <div className="order-filter-buttons mb-3 d-flex justify-content-center gap-3">
+          {['Semua', 'Belum Bayar', 'Sedang Dikemas', 'Dikirim', 'Selesai'].map((status) => {
+            const isActive = orderFilter === status;
+            const dikirimCount = orders.filter(o => o.status.toLowerCase() === 'dikirim').length;
+            return (
+              <Button
+                key={status}
+                variant={isActive ? 'primary' : 'outline-primary'}
+                className="filter-btn"
+                onClick={() => setOrderFilter(status)}
+              >
+                {status}
+                {status === 'Dikirim' && dikirimCount > 0 && (
+                  <span className="badge bg-danger ms-1">{dikirimCount}</span>
+                )}
+              </Button>
+            );
+          })}
+        </div>
 
         {/* Orders Information */}
         <div className="profile-info">
@@ -340,18 +362,49 @@ const ProfileordersPage = () => {
               <span>No orders yet.</span>
             ) : (
               <div>
-                {orders.map((order, idx) => (
-                  <div key={idx} className="mb-3 p-2" style={{ background: '#222a4d', borderRadius: 8 }}>
-                    <div><strong>Order ID:</strong> {order._id}</div>
-                    {order.items.map((item, i) => (
-                      <div key={i}>
-                        <div><strong>Product:</strong> {item.product?.name || item.product}</div>
-                        <div><strong>Quantity:</strong> {item.quantity}</div>
+                {orders
+                  .filter(order => {
+                    const status = order.status.trim().toLowerCase();
+                    console.log('Filtering order status:', status, 'with filter:', orderFilter);
+                    if (orderFilter === 'Semua') return true;
+                    if (orderFilter === 'Dikirim') return status === 'dikirim';
+                    if (orderFilter === 'Belum Bayar') {
+                      // Explicitly check for 'belum bayar' or 'unpaid' or any other variants
+                      return ['belum bayar', 'unpaid', 'pending payment'].includes(status);
+                    }
+                    if (orderFilter === 'Sedang Dikemas') return status === 'sedang dikemas' || status === 'pending';
+                    if (orderFilter === 'Selesai') return status === 'selesai';
+                    return true;
+                  }).map((order, idx) => (
+                    <div key={idx} className="mb-3 p-2" style={{ background: '#222a4d', borderRadius: 8 }}>
+                      <div><strong>Order ID:</strong> {order._id}</div>
+                      {order.items.map((item, i) => (
+                        <div key={i}>
+                          <div><strong>Product:</strong> {item.product?.name || item.product}</div>
+                          <div><strong>Quantity:</strong> {item.quantity}</div>
+                        </div>
+                      ))}
+                      <div>
+                        <strong>Status:</strong>{' '}
+                        <span className="badge bg-warning text-dark">
+                          {status === 'pending' || status === 'sedang dikemas'
+                            ? 'Sedang Dikemas'
+                            : order.status}
+                        </span>
                       </div>
-                    ))}
-                    <div><strong>Status:</strong> <span className="badge bg-warning text-dark">{order.status}</span></div>
-                  </div>
-                ))}
+                      {(status === 'belum bayar') && (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => navigate(`/${uid}/payment`, { state: { orderId: order._id, fromOrdersPage: true } })}
+                        >
+                          Pay Now
+                        </Button>
+                      )}
+                    </div>
+                  ))
+                }
               </div>
             )}
           </div>

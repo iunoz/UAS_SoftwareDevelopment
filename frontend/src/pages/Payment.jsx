@@ -425,20 +425,37 @@ const Payment = () => {
         setPaymentInProgress(false);
         return;
       }
-      await loadMidtransScript();
 
       // Prepare order data
-      const orderId = `order-${Date.now()}`;
-      const amount = (buyNowState ? buyNowTotal : cartTotal) + shippingCost;
-      const name = currentUser.displayName || 'Customer';
-      const email = currentUser.email || '';
+      const orderData = {
+        userId: currentUser.uid,
+        items: buyNowState && buyNowProduct ? [{
+          product: buyNowProduct.id || buyNowProduct._id,
+          quantity: buyNowProduct.quantity,
+          priceAtPurchase: buyNowProduct.price
+        }] : cartItems.map(item => ({
+          product: item.id,
+          quantity: item.quantity,
+          priceAtPurchase: item.price
+        })),
+        address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
+        courier: selectedCourier,
+        totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost,
+        status: 'Belum Bayar' // Set initial status as Unpaid
+      };
+
+      // Save order to backend immediately with status 'Belum Bayar'
+      const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+
+      // Proceed with Midtrans payment
+      await loadMidtransScript();
 
       // Call backend to get Snap token
       const response = await axios.post('http://localhost:4000/api/payment/create-payment', {
-        orderId,
-        amount,
-        name,
-        email
+        orderId: saveRes.data.order._id,
+        amount: orderData.totalAmount,
+        name: currentUser.displayName || 'Customer',
+        email: currentUser.email || ''
       });
 
       const token = response.data.token;
@@ -448,30 +465,10 @@ const Payment = () => {
         onSuccess: async function(result) {
           alert('Payment success!');
           try {
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-              navigate('/login');
-              setPaymentInProgress(false);
-              return;
-            }
-            // Prepare order data to save
-            const orderData = {
-              userId: currentUser.uid,
-              items: buyNowState && buyNowProduct ? [{
-                product: buyNowProduct.id || buyNowProduct._id,
-                quantity: buyNowProduct.quantity,
-                priceAtPurchase: buyNowProduct.price
-              }] : cartItems.map(item => ({
-                product: item.id,
-                quantity: item.quantity,
-                priceAtPurchase: item.price
-              })),
-              address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
-              courier: selectedCourier,
-              totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost
-            };
-            // Save order to backend
-            const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+            // Update order status to 'Sedang Dikemas' after successful payment
+            await axios.put(`http://localhost:4000/api/payment/update-status/${saveRes.data.order._id}`, {
+              status: 'Sedang Dikemas'
+            });
             setPaymentInProgress(false);
             // Remove Midtrans overlay
             const overlay = document.querySelector('.midtrans-overlay');
@@ -481,51 +478,21 @@ const Payment = () => {
             // Redirect to orders page with newOrderId
             navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
           } catch (error) {
-            console.error('Error saving order:', error);
-            alert('Failed to save order');
+            console.error('Error updating order status:', error);
+            alert('Failed to update order status');
             setPaymentInProgress(false);
           }
         },
         onPending: async function(result) {
           alert('Payment pending!');
-          try {
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-              navigate('/login');
-              setPaymentInProgress(false);
-              return;
-            }
-            // Prepare order data to save
-            const orderData = {
-              userId: currentUser.uid,
-              items: buyNowState && buyNowProduct ? [{
-                product: buyNowProduct.id || buyNowProduct._id,
-                quantity: buyNowProduct.quantity,
-                priceAtPurchase: buyNowProduct.price
-              }] : cartItems.map(item => ({
-                product: item.id,
-                quantity: item.quantity,
-                priceAtPurchase: item.price
-              })),
-              address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
-              courier: selectedCourier,
-              totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost
-            };
-            // Save order to backend
-            const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
-            setPaymentInProgress(false);
-            // Remove Midtrans overlay
-            const overlay = document.querySelector('.midtrans-overlay');
-            if (overlay) {
-              overlay.style.display = 'none';
-            }
-            // Redirect to orders page with newOrderId
-            navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
-          } catch (error) {
-            console.error('Error saving order:', error);
-            alert('Failed to save order');
-            setPaymentInProgress(false);
+          setPaymentInProgress(false);
+          // Remove Midtrans overlay
+          const overlay = document.querySelector('.midtrans-overlay');
+          if (overlay) {
+            overlay.style.display = 'none';
           }
+          // Redirect to orders page with newOrderId
+          navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
         },
         onError: function(result) {
           alert('Payment failed!');

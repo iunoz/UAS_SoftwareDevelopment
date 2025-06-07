@@ -33,7 +33,7 @@ export const getSnapToken = async (req, res) => {
 export const saveOrder = async (req, res) => {
     try {
         console.log('saveOrder request body:', req.body);
-        const { userId, items, address, courier, totalAmount } = req.body;
+        const { userId, items, address, courier, totalAmount, status } = req.body;
 
         if (!userId || typeof userId !== 'string') {
             console.error('Invalid or missing userId:', userId);
@@ -67,13 +67,16 @@ export const saveOrder = async (req, res) => {
             };
         });
 
+        // Since 'Belum Bayar' is now a valid enum, use status or default to 'Belum Bayar'
+        const normalizedStatus = status || 'Belum Bayar';
+
         const newOrder = new Order({
             user: userId,
             items: orderItems,
             Address: address,
             courier: courier,
             totalAmount: totalAmount,
-            status: 'pending'
+            status: normalizedStatus
         });
 
         await newOrder.save();
@@ -97,5 +100,30 @@ export const getUserOrders = async (req, res) => {
     } catch (error) {
         console.error('Error fetching user orders:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch user orders' });
+    }
+};
+
+export const updateOrderStatus = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+
+        if (!orderId) {
+            return res.status(400).json({ success: false, message: 'Missing orderId parameter' });
+        }
+        if (!status) {
+            return res.status(400).json({ success: false, message: 'Missing status in request body' });
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+
+        if (!updatedOrder) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        res.status(200).json({ success: true, order: updatedOrder });
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).json({ success: false, message: 'Failed to update order status' });
     }
 };

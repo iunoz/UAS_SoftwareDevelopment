@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema({
   Address: { type: String, required: true },
   courier: { type: String, enum: ['jne', 'jnt', 'sicepat', 'ninja', 'lion'], required: true },
   totalAmount: { type: Number, required: true },
-  status: { type: String, enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
+  status: { type: String, enum: ['Belum Bayar', 'pending', 'paid', 'shipped', 'delivered', 'cancelled'], default: 'Belum Bayar' },
   orderedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
