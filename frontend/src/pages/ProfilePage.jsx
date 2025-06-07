@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, Modal, Form } from 'react-bootstrap';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaMapMarkerAlt, FaPen } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaMapMarkerAlt, FaCamera } from 'react-icons/fa';
 import { auth } from '../firebase.config';
 import { useCart } from '../contexts/CartContext';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const { resetCartCount } = useCart();
+  const fileInputRef = useRef(null);
 
   // Autocomplete & dropdown states
   const [provinceInput, setProvinceInput] = useState('');
@@ -52,6 +53,8 @@ const ProfilePage = () => {
     subdistrict_id: '',
     zipCode: ''
   });
+
+  const [imageLoading, setImageLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -216,6 +219,43 @@ const ProfilePage = () => {
     }
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setImageLoading(true);
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Fix: Change endpoint from 'user' to 'users'
+      const response = await axios.put(
+        `http://localhost:4000/api/user/${uid}/profile-image`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        setUser(prev => ({
+          ...prev,
+          profileImage: response.data.profileImage
+        }));
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+      // Add more detailed error message
+      alert(`Failed to update profile image: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
   useEffect(() => {
     function handleClickOutside(e) {
       if (!e.target.closest('.dropdown-autocomplete')) {
@@ -249,10 +289,36 @@ const ProfilePage = () => {
       <Container className="profile-container text-center py-5">
         {/* Profile Image */}
         <div className="profile-image-section mb-4">
-          <div className="profile-image-wrapper mx-auto">
-            <div className="profile-image rounded-circle d-flex align-items-center justify-content-center">
-              <FaUser className="profile-icon" />
+          <div className="profile-image-wrapper mx-auto position-relative">
+            <div className="profile-image rounded-circle d-flex align-items-center justify-content-center overflow-hidden">
+              {imageLoading ? (
+                <div className="spinner-border text-warning" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : user?.profileImage ? (
+                <img 
+                  src={user.profileImage} 
+                  alt="Profile" 
+                  className="w-100 h-100 object-fit-cover"
+                />
+              ) : (
+                <FaUser className="profile-icon" />
+              )}
             </div>
+            <button 
+              className="edit-profile-btn"
+              onClick={() => fileInputRef.current?.click()}
+              type="button"
+            >
+              <FaCamera size={18} /> {/* Menggunakan FaCamera dengan size yang lebih besar */}
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="d-none"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
           </div>
         </div>
 
@@ -450,4 +516,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage; 
+export default ProfilePage;

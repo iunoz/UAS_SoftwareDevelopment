@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import admin from '../firebase/firebaseAdmin.js';
 import fetch from 'node-fetch';
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
 
 /**
  * Register user dari Firebase Auth ke MongoDB
@@ -239,4 +241,41 @@ export const getAllUsers = async (req, res) => {
   const users = await User.find({});
   console.log('All users:', users); // LOG: Semua user yang ditemukan
   res.status(200).json({ users });
+};
+
+/**
+ * Update Profile Image
+ */
+export const updateProfileImage = async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No image file provided' });
+    }
+
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'profile-images',
+    });
+
+    // Delete local file after upload
+    fs.unlinkSync(req.file.path);
+
+    // Update user profile image
+    const updated = await User.findOneAndUpdate(
+      { uid },
+      { profileImage: result.secure_url },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.json({ success: true, profileImage: result.secure_url });
+  } catch (error) {
+    console.error('Update Profile Image Error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 };

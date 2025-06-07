@@ -86,6 +86,14 @@ const ProductPage = () => {
     setCurrentPage(1); // Reset to first page when changing collection
   };
 
+  // Pagination logic
+  const productsPerPage = 12;
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * productsPerPage,
+    currentPage * productsPerPage
+  );
+
   if (loading) {
     return (
       <div className="product-page py-5">
@@ -176,7 +184,7 @@ const ProductPage = () => {
 
         {/* Products Grid */}
         <Row className="g-4 mb-4">
-          {filteredProducts.length === 0 ? (
+          {paginatedProducts.length === 0 ? (
             <Col xs={12}>
               <div className="text-center text-white py-5">
                 <h3>No products found</h3>
@@ -194,7 +202,7 @@ const ProductPage = () => {
               </div>
             </Col>
           ) : (
-            filteredProducts.map((product) => (
+            paginatedProducts.map((product) => (
               <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
                 <Card 
                   className="h-100 product-item"
@@ -235,9 +243,9 @@ const ProductPage = () => {
         </Row>
 
         {/* Pagination - Only show if there are products */}
-        {filteredProducts.length > 0 && (
+        {totalPages > 1 && (
           <div className="d-flex justify-content-center gap-2 mb-4">
-            {[1, 2, 3, 4, 5].map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? 'warning' : 'outline-warning'}
@@ -259,4 +267,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage; 
+export default ProductPage;

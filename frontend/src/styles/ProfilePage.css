@@ -1,3 +1,4 @@
+/* Base Styles */
 .profile-page {
   background-color: #1a2238;
   min-height: 100vh;
@@ -5,10 +6,10 @@
 }
 
 .profile-container {
-  max-width: 600px !important;
+  max-width: 600px;
 }
 
-/* Profile Image Styling */
+/* Profile Image Section */
 .profile-image-section {
   padding: 2rem 0;
 }
@@ -16,6 +17,8 @@
 .profile-image-wrapper {
   width: 150px;
   height: 150px;
+  position: relative;
+  margin: 0 auto;
 }
 
 .profile-image {
@@ -23,6 +26,14 @@
   height: 100%;
   background-color: #262f60;
   border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .profile-icon {
@@ -30,31 +41,58 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Navigation Styling */
+.edit-profile-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #d4af37;
+  border: 2px solid #1a2238;
+  color: #1a2238;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.edit-profile-btn:hover {
+  background: #1a2238;
+  color: #d4af37;
+  transform: scale(1.1);
+  border-color: #d4af37;
+}
+
+.edit-profile-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block; /* Memastikan icon ditampilkan dengan benar */
+}
+
+/* Navigation Section */
 .profile-nav {
   margin: 2rem 0;
 }
 
 .nav-btn {
   min-width: 120px;
-  background-color: #1a2238 !important;
-  border: 2px solid #d4af37 !important;
-  color: #d4af37 !important;
-  transition: all 0.3s ease !important;
+  background-color: #1a2238;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  transition: all 0.3s ease;
+  margin: 0 0.5rem;
 }
 
-.nav-btn:hover {
-  background-color: #d4af37 !important;
-  color: #1a2238 !important;
-}
-
+.nav-btn:hover,
 .nav-btn.active {
-  background-color: #d4af37 !important;
-  border-color: #d4af37 !important;
-  color: #1a2238 !important;
+  background-color: #d4af37;
+  color: #1a2238;
 }
 
-/* Profile Info Styling */
+/* Profile Info Section */
 .profile-info {
   text-align: left;
   background-color: #262f60;
@@ -74,63 +112,49 @@
 .info-header {
   display: flex;
   align-items: center;
+  gap: 1rem;
   margin-bottom: 0.5rem;
+  padding: 0.8rem;
+  background-color: #d4af37;
+  color: #1a2238;
+  border-radius: 5px;
+  font-weight: 600;
 }
 
 .info-icon {
-  margin-right: 0.5rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-label {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.change-address-btn {
-  font-size: 0.8rem !important;
-  padding: 0.25rem 0.75rem !important;
-  border-color: #d4af37 !important;
-  color: #d4af37 !important;
-  background: transparent !important;
-  transition: all 0.3s ease !important;
-}
-
-.change-address-btn:hover {
-  background: #d4af37 !important;
-  color: #1a2238 !important;
-  transform: translateY(-1px);
+  font-size: 1.2rem;
 }
 
 /* Action Buttons */
 .profile-actions {
-  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .change-password-btn {
-  background-color: #d4af37 !important;
-  border: 2px solid #d4af37 !important;
-  color: #1a2238 !important;
-  transition: transform 0.2s ease !important;
-  padding: 0.8rem;
-  font-weight: 600;
+  background-color: transparent;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  transition: all 0.3s ease;
 }
 
 .change-password-btn:hover {
-  transform: scale(1.05);
+  background-color: #d4af37;
+  color: #d4af37;
 }
 
 .sign-out-btn {
-  background-color: #dc3545 !important;
-  border: 2px solid #dc3545 !important;
-  color: #1a2238 !important;
-  transition: transform 0.2s ease !important;
-  padding: 0.8rem;
-  font-weight: 600;
+  background-color: transparent;
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  transition: all 0.3s ease;
 }
 
 .sign-out-btn:hover {
-  transform: scale(1.05);
+  background-color: #dc3545;
+  color: white;
 }
 
 /* Responsive Design */
@@ -151,43 +175,4 @@ label {
   .profile-info {
     padding: 1.5rem;
   }
-
-  .profile-actions {
-    padding: 0 1rem;
-  }
 }
-
-/* Modal Styling */
-.modal-dark .modal-content {
-  background-color: #262f60;
-  color: white;
-}
-
-.modal-dark .modal-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-dark .modal-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-dark .close {
-  color: white;
-}
-
-.modal-input {
-  background-color: #1a2238 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-}
-
-.modal-input:focus {
-  background-color: #1a2238 !important;
-  border-color: #d4af37 !important;
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25) !important;
-  color: white !important;
-}
-
-.modal-input::placeholder {
-  color: rgba(255, 255, 255, 0.5) !important;
-} 
