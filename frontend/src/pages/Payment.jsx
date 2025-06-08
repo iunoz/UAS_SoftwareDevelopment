@@ -59,12 +59,12 @@ const Payment = () => {
   const location = useLocation();
   const buyNowState = location.state?.buyNow;
   const buyNowProduct = location.state?.product;
+  // Tambahkan selectedProducts dari state
+  const selectedProducts = location.state?.selectedProducts || null;
 
   const [buyNowTotal, setBuyNowTotal] = useState(0);
-
   const cartWeight = location.state?.cartWeight;
   const [totalWeight, setTotalWeight] = useState(0);
-
   const [cartItems, setCartItems] = useState([]);
 
   
@@ -158,6 +158,10 @@ const Payment = () => {
   useEffect(() => {
     if (buyNowState && buyNowProduct) {
       setTotalWeight(buyNowProduct.weight * buyNowProduct.quantity);
+    } else if (selectedProducts && selectedProducts.length > 0) {
+      // Hitung total berat dari selectedProducts
+      const weightSum = selectedProducts.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
+      setTotalWeight(weightSum);
     } else if (cartWeight) {
       setTotalWeight(cartWeight);
     } else {
@@ -203,7 +207,7 @@ const Payment = () => {
       };
       fetchCart();
     }
-  }, [buyNowState, buyNowProduct, cartWeight, navigate]);
+  }, [buyNowState, buyNowProduct, selectedProducts, cartWeight, navigate]);
 
   // Province autocomplete
   useEffect(() => {
@@ -448,6 +452,10 @@ const Payment = () => {
   useEffect(() => {
     if (buyNowState && buyNowProduct) {
       setBuyNowTotal(buyNowProduct.price * buyNowProduct.quantity);
+    } else if (selectedProducts && selectedProducts.length > 0) {
+      // Hitung total harga dari selectedProducts
+      const total = selectedProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      setCartTotal(total);
     } else {
       // fetch cart seperti biasa
       const fetchCart = async () => {
@@ -472,7 +480,7 @@ const Payment = () => {
       };
       fetchCart();
     }
-  }, [buyNowState, buyNowProduct, navigate]);
+  }, [buyNowState, buyNowProduct, selectedProducts, navigate]);
 
   // Load Midtrans Snap script dynamically
   const loadMidtransScript = () => {
@@ -520,11 +528,18 @@ const Payment = () => {
           product: buyNowProduct.id || buyNowProduct._id,
           quantity: buyNowProduct.quantity,
           priceAtPurchase: buyNowProduct.price
-        }] : cartItems.map(item => ({
-          product: item.id,
-          quantity: item.quantity,
-          priceAtPurchase: item.price
-        })),
+        }] : (selectedProducts && selectedProducts.length > 0
+          ? selectedProducts.map(item => ({
+              product: item.id,
+              quantity: item.quantity,
+              priceAtPurchase: item.price
+            }))
+          : cartItems.map(item => ({
+              product: item.id,
+              quantity: item.quantity,
+              priceAtPurchase: item.price
+            }))
+        ),
         address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
         courier: selectedCourier,
         totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost,
@@ -624,8 +639,8 @@ const Payment = () => {
             </div>
           </div>
         ) : (
-          cartItems.length > 0
-            ? cartItems.map(item => (
+          (selectedProducts && selectedProducts.length > 0
+            ? selectedProducts.map(item => (
                 <div className="payment-product-item" key={item.id}>
                   <img src={item.image} alt={item.name} className="payment-product-img" />
                   <div className="payment-product-info">
@@ -635,7 +650,19 @@ const Payment = () => {
                   </div>
                 </div>
               ))
-            : <div className="text-light">No products found.</div>
+            : cartItems.length > 0
+              ? cartItems.map(item => (
+                  <div className="payment-product-item" key={item.id}>
+                    <img src={item.image} alt={item.name} className="payment-product-img" />
+                    <div className="payment-product-info">
+                      <div className="payment-product-name">{item.name}</div>
+                      <div className="payment-product-qty">Qty: {item.quantity}</div>
+                      <div className="payment-product-price">Rp {item.price.toLocaleString()}</div>
+                    </div>
+                  </div>
+                ))
+              : <div className="text-light">No products found.</div>
+          )
         )}
       </div>
 

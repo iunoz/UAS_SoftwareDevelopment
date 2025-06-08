@@ -221,15 +221,19 @@ const Cart = () => {
       }
     }
   };
-
   // Handle checkout
   const handleCheckout = () => {
-    // Hitung total weight dari cart
-    const totalWeight = cartItems.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
+    // Filter item yang dipilih saja
+    const selectedProducts = cartItems.filter(item => selectedItems.includes(item.id));
+    
+    // Hitung total weight dari item yang dipilih
+    const totalWeight = selectedProducts.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
+    
     navigate(`/${uid}/payment`, {
       state: {
         buyNow: false,
-        cartWeight: totalWeight
+        cartWeight: totalWeight,
+        selectedProducts: selectedProducts // Kirim selected products ke payment page
       }
     });
   };
