@@ -154,59 +154,95 @@ const Payment = () => {
     }),
   });
 
-  // Fetch cart & user address
+  // Separate useEffect for address fetching
   useEffect(() => {
-    if (buyNowState && buyNowProduct) {
-      setTotalWeight(buyNowProduct.weight * buyNowProduct.quantity);
-    } else if (selectedProducts && selectedProducts.length > 0) {
-      // Hitung total berat dari selectedProducts
-      const weightSum = selectedProducts.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
-      setTotalWeight(weightSum);
-    } else if (cartWeight) {
-      setTotalWeight(cartWeight);
-    } else {
-      // fallback: fetch cart dan hitung total weight
-      const fetchCart = async () => {
-        try {
-          const currentUser = auth.currentUser;
-          if (!currentUser) {
-            navigate('/login');
-            return;
-          }
+    const fetchUserAddress = async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          navigate('/login');
+          return;
+        }
+        const userRes = await axios.get(`http://localhost:4000/api/user/${currentUser.uid}`);
+        if (userRes.data.success) {
+          setAddress(userRes.data.user.address || null);
+        }
+      } catch (err) {
+        console.error('Error fetching address:', err);
+      }
+    };
+    fetchUserAddress();
+  }, [navigate]);
+
+  // Helper function for weight calculation
+  const calculateWeight = (items) => {
+    if (!items || !Array.isArray(items)) return 0;
+    return items.reduce((sum, item) => {
+      const weight = Number(item.weight) || 0;
+      const quantity = Number(item.quantity) || 0;
+      return sum + (weight * quantity);
+    }, 0);
+  };
+
+  // Modified useEffect for cart and weight calculation
+  useEffect(() => {
+    const fetchCartAndCalculateWeight = async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          navigate('/login');
+          return;
+        }
+
+        if (buyNowState && buyNowProduct) {
+          const weight = Number(buyNowProduct.weight) || 0;
+          const quantity = Number(buyNowProduct.quantity) || 0;
+          setTotalWeight(weight * quantity);
+          setBuyNowTotal(buyNowProduct.price * buyNowProduct.quantity);
+        } else if (selectedProducts && selectedProducts.length > 0) {
+          const weightSum = calculateWeight(selectedProducts);
+          setTotalWeight(weightSum);
+          const total = selectedProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+          setCartTotal(total);
+        } else if (cartWeight) {
+          setTotalWeight(Number(cartWeight) || 0);
+        } else {
           const token = await currentUser.getIdToken();
           // Fetch cart
           const res = await axios.get('http://localhost:4000/api/cart', {
             headers: { Authorization: `Bearer ${token}` }
           });
+          
           if (res.data.success) {
-            setCartItems(res.data.cart.map(item => ({
+            const cartItems = res.data.cart.map(item => ({
               id: item.product._id,
               name: item.product.name,
               image: item.product.image,
               price: item.product.price,
               quantity: item.quantity,
               weight: item.product.weight
-            })));
-            const total = res.data.cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+            }));
+
+            setCartItems(cartItems);
+            
+            // Calculate total price
+            const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             setCartTotal(total);
-            // Hitung total weight dari cart
-            const weightSum = res.data.cart.reduce((sum, item) => sum + (item.product.weight * item.quantity), 0);
+            
+            // Calculate total weight
+            const weightSum = calculateWeight(cartItems);
             setTotalWeight(weightSum);
           }
-          // Fetch user profile for address
-          const userRes = await axios.get(`http://localhost:4000/api/user/${currentUser.uid}`);
-          if (userRes.data.success) {
-            setAddress(userRes.data.user.address || null);
-          }
-        } catch (err) {
-          console.error('Error fetching cart or address:', err);
-          setCartTotal(0);
-          setTotalWeight(0);
-          setCartItems([]);
         }
-      };
-      fetchCart();
-    }
+      } catch (err) {
+        console.error('Error fetching cart or calculating weight:', err);
+        setCartTotal(0);
+        setTotalWeight(0);
+        setCartItems([]);
+      }
+    };
+
+    fetchCartAndCalculateWeight();
   }, [buyNowState, buyNowProduct, selectedProducts, cartWeight, navigate]);
 
   // Province autocomplete
@@ -732,7 +768,7 @@ const Payment = () => {
         {/* Total Weight */}
         <div className="form-label-cell">Total Weight</div>
         <div className="form-input-cell">
-          <span className="weight-display">{(totalWeight / 1000).toFixed(2)} kg</span>
+          <span className="weight-display">{isNaN(totalWeight) ? '0.00' : (totalWeight / 1000).toFixed(2)} kg</span>
         </div>
       </div>
 

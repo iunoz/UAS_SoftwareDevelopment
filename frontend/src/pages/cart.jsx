@@ -49,7 +49,8 @@ const Cart = () => {
           name: item.product.name,
           price: item.product.price,
           image: item.product.image,
-          quantity: item.quantity
+          quantity: item.quantity,
+          weight: item.product.weight
         })));
         calculateTotal(res.data.cart);
       }
@@ -227,13 +228,20 @@ const Cart = () => {
     const selectedProducts = cartItems.filter(item => selectedItems.includes(item.id));
     
     // Hitung total weight dari item yang dipilih
-    const totalWeight = selectedProducts.reduce((sum, item) => sum + (item.weight * item.quantity), 0);
+    const totalWeight = selectedProducts.reduce((sum, item) => {
+      const weight = Number(item.weight) || 0;
+      const quantity = Number(item.quantity) || 0;
+      return sum + (weight * quantity);
+    }, 0);
     
     navigate(`/${uid}/payment`, {
       state: {
         buyNow: false,
         cartWeight: totalWeight,
-        selectedProducts: selectedProducts // Kirim selected products ke payment page
+        selectedProducts: selectedProducts.map(item => ({
+          ...item,
+          weight: Number(item.weight) || 0  // Pastikan weight adalah number
+        }))
       }
     });
   };
