@@ -13,7 +13,7 @@ export const searchDestination = async (req, res) => {
             limit: 30000,
             offset: 0
         },
-        headers: { 'key': process.env.SHIPPING_COST_API_KEY5}
+        headers: { 'key': process.env.SHIPPING_COST_API_KEY2}
         });
         const all = response.data.data || [];
         const seen = new Set();
@@ -73,7 +73,7 @@ export const getCitiesByProvince = async (req, res) => {
         limit: 30000,
         offset: 0
       },
-      headers: { 'key': process.env.SHIPPING_COST_API_KEY6}
+      headers: { 'key': process.env.SHIPPING_COST_API_KEY2}
     });
     const all = response.data.data || [];
 
@@ -134,7 +134,7 @@ export const calculateOngkir = async (req, res) => {
       {},
       {
         params: { origin, destination, weight, courier, price },
-        headers: { key: process.env.SHIPPING_COST_API_KEY5}
+        headers: { key: process.env.SHIPPING_COST_API_KEY2}
       }
     );
     // Debug log

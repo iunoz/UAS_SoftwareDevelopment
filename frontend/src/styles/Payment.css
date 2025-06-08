@@ -128,24 +128,6 @@
   margin-top: 0.5rem;
 }
 
-.edit-btn {
-  margin-left: 0.7rem;
-  font-size: 1.1rem;
-  background: #e6d5b8;
-  color: #222d52;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.edit-btn:hover {
-  background: #d4af37;
-  color: #fff;
-}
-
 .payment-form-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -208,19 +190,20 @@
 .edit-btn {
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 8px;
+  top: auto;
+  transform: none;
   margin-left: 0;
   font-size: 0.95rem;
   background: #e6d5b8;
   color: #222d52;
   border: none;
   border-radius: 6px;
-  padding: 0.35rem 0.8rem;
+  padding: 0.5rem 2rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
-  height: 30%;
+  height: auto;
   min-width: 30px;
   z-index: 2;
 }

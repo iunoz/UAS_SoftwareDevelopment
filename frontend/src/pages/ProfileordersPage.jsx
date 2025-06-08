@@ -339,7 +339,7 @@ const ProfileordersPage = () => {
               <Button
                 key={status}
                 variant={isActive ? 'primary' : 'outline-primary'}
-                className="filter-btn"
+                className={`filter-btn ${isActive ? 'active' : ''}`}
                 onClick={() => setOrderFilter(status)}
               >
                 {status}

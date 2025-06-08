@@ -4,6 +4,7 @@ import { auth } from '../firebase.config';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
+import Select from 'react-select';
 
 const ORIGIN_ZIPCODE = '10440'; // Kodepos Jakarta Pusat
 const WEIGHT = 10000; // Berat total dalam gram
@@ -65,6 +66,93 @@ const Payment = () => {
   const [totalWeight, setTotalWeight] = useState(0);
 
   const [cartItems, setCartItems] = useState([]);
+
+  
+  const COLOR_ENABLED_BG = '#222d52';      // warna aktif (sama dengan Province)
+  const COLOR_DISABLED_BG = '#181e33';     // warna gelap untuk disabled
+  const COLOR_ENABLED_BORDER = '#c1a139';  // border keemasan
+  const COLOR_DISABLED_BORDER = '#444654'; // border gelap
+  const COLOR_ENABLED_TEXT = '#e6d4b7';    // teks keemasan
+  const COLOR_DISABLED_TEXT = '#888';      // teks abu-abu
+  const COLOR_FOCUS_SHADOW = '#484538';     
+
+  const getSelectCustomStyles = (enabled) => ({
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 9999,
+      backgroundColor: enabled ? COLOR_ENABLED_BG : COLOR_DISABLED_BG,
+      color: enabled ? COLOR_ENABLED_TEXT : COLOR_DISABLED_TEXT,
+      border: `1px solid ${enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER}`,
+      borderRadius: 12,
+      marginTop: 0,
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: enabled ? COLOR_ENABLED_BG : COLOR_DISABLED_BG,
+      color: enabled ? COLOR_ENABLED_TEXT : COLOR_DISABLED_TEXT,
+      borderColor: enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER,
+      borderWidth: 1, // tipis
+      borderRadius: 12,
+      boxShadow: state.isFocused && enabled ? `0 0 0 4px ${COLOR_FOCUS_SHADOW}` : 'none',
+      fontSize: '1rem',
+      fontWeight: 400,
+      minHeight: '48px',
+      paddingLeft: 0,
+      paddingRight: 0,
+      opacity: enabled ? 1 : 0.7,
+      transition: 'border-color 0.2s, box-shadow 0.2s, background-color 0.2s',
+      '&:hover': {
+        borderColor: enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER,
+      },
+      cursor: enabled ? 'pointer' : 'not-allowed',
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '8px 12px',
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: enabled ? COLOR_ENABLED_TEXT : COLOR_DISABLED_TEXT,
+      margin: 0,
+      padding: 0,
+      fontSize: '1rem',
+      fontWeight: 400,
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: enabled ? COLOR_ENABLED_TEXT : COLOR_DISABLED_TEXT,
+      fontSize: '1rem',
+      fontWeight: 400,
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: enabled ? 'rgb(197, 194, 194)' : '#666',
+      fontSize: '1rem',
+      fontWeight: 400,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused
+        ? (enabled ? '#1a2238' : COLOR_DISABLED_BG)
+        : (enabled ? COLOR_ENABLED_BG : COLOR_DISABLED_BG),
+      color: enabled ? COLOR_ENABLED_TEXT : COLOR_DISABLED_TEXT,
+      cursor: enabled ? 'pointer' : 'not-allowed',
+      padding: '8px 12px',
+      fontSize: '1rem',
+      fontWeight: 400,
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER,
+      '&:hover': {
+        color: enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER,
+      },
+    }),
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      backgroundColor: enabled ? COLOR_ENABLED_BORDER : COLOR_DISABLED_BORDER,
+    }),
+  });
 
   // Fetch cart & user address
   useEffect(() => {
@@ -310,7 +398,6 @@ const Payment = () => {
   };
 
   useEffect(() => {
-    // Jika address sudah ada dan belum pernah diisi ke state dropdown
     if (
       address &&
       address.province &&
@@ -321,7 +408,7 @@ const Payment = () => {
     ) {
       setProvinceInput(address.province);
       setSelectedProvince(address.province);
-
+  
       // Fetch city/district/subdistrict/zipcode options dari backend
       axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${address.province}`)
         .then(res => {
@@ -329,21 +416,21 @@ const Payment = () => {
           setAllDistricts(res.data.districts);
           setAllSubdistricts(res.data.subdistricts);
           setAllZipcodes(res.data.zipcodes);
-
+  
           // Set selected city
           const cityObj = res.data.cities.find(c => c.name === address.city);
           setSelectedCity(cityObj ? cityObj.id : '');
-
+  
           // Set selected district
           const districtObj = res.data.districts.find(d => d.name === address.district && d.city_name === address.city);
           setDistrictOptions(res.data.districts.filter(d => d.city_name === address.city));
           setSelectedDistrict(districtObj ? districtObj.id : '');
-
+  
           // Set selected subdistrict
           const subdistrictObj = res.data.subdistricts.find(s => s.name === address.subdistrict && s.district_name === address.district);
           setSubdistrictOptions(res.data.subdistricts.filter(s => s.district_name === address.district));
           setSelectedSubdistrict(subdistrictObj ? subdistrictObj.id : '');
-
+  
           // Set selected zipcode
           const zipcodeObj = res.data.zipcodes.find(z => z.name === address.zipCode && z.subdistrict_name === address.subdistrict);
           setZipcodeOptions(res.data.zipcodes.filter(z => z.subdistrict_name === address.subdistrict));
@@ -681,61 +768,93 @@ const Payment = () => {
               </div>
             )}
           </Form.Group>
+
           <Form.Group>
             <Form.Label>City</Form.Label>
-            <Form.Select
-              value={selectedCity}
-              onChange={e => setSelectedCity(e.target.value)}
-              disabled={!selectedProvince}
-            >
-              <option value="">Select City</option>
-              {cityOptions.map(city => (
-                <option key={city.id} value={city.id}>{city.name}</option>
-              ))}
-            </Form.Select>
+            <Select
+              options={cityOptions.map(city => ({
+                value: city.id,
+                label: city.name
+              }))}
+              value={cityOptions.find(city => city.id === selectedCity) ? {
+                value: selectedCity,
+                label: cityOptions.find(city => city.id === selectedCity)?.name
+              } : null}
+              onChange={option => {
+                setSelectedCity(option ? option.value : '');
+                setSelectedDistrict('');
+                setSelectedSubdistrict('');
+                setSelectedZipcode('');
+              }}
+              isDisabled={!selectedProvince}
+              placeholder=""
+              styles={getSelectCustomStyles(!!selectedProvince)}
+            />
           </Form.Group>
+
           <Form.Group>
             <Form.Label>District</Form.Label>
-            <Form.Select
-              value={selectedDistrict}
-              onChange={e => setSelectedDistrict(e.target.value)}
-              disabled={!selectedCity}
-            >
-              <option value="">Select District</option>
-              {districtOptions.map(d => (
-                <option key={d.id} value={d.id}>{d.name}</option>
-              ))}
-            </Form.Select>
+            <Select
+              options={districtOptions.map(d => ({
+                value: d.id,
+                label: d.name
+              }))}
+              value={districtOptions.find(d => d.id === selectedDistrict) ? {
+                value: selectedDistrict,
+                label: districtOptions.find(d => d.id === selectedDistrict)?.name
+              } : null}
+              onChange={option => {
+                setSelectedDistrict(option ? option.value : '');
+                setSelectedSubdistrict('');
+                setSelectedZipcode('');
+              }}
+              isDisabled={!selectedCity}
+              placeholder=""
+              styles={getSelectCustomStyles(!!selectedCity)}
+            />
           </Form.Group>
+
           <Form.Group>
             <Form.Label>Subdistrict</Form.Label>
-            <Form.Select
-              value={selectedSubdistrict}
-              onChange={e => setSelectedSubdistrict(e.target.value)}
-              disabled={!selectedDistrict}
-            >
-              <option value="">Select Subdistrict</option>
-              {subdistrictOptions.map(s => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </Form.Select>
+            <Select
+              options={subdistrictOptions.map(s => ({
+                value: s.id,
+                label: s.name
+              }))}
+              value={subdistrictOptions.find(s => s.id === selectedSubdistrict) ? {
+                value: selectedSubdistrict,
+                label: subdistrictOptions.find(s => s.id === selectedSubdistrict)?.name
+              } : null}
+              onChange={option => {
+                setSelectedSubdistrict(option ? option.value : '');
+                setSelectedZipcode('');
+              }}
+              isDisabled={!selectedDistrict}
+              placeholder=""
+              styles={getSelectCustomStyles(!!selectedDistrict)}
+            />
           </Form.Group>
+
           <Form.Group>
             <Form.Label>Zip Code</Form.Label>
-            <Form.Select
-              value={selectedZipcode}
-              onChange={e => {
-                setSelectedZipcode(e.target.value);
-                console.log('Zipcode selected:', e.target.value);
+            <Select
+              options={zipcodeOptions.map(z => ({
+                value: z.id,
+                label: z.name
+              }))}
+              value={zipcodeOptions.find(z => z.id === selectedZipcode) ? {
+                value: selectedZipcode,
+                label: zipcodeOptions.find(z => z.id === selectedZipcode)?.name
+              } : null}
+              onChange={option => {
+                setSelectedZipcode(option ? option.value : '');
               }}
-              disabled={!selectedSubdistrict}
-            >
-              <option value="">Select Zip Code</option>
-              {zipcodeOptions.map(z => (
-                <option key={z.id} value={z.id}>{z.name}</option>
-              ))}
-            </Form.Select>
+              isDisabled={!selectedSubdistrict}
+              placeholder=""
+              styles={getSelectCustomStyles(!!selectedSubdistrict)}
+            />
           </Form.Group>
+
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowAddressModal(false)}>

@@ -124,7 +124,7 @@ const OrderReceipt = () => {
         {isPaid ? (
           <button
             className="receipt-back-btn"
-            onClick={() => navigate('/profile-orders')}
+            onClick={() => navigate(`/${orderData.userId}/orders`)}
           >
             Back to Orders
           </button>
@@ -143,7 +143,7 @@ const OrderReceipt = () => {
             </button>
             <button
               className="receipt-back-btn secondary"
-              onClick={() => navigate('/profile-orders')}
+              onClick={() => navigate(`/${orderData.userId}/orders`)}
             >
               Back to Orders
             </button>

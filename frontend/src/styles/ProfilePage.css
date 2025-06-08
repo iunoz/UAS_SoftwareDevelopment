@@ -1,3 +1,4 @@
+
 /* Base Styles */
 .profile-page {
   background-color: #1a2238;
@@ -142,6 +143,10 @@
 
 .info-icon {
   font-size: 1.2rem;
+}
+
+.form-label {
+  margin-top: 1rem !important;
 }
 
 /* Action Buttons */
