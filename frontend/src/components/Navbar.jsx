@@ -80,7 +80,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="navbar-end">
-        <Link to={uid ? `/${uid}/cart` : "/login"} className="nav-icon-link">
+        <Link to={uid ? `/${uid}/cart` : "/login"} className="nav-icon-link" title={`${cartCount} item${cartCount !== 1 ? 's' : ''} in cart`}>
           <FaShoppingCart className="nav-icon" />
           {uid && cartCount > 0 && <span className="cart-count">{cartCount}</span>}
         </Link>

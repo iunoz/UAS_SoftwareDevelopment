@@ -27,6 +27,7 @@ export const CartProvider = ({ children }) => {
       });
 
       if (response.data.success) {
+        // Revert to sum of quantities for cart count
         const totalItems = response.data.cart.reduce((sum, item) => sum + item.quantity, 0);
         setCartCount(totalItems);
       }
