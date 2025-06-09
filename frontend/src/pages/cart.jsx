@@ -44,7 +44,9 @@ const Cart = () => {
       });
       
       if (res.data.success) {
-        setCartItems(res.data.cart.map(item => ({
+        // Filter out items with null product to avoid errors
+        const validCartItems = res.data.cart.filter(item => item.product != null);
+        setCartItems(validCartItems.map(item => ({
           id: item.product._id,
           name: item.product.name,
           price: item.product.price,
@@ -52,7 +54,7 @@ const Cart = () => {
           quantity: item.quantity,
           weight: item.product.weight
         })));
-        calculateTotal(res.data.cart);
+        calculateTotal(validCartItems);
       }
     } catch (err) {
       console.error('Error fetching cart:', err);
@@ -71,7 +73,9 @@ const Cart = () => {
 
   // Calculate total price
   const calculateTotal = (items) => {
-    const newTotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    // Defensive: filter items with product not null
+    const validItems = items.filter(item => item.product != null);
+    const newTotal = validItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
     setTotal(newTotal);
   };
 

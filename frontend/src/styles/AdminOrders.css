@@ -1,17 +1,21 @@
-body, .dashboard-admin, .dashboard-content.admin-orders-content {
+.admin-orders-content {
+  margin-left:23%;
   background: #222d52;
+  align-items: center;
+  display:fit-content;
+  justify-content: center;
 }
 .admin-orders-content {
-  min-height: 100vh;
-  padding: 2rem 0 2rem 0;
+  padding-right: 1rem;
   background: #222d52;
 }
 .orders-title {
   color: #e5d3b3;
   font-family: 'Georgia', serif;
-  font-size: 2rem;
+  font-size: 2.5rem;
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin: 2rem auto 3rem auto;
+  max-width: 1200px;
   letter-spacing: 1px;
 }
 .orders-list {
@@ -19,6 +23,7 @@ body, .dashboard-admin, .dashboard-content.admin-orders-content {
   flex-direction: column;
   gap: 2rem;
   align-items: center;
+  margin-right: 0;
 }
 .order-card {
   display: flex;
@@ -28,19 +33,21 @@ body, .dashboard-admin, .dashboard-content.admin-orders-content {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   padding: 1.5rem 2.5rem;
-  min-width: 500px;
-  max-width: 700px;
+  min-width: px;
+  max-width: 1200px;
   width: 100%;
-  color: #e5d3b3;
+  color: #f0e68c;
   font-family: 'Georgia', serif;
   position: relative;
 }
 .order-img-col {
   flex: 0 0 80px;
   display: flex;
+  color: #e5d3b3;
+  background-color: #e5d3b3;
   align-items: center;
   justify-content: center;
-  margin-right: 2rem;
+  margin-right: 3rem;
 }
 .order-chandelier-img {
   width: 70px;
@@ -48,16 +55,25 @@ body, .dashboard-admin, .dashboard-content.admin-orders-content {
   object-fit: contain;
   filter: brightness(1.1) grayscale(0.2);
 }
+.orders-scroll-list {
+  color: #e5d3b3;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: 0;
+  padding-right: 2rem;
+}
 .order-info-col {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  background-color: #e5d3b3;
 }
 .order-product {
   font-size: 1.15rem;
   font-weight: bold;
   margin-bottom: 0.2rem;
+  background-color: #e5d3b3;
 }
 .order-status {
   font-size: 1rem;

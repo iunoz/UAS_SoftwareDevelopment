@@ -33,11 +33,15 @@ export const getSnapToken = async (req, res) => {
 export const saveOrder = async (req, res) => {
     try {
         console.log('saveOrder request body:', req.body);
-        const { userId, items, address, courier, totalAmount, status } = req.body;
+        const { userId, userName, items, address, courier, totalAmount, status } = req.body;
 
         if (!userId || typeof userId !== 'string') {
             console.error('Invalid or missing userId:', userId);
             return res.status(400).json({ success: false, message: 'Invalid or missing userId' });
+        }
+        if (!userName || typeof userName !== 'string') {
+            console.error('Invalid or missing userName:', userName);
+            return res.status(400).json({ success: false, message: 'Invalid or missing userName' });
         }
         if (!items || !Array.isArray(items) || items.length === 0) {
             console.error('Invalid or missing items:', items);
@@ -63,7 +67,8 @@ export const saveOrder = async (req, res) => {
             return {
                 product: new mongoose.Types.ObjectId(item.product),
                 quantity: item.quantity,
-                priceAtPurchase: item.priceAtPurchase
+                priceAtPurchase: item.priceAtPurchase,
+                receipt: item.receipt || ''
             };
         });
 
@@ -72,6 +77,7 @@ export const saveOrder = async (req, res) => {
 
         const newOrder = new Order({
             user: userId,
+            userName: userName,
             items: orderItems,
             Address: address,
             courier: courier,
@@ -125,5 +131,15 @@ export const updateOrderStatus = async (req, res) => {
     } catch (error) {
         console.error('Error updating order status:', error);
         res.status(500).json({ success: false, message: 'Failed to update order status' });
+    }
+};
+
+export const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find().populate('items.product').sort({ orderedAt: -1 });
+        res.status(200).json({ success: true, orders });
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch all orders' });
     }
 };

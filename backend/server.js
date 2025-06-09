@@ -28,6 +28,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
 app.use('/api/ship', shipRouter);
 app.use('/api/payment', paymentRouter);
+/* Removed import and usage of orderRoute.js since the file was deleted */
+// import orderRouter from './routes/orderRoute.js';
+
+// app.use('/api/orders', orderRouter);
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on http://localhost:${PORT}`)

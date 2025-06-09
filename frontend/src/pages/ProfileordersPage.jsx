@@ -386,7 +386,8 @@ const ProfileordersPage = () => {
                         ':hover': {
                           transform: 'scale(1.01)'
                         }
-                      }}                      onClick={() => navigate(`/${uid}/order-receipt`, { 
+                      }}
+                      onClick={() => navigate(`/${uid}/order-receipt`, { 
                         state: {
                           items: order.items,
                           Address: order.address,
@@ -404,7 +405,8 @@ const ProfileordersPage = () => {
                           <div><strong>Product:</strong> {item.product?.name || item.product}</div>
                           <div><strong>Quantity:</strong> {item.quantity}</div>
                         </div>
-                      ))}                      <div>
+                      ))}                      
+                      <div>
                         <strong>Status:</strong>{' '}
                         <span className="badge bg-warning text-dark">
                           {order.status === 'pending' || order.status === 'sedang dikemas'
@@ -412,6 +414,36 @@ const ProfileordersPage = () => {
                             : order.status}
                         </span>
                       </div>
+                      {order.status.toLowerCase() === 'dikirim' && (
+                        <button
+                          className="btn btn-success mt-2"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              const token = await auth.currentUser.getIdToken();
+                              const response = await axios.put(
+                                `http://localhost:4000/api/payment/update-status/${order._id}`,
+                                { status: 'selesai' },
+                                { headers: { Authorization: `Bearer ${token}` } }
+                              );
+                              if (response.data.success) {
+                                // Refresh orders list
+                                const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
+                                if (ordersRes.data.success) {
+                                  setOrders(ordersRes.data.orders);
+                                }
+                              } else {
+                                alert('Failed to update status');
+                              }
+                            } catch (error) {
+                              console.error('Error updating status:', error);
+                              alert('Error updating status');
+                            }
+                          }}
+                        >
+                          Telah Diterima
+                        </button>
+                      )}
                     </div>
                   ))
                 }

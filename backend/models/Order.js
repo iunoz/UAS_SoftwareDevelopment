@@ -4,10 +4,12 @@ const orderItemSchema = new mongoose.Schema({
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   quantity: { type: Number, required: true },
   priceAtPurchase: { type: Number, required: true }, // Simpan harga saat transaksi
+  receipt: { type: String } // Simpan order receipt untuk setiap produk
 });
 
 const orderSchema = new mongoose.Schema({
   user: { type: String, required: true },
+  userName: { type: String, required: true }, // Simpan nama user
   items: [orderItemSchema],
   Address: { type: String, required: true },
   courier: { type: String, enum: ['jne', 'jnt', 'sicepat', 'ninja', 'lion'], required: true },
