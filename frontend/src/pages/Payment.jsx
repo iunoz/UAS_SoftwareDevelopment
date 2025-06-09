@@ -663,37 +663,77 @@ const Payment = () => {
     <div className="payment-container">
       <h2 className="global-title">Payment</h2>
       <hr />
-      {/* Product List (readonly, mirip cart, tidak bisa diedit) */}
+      
+      {/* Product List */}
       <div className="payment-products-list">
         {buyNowState && buyNowProduct ? (
           <div className="payment-product-item">
-            <img src={buyNowProduct.image} alt={buyNowProduct.name} className="payment-product-img" />
+            <img 
+              src={buyNowProduct.image} 
+              alt={buyNowProduct.name} 
+              className="payment-product-img"
+            />
             <div className="payment-product-info">
-              <div className="payment-product-name">{buyNowProduct.name}</div>
-              <div className="payment-product-qty">Qty: {buyNowProduct.quantity}</div>
-              <div className="payment-product-price">Rp {buyNowProduct.price.toLocaleString()}</div>
+              <div className="payment-product-left">
+                <span className="payment-product-name">{buyNowProduct.name}</span>
+                <span className="payment-product-qty">Qty: {buyNowProduct.quantity}</span>
+              </div>
+              <div className="payment-product-right">
+                <span className="payment-product-price">
+                  RP. {(buyNowProduct.price * buyNowProduct.quantity).toLocaleString('id-ID')}
+                </span>
+                <span className="payment-product-unit-price">
+                  @ RP. {buyNowProduct.price.toLocaleString('id-ID')}
+                </span>
+              </div>
             </div>
           </div>
         ) : (
           (selectedProducts && selectedProducts.length > 0
             ? selectedProducts.map(item => (
                 <div className="payment-product-item" key={item.id}>
-                  <img src={item.image} alt={item.name} className="payment-product-img" />
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="payment-product-img"
+                  />
                   <div className="payment-product-info">
-                    <div className="payment-product-name">{item.name}</div>
-                    <div className="payment-product-qty">Qty: {item.quantity}</div>
-                    <div className="payment-product-price">Rp {item.price.toLocaleString()}</div>
+                    <div className="payment-product-left">
+                      <span className="payment-product-name">{item.name}</span>
+                      <span className="payment-product-qty">Qty: {item.quantity}</span>
+                    </div>
+                    <div className="payment-product-right">
+                      <span className="payment-product-price">
+                        RP. {(item.price * item.quantity).toLocaleString('id-ID')}
+                      </span>
+                      <span className="payment-product-unit-price">
+                        @ RP. {item.price.toLocaleString('id-ID')}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))
             : cartItems.length > 0
               ? cartItems.map(item => (
                   <div className="payment-product-item" key={item.id}>
-                    <img src={item.image} alt={item.name} className="payment-product-img" />
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="payment-product-img"
+                    />
                     <div className="payment-product-info">
-                      <div className="payment-product-name">{item.name}</div>
-                      <div className="payment-product-qty">Qty: {item.quantity}</div>
-                      <div className="payment-product-price">Rp {item.price.toLocaleString()}</div>
+                      <div className="payment-product-left">
+                        <span className="payment-product-name">{item.name}</span>
+                        <span className="payment-product-qty">Qty: {item.quantity}</span>
+                      </div>
+                      <div className="payment-product-right">
+                        <span className="payment-product-price">
+                          RP. {(item.price * item.quantity).toLocaleString('id-ID')}
+                        </span>
+                        <span className="payment-product-unit-price">
+                          @ RP. {item.price.toLocaleString('id-ID')}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))

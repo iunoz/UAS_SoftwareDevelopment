@@ -93,9 +93,14 @@
 }
 
 .cart-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;   /* Menjaga rasio gambar tanpa terpotong */
+  border-radius: 8px;    /* Opsional: sudut membulat */
+  background: #fff;      /* Background putih agar gambar kecil tetap jelas */
+  display: block;
+  margin: 0 auto;        /* Tengah secara horizontal */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
   filter: brightness(1.1);
 }
 

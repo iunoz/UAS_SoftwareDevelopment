@@ -286,9 +286,7 @@ const ProductAdmin = () => {
                     />
                   </div>
                   <div className="product-main-info">
-                    <div className="product-name-row">
-                      <span className="product-name">{product.name}</span>
-                    </div>
+                    <div className="product-name-centered">{product.name}</div>
                     <div className="product-qty-price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2.5rem' }}>
                       <div className="product-qty" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <label style={{ color: '#e0c69a', fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 400, marginBottom: '0.3rem' }}>Quantity Of Product</label>

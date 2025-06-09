@@ -76,35 +76,6 @@
   background: #28325a; /* Background yang lebih terang ketika dipilih */
 }
 
-.payment-option img {
-  width: 90px;
-  height: 90px;
-  margin-bottom: 0;
-  display: block;
-}
-
-.payment-option p {
-  margin-top: 1.2rem;
-  margin-bottom: 0;
-  color: #e6d5b8;
-  font-weight: 600;
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-.payment-label {
-  display: block;
-  margin-top: 1.2rem;
-  color: #e6d5b8;
-  font-weight: 600;
-  font-size: 1.2rem;
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2.2rem;
-}
-
 .form-group {
   margin-bottom: 2rem;
   width: 420px;
@@ -262,46 +233,126 @@
   outline: none;
 }
 
+/* Update product list styles */
 .payment-products-list {
   margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 800px;
+  max-width: 98vw;
 }
+
 .payment-product-item {
   display: flex;
-  align-items: center;
-  background: #28325a;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  align-items: center; /* Ubah ke center untuk vertical alignment */
+  gap: 14px;
+  padding: 0;
+  background: none;
 }
+
+.payment-product-item:hover {
+  background: none;
+}
+
 .payment-product-img {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   border-radius: 8px;
   background: #fff;
-  margin-right: 1.5rem;
 }
+
 .payment-product-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Ubah ke center untuk vertical alignment */
+}
+
+.payment-product-left {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  color: #e6d5b8;
+  gap: 4px;
+  margin-left: 10px; /* Tambah margin kiri */
+  align-items: flex-start;
 }
+
+.payment-product-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  min-width: 200px;
+  margin-right: 10px; /* Tambah margin kanan */
+}
+
 .payment-product-name {
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 500;
+  color: #d4af37;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 4px; /* Tambah margin bottom */
+  width: 100%;
 }
+
 .payment-product-qty {
-  color: #e6d5b8;
-  font-size: 1rem;
+  color: #e0c69a;
+  font-size: 0.95rem;
+  text-align: left;
+  width: 100%;
 }
+
 .payment-product-price {
   color: #d4af37;
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 4px; /* Tambah margin bottom */
 }
+
+.payment-product-unit-price {
+  color: #e0c69a;
+  font-size: 0.95rem;
+}
+
+.payment-products-list {
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 800px;
+  max-width: 98vw;
+  padding-bottom: 30px;
+  border-bottom: 3px solid rgba(212, 175, 55, 0.2);
+  max-height: 60vh;         /* Batasi tinggi agar muncul scrollbar */
+  overflow-y: auto;         /* Aktifkan scrollbar vertikal */
+  padding-right: 12px;      /* Agar konten tidak tertutup scrollbar */
+  scrollbar-width: thin;    /* Firefox: tipiskan scrollbar */
+  scrollbar-color: #d4af37 rgba(255,255,255,0.1); /* Firefox: warna scrollbar */
+}
+
+.payment-products-list::-webkit-scrollbar {
+  width: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.payment-products-list::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 4px;
+  min-height: 40px;
+}
+
+.payment-products-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+/* Hapus border bottom dari item terakhir jika ada */
+.payment-product-item:last-child {
+  border-bottom: none;
+}
+
 .address-display.address-input {
   background: #28325a;
   color: #e6d5b8;
