@@ -61,6 +61,20 @@
   margin-left: auto;
   margin-right: 0;
   padding-right: 2rem;
+  max-height: 520px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ceae43 #222d52;
+}
+.orders-scroll-list::-webkit-scrollbar {
+  width: 8px;
+}
+.orders-scroll-list::-webkit-scrollbar-thumb {
+  background: #ceae43;
+  border-radius: 6px;
+}
+.orders-scroll-list::-webkit-scrollbar-track {
+  background: #222d52;
 }
 .order-info-col {
   flex: 1;
@@ -94,3 +108,71 @@
 
 /* Remove old table styles */
 .orders-table, .orders-table th, .orders-table td, .view-btn { display: none !important; }
+.admin-orders-searchbar {
+  background: #181e33;
+  color: #e5d3b3;
+  border: 2px solid #c1a139;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 350px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.admin-orders-searchbar:focus {
+  outline: none;
+  border-color: #e5d3b3;
+  box-shadow: 0 0 0 2px #c1a13944;
+  background: #222d52;
+}
+::placeholder {
+  color: #bba77b;
+  opacity: 1;
+}
+.order-list-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 110px;
+} 
+.order-id-col {
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 0.5rem;
+  background: #f8d594e8;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  color: #222a4d;
+  box-shadow: -2px 0 8px 0 #00000010 inset;
+}
+.order-id-label {
+  font-size: 1.13rem;
+  font-weight: 700;
+  color: #222a4d;
+  letter-spacing: 1px;
+  margin-bottom: 0.2rem;
+}
+.order-id-value {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #222a4d;
+  word-break: break-all;
+  letter-spacing: 0.5px;
+}
+@media (max-width: 900px) {
+  .order-id-col {
+    margin-top: 1.2rem;
+    min-width: unset;
+    font-size: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0 0 12px 12px;
+  }
+}

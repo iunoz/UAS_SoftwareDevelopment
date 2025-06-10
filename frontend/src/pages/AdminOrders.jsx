@@ -8,6 +8,7 @@ const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState(''); // Tambah state search
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,9 +34,16 @@ const AdminOrders = () => {
     setStatusFilter(status);
   };
 
+  // Filter orders by status and search term
   const filteredOrders = orders.filter(order => {
-    if (statusFilter.toLowerCase() === 'all') return true;
-    return order.status.toLowerCase() === statusFilter.toLowerCase();
+    // Filter by status
+    const statusMatch = statusFilter.toLowerCase() === 'all' || order.status.toLowerCase() === statusFilter.toLowerCase();
+    // Filter by search term (id or name)
+    if (!searchTerm.trim()) return statusMatch;
+    const term = searchTerm.trim().toLowerCase();
+    const idMatch = order._id && order._id.toLowerCase().includes(term);
+    const nameMatch = order.userName && order.userName.toLowerCase().includes(term);
+    return statusMatch && (idMatch || nameMatch);
   });
 
   if (loading) {
@@ -55,6 +63,25 @@ const AdminOrders = () => {
       <AdminNavbar />
       <Container className="dashboard-content admin-orders-content">
         <h1 className="orders-title">ON GOING ORDERS</h1>
+        {/* Search Bar */}
+        <div className="mb-3 d-flex justify-content-center align-items-center gap-2">
+          <input
+            type="text"
+            className="admin-orders-searchbar"
+            style={{ maxWidth: 600, minWidth: 300, width: '100%' }}
+            placeholder="Search by Order ID or Buyer Name..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') e.preventDefault(); }}
+          />
+          <Button
+            variant="warning"
+            style={{ height: '42px', fontWeight: 600, fontFamily: 'Georgia, serif', color: '#222d52', minWidth: 90 }}
+            onClick={e => { /* Tidak perlu aksi khusus, filter sudah realtime */ }}
+          >
+            Search
+          </Button>
+        </div>
         <div className="order-filter-buttons mb-3 d-flex justify-content-center gap-3">
           {['All', 'Belum Bayar', 'Sedang Dikemas', 'Dikirim', 'Selesai'].map((status) => {
             const isActive = statusFilter === status;
@@ -77,12 +104,15 @@ const AdminOrders = () => {
             filteredOrders.map((order) => (
               <div
                 key={order._id}
-                className="mb-3 p-2"
+                className="mb-3 p-2 d-flex align-items-stretch order-list-row"
                 style={{
                   background: '#222a4d',
                   borderRadius: 8,
                   cursor: 'pointer',
                   transition: 'transform 0.2s ease',
+                  minHeight: 110,
+                  border: '1px solid #2E3A6C',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.10)'
                 }}
                 onClick={() => {
                   let role = localStorage.getItem('role');
@@ -104,22 +134,30 @@ const AdminOrders = () => {
                   });
                 }}
               >
-                <div><strong>Order by:</strong> {order.userName}</div>
-                <div><strong>Status:</strong> {order.status}</div>
-                <div>
-                  <strong>Items:</strong>
-                  <ul>
-                    {order.items.map((item) => (
-                      <li key={item._id}>
-                        Product: {item.product?.name || item.product} - Quantity: {item.quantity} - Price: {item.priceAtPurchase}
-                        {item.receipt && (
-                          <div>
-                            Receipt: <a href={item.receipt} target="_blank" rel="noopener noreferrer">View</a>
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+                {/* Detail pesanan di kiri */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 1.5rem 0 0', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+                  <div><strong>Ordered By:</strong> {order.userName}</div>
+                  <div><strong>Status:</strong> {order.status}</div>
+                  <div>
+                    <strong>Items:</strong>
+                    <ul style={{ marginBottom: 0 }}>
+                      {order.items.map((item) => (
+                        <li key={item._id} style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>
+                          Product: {item.product?.name || item.product} - Quantity: {item.quantity} - Price: {item.priceAtPurchase}
+                          {item.receipt && (
+                            <div>
+                              Receipt: <a href={item.receipt} target="_blank" rel="noopener noreferrer">View</a>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {/* Order ID di kanan */}
+                <div className="order-id-col">
+                  <span className="order-id-label">ORDER ID:</span><br />
+                  <span className="order-id-value">{order._id}</span>
                 </div>
               </div>
             ))
