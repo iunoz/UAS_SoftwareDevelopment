@@ -673,6 +673,8 @@ const Payment = () => {
           if (overlay) {
             overlay.style.display = 'none';
           }
+          // Redirect to profile orders page
+          navigate(`/${currentUser.uid}/orders`);
         }
       });
     } catch (error) {
