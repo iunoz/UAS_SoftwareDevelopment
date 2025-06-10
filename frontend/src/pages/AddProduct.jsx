@@ -101,9 +101,15 @@ const AddProduct = () => {
               />
             </div>
             <div className="add-product-fields-section">
-              <div className="form-group">
-                <label>Name</label>
-                <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Product name..." required />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Name</label>
+                  <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Product name..." required />
+                </div>
+                <div className="form-group">
+                  <label>Weight (gram)</label>
+                  <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="XXXX (Gram)" required min="0" />
+                </div>
               </div>
               <div className="form-group">
                 <label>Description</label>
@@ -118,10 +124,7 @@ const AddProduct = () => {
                   <label>Quantity</label>
                   <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="XX" required min="0" />
                 </div>
-                <div className="form-group">
-                  <label>Weight (gram)</label>
-                  <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="XXXX (Gram)" required min="0" />
-                </div>
+                
               </div>
               <div className="form-row">
                 <div className="form-group">
