@@ -46,14 +46,17 @@ const Cart = () => {
       if (res.data.success) {
         // Filter out items with null product to avoid errors
         const validCartItems = res.data.cart.filter(item => item.product != null);
-        setCartItems(validCartItems.map(item => ({
+        const mappedItems = validCartItems.map(item => ({
           id: item.product._id,
           name: item.product.name,
           price: item.product.price,
           image: item.product.image,
-          quantity: item.quantity,
-          weight: item.product.weight
-        })));
+          quantity: Number(item.quantity), // Pastikan quantity selalu number
+          weight: item.product.weight,
+          stock: Number(item.product.stock) // Pastikan stock selalu number
+        }));
+        console.log('Cart Items:', mappedItems); // Untuk debugging
+        setCartItems(mappedItems);
         calculateTotal(validCartItems);
       }
     } catch (err) {
@@ -85,11 +88,17 @@ const Cart = () => {
     if (!item) return;
     
     const newQty = item.quantity + change;
+    console.log('Update Quantity:', { currentQty: item.quantity, stock: item.stock, newQty }); // Debug
+
     if (newQty < 1) {
-      // Jika hasilnya kurang dari 1, hapus item
       await handleDeleteItem(id);
       return;
-    } 
+    }
+    
+    if (newQty > item.stock) {
+      toast.error(`Stock tidak mencukupi. Maksimal ${item.stock}`);
+      return;
+    }
 
     try {
       const currentUser = auth.currentUser;
@@ -107,9 +116,16 @@ const Cart = () => {
       });
 
       if (response.data.success) {
+        // Update state lokal dulu
+        setCartItems(prevItems => 
+          prevItems.map(item => 
+            item.id === id ? { ...item, quantity: newQty } : item
+          )
+        );
+        
+        // Lalu fetch untuk memastikan sinkronisasi
         await fetchCart();
         fetchCartCount();
-        toast.success('Cart updated successfully');
       }
     } catch (err) {
       console.error('Error updating quantity:', err);
@@ -123,12 +139,20 @@ const Cart = () => {
 
   // Handle direct quantity input
   const handleInputChange = (id, value) => {
-    // Izinkan input kosong agar user bisa menghapus angka
+    const item = cartItems.find(i => i.id === id);
+    if (!item) return;
+
     let newValue = value;
-    // Hilangkan leading zero, kecuali jika user memang ingin kosong
-    if (newValue.length > 1 && newValue.startsWith("0")) {
-      newValue = newValue.replace(/^0+/, "");
+    // Konversi ke number untuk validasi
+    const numValue = Number(newValue);
+    const maxStock = Number(item.stock);
+    
+    // Validasi stok
+    if (!isNaN(numValue) && numValue > maxStock) {
+      newValue = maxStock;
+      toast.error(`Stock tidak mencukupi. Maksimal ${maxStock}`);
     }
+
     setCartItems(items =>
       items.map(item =>
         item.id === id ? { ...item, quantity: newValue } : item
@@ -158,6 +182,17 @@ const Cart = () => {
       setCartItems(items =>
         items.map(item =>
           item.id === id ? { ...item, quantity: prevQuantities[id] || 1 } : item
+        )
+      );
+      return;
+    }
+
+    const item = cartItems.find(i => i.id === id);
+    if (item && item.stock !== undefined && qty > item.stock) {
+      toast.error(`Stock tidak mencukupi. Maksimal ${item.stock}`);
+      setCartItems(items =>
+        items.map(itm =>
+          itm.id === id ? { ...itm, quantity: item.stock } : itm
         )
       );
       return;
@@ -379,27 +414,36 @@ const Cart = () => {
                       variant="dark"
                       className="cart-qty-btn"
                       onClick={() => updateQuantity(item.id, -1)}
+                      disabled={item.quantity <= 1}
                     >
                       <FaMinus size={12} />
                     </Button>
                     <input
                       type="number"
                       min="1"
-                      value={item.quantity === "" ? "" : item.quantity}
+                      max={item.stock}
+                      value={item.quantity}
                       onFocus={() => handleInputFocus(item.id, item.quantity)}
                       onBlur={(e) => handleInputBlur(item.id, e.target.value)}
-                      onChange={(e) => handleInputChange(item.id, e.target.value)}
+                      onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        if (newValue > item.stock) {
+                          toast.error(`Stock tidak mencukupi. Maksimal ${item.stock}`);
+                          return;
+                        }
+                        handleInputChange(item.id, newValue);
+                      }}
                       className="cart-qty-num"
                     />
                     <Button
                       variant="dark"
                       className="cart-qty-btn"
                       onClick={() => updateQuantity(item.id, 1)}
+                      disabled={item.quantity >= item.stock}
                     >
                       <FaPlus size={12} />
                     </Button>
-                    <Button
-                      variant="danger"
+                    <Button                      variant="danger"
                       className="cart-delete-btn ms-2"
                       onClick={() => handleDeleteItem(item.id)}
                     >
