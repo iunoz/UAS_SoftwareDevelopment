@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminNavbar from '../components/AdminNavbar';
 import '../styles/ProductAdmin.css';
 import chandelier from '../assets/images/chandelier.jpg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const categories = [
@@ -13,6 +13,7 @@ const collections = [
 ];
 
 const ProductAdmin = () => {
+  const { uid } = useParams();
   const [products, setProducts] = useState([]);
   const [editImage, setEditImage] = useState(null); // index of editing image
   const [editName, setEditName] = useState(null); // index of editing name
@@ -133,7 +134,7 @@ const ProductAdmin = () => {
         <button
           className="add-product-btn"
           style={{ marginLeft: 0, marginBottom: '1.5rem', display: 'block' }}
-          onClick={() => navigate('/addproduct')}
+          onClick={() => navigate(`/${uid}/addproduct`)}
         >
           Add Product
         </button>
