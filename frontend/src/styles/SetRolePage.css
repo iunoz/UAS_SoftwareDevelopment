@@ -19,7 +19,10 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(34, 45, 82, 0.1);
-  border: none; /* border dihapus */
+  border: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 600px; /* Set minimum height to ensure consistent spacing */
 }
 
 .set-role-content h2 {
@@ -39,6 +42,7 @@
   background-color: #e0c69a;
   border-radius: 8px;
   overflow: hidden;
+  table-layout: fixed;
 }
 
 .set-role-table thead {
@@ -55,6 +59,35 @@
   padding: 0.85rem 1rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
+}
+
+.set-role-table th:nth-child(1),
+.set-role-table td:nth-child(1) {
+  width: 24%; /* Name */
+  min-width: 120px;
+  max-width: 220px;
+  word-break: break-word;
+}
+.set-role-table th:nth-child(2),
+.set-role-table td:nth-child(2) {
+  width: 32%; /* Email */
+  min-width: 180px;
+  max-width: 320px;
+  word-break: break-word;
+}
+.set-role-table th:nth-child(3),
+.set-role-table td:nth-child(3) {
+  width: 18%; /* Role */
+  min-width: 80px;
+  max-width: 120px;
+  word-break: break-word;
+}
+.set-role-table th:nth-child(4),
+.set-role-table td:nth-child(4) {
+  width: 26%; /* Action */
+  min-width: 120px;
+  max-width: 180px;
+  word-break: break-word;
 }
 
 .set-role-table tbody tr:hover {
@@ -109,4 +142,13 @@
   font-size: 0.9rem;
   display: block;
   box-shadow: none !important;
+}
+
+/* Add new styles for pagination container */
+.pagination-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 1.5rem;
 }
