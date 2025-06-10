@@ -56,7 +56,91 @@ const ProfileordersPage = () => {
     zipCode: ''
   });
 
-  const [imageLoading, setImageLoading] = useState(false);
+const [imageLoading, setImageLoading] = useState(false);
+const [paymentInProgress, setPaymentInProgress] = useState(false);
+
+const handleCompletePayment = async (order) => {
+  if (paymentInProgress) {
+    return; // Prevent multiple payment popups
+  }
+  setPaymentInProgress(true);
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert('Please login first.');
+      setPaymentInProgress(false);
+      return;
+    }
+    // Call backend to get Midtrans snap token for existing order
+    const response = await axios.post('http://localhost:4000/api/payment/create-payment', {
+      orderId: order._id,
+      amount: order.totalAmount,
+      name: currentUser.displayName || 'Customer',
+      email: currentUser.email || ''
+    });
+    if (!response.data.token) {
+      throw new Error('Failed to get payment token');
+    }
+    const token = response.data.token;
+    // Load Midtrans script dynamically
+    await new Promise((resolve, reject) => {
+      if (document.getElementById('midtrans-script')) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+      script.id = 'midtrans-script';
+      script.setAttribute('data-client-key', 'SB-Mid-client-huB53_HU9pUQhE3N');
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load Midtrans script'));
+      document.body.appendChild(script);
+    });
+    // Open Midtrans payment popup
+    window.snap.pay(token, {
+      onSuccess: async function(result) {
+        alert('Payment success!');
+        try {
+          // Update order status to 'Sedang Dikemas' after successful payment
+          await axios.put(`http://localhost:4000/api/payment/update-status/${order._id}`, {
+            status: 'Sedang Dikemas'
+          });
+          // Refresh orders list
+          const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${order.user}`);
+          if (ordersRes.data.success) {
+            setOrders(ordersRes.data.orders);
+          }
+          setPaymentInProgress(false);
+        } catch (error) {
+          console.error('Error updating order status:', error);
+          alert('Failed to update order status');
+          setPaymentInProgress(false);
+        }
+      },
+      onPending: async function(result) {
+        alert('Payment pending!');
+        setPaymentInProgress(false);
+        // Refresh orders list
+        const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${order.user}`);
+        if (ordersRes.data.success) {
+          setOrders(ordersRes.data.orders);
+        }
+      },
+      onError: function(result) {
+        alert('Payment failed!');
+        setPaymentInProgress(false);
+      },
+      onClose: function() {
+        alert('You closed the payment popup without finishing the payment');
+        setPaymentInProgress(false);
+      }
+    });
+  } catch (error) {
+    console.error('Error during payment:', error);
+    alert('Failed to process payment. Please try again.');
+    setPaymentInProgress(false);
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -362,91 +446,96 @@ const ProfileordersPage = () => {
               <span>No orders yet.</span>
             ) : (
               <div className="orders-scroll-list">
-                {orders
-                  .filter(order => {
-                    const status = order.status.trim().toLowerCase();
-                    console.log('Filtering order status:', status, 'with filter:', orderFilter);
-                    if (orderFilter === 'Semua') return true;
-                    if (orderFilter === 'Dikirim') return status === 'dikirim';
-                    if (orderFilter === 'Belum Bayar') {
-                      // Explicitly check for 'belum bayar' or 'unpaid' or any other variants
-                      return ['belum bayar', 'unpaid', 'pending payment'].includes(status);
-                    }
-                    if (orderFilter === 'Sedang Dikemas') return status === 'sedang dikemas' || status === 'pending';
-                    if (orderFilter === 'Selesai') return status === 'selesai';
-                    return true;
-                  }).map((order, idx) => (
-                    <div key={idx} 
-                      className="mb-3 p-2" 
-                      style={{ 
-                        background: '#222a4d', 
-                        borderRadius: 8,
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s ease',
-                        ':hover': {
-                          transform: 'scale(1.01)'
-                        }
-                      }}
-                      onClick={() => navigate(`/${uid}/order-receipt`, { 
-                        state: {
-                          items: order.items,
-                          Address: order.address,
-                          courier: order.courier,
-                          totalAmount: order.totalAmount,
-                          status: order.status,
-                          orderId: order._id,
-                          userId: uid
-                        }
-                      })}
-                    >
-                      <div><strong>Order ID:</strong> {order._id}</div>
-                      {order.items.map((item, i) => (
-                        <div key={i}>
-                          <div><strong>Product:</strong> {item.product?.name || item.product}</div>
-                          <div><strong>Quantity:</strong> {item.quantity}</div>
-                        </div>
-                      ))}                      
-                      <div>
-                        <strong>Status:</strong>{' '}
-                        <span className="badge bg-warning text-dark">
-                          {order.status === 'pending' || order.status === 'sedang dikemas'
-                            ? 'Sedang Dikemas'
-                            : order.status}
-                        </span>
-                      </div>
-                      {order.status.toLowerCase() === 'dikirim' && (
-                        <button
-                          className="btn btn-success mt-2"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            try {
-                              const token = await auth.currentUser.getIdToken();
-                              const response = await axios.put(
-                                `http://localhost:4000/api/payment/update-status/${order._id}`,
-                                { status: 'selesai' },
-                                { headers: { Authorization: `Bearer ${token}` } }
-                              );
-                              if (response.data.success) {
-                                // Refresh orders list
-                                const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
-                                if (ordersRes.data.success) {
-                                  setOrders(ordersRes.data.orders);
-                                }
-                              } else {
-                                alert('Failed to update status');
-                              }
-                            } catch (error) {
-                              console.error('Error updating status:', error);
-                              alert('Error updating status');
-                            }
-                          }}
-                        >
-                          Telah Diterima
-                        </button>
-                      )}
-                    </div>
-                  ))
+{orders
+  .filter(order => {
+    const status = order.status.trim().toLowerCase();
+    console.log('Filtering order status:', status, 'with filter:', orderFilter);
+    if (orderFilter === 'Semua') return true;
+    if (orderFilter === 'Dikirim') return status === 'dikirim';
+    if (orderFilter === 'Belum Bayar') {
+      // Explicitly check for 'belum bayar' or 'unpaid' or any other variants
+      return ['belum bayar', 'unpaid', 'pending payment'].includes(status);
+    }
+    if (orderFilter === 'Sedang Dikemas') return status === 'sedang dikemas' || status === 'pending';
+    if (orderFilter === 'Selesai') return status === 'selesai';
+    return true;
+  }).map((order, idx) => (
+    <div key={idx} 
+      className="mb-3 p-2" 
+      style={{ 
+        background: '#222a4d', 
+        borderRadius: 8,
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease',
+        ':hover': {
+          transform: 'scale(1.01)'
+        }
+      }}
+      onClick={() => navigate(`/${uid}/order-receipt`, { 
+        state: {
+          items: order.items,
+          Address: order.address,
+          courier: order.courier,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          orderId: order._id,
+          userId: uid
+        }
+      })}
+    >
+      <div><strong>Order ID:</strong> {order._id}</div>
+      {order.items.map((item, i) => (
+        <div key={i}>
+          <div><strong>Product:</strong> {item.product?.name || item.product}</div>
+          <div><strong>Quantity:</strong> {item.quantity}</div>
+        </div>
+      ))}                      
+      <div>
+        <strong>Status:</strong>{' '}
+        <span className="badge bg-warning text-dark">
+          {order.status === 'pending' || order.status === 'sedang dikemas'
+            ? 'Sedang Dikemas'
+            : order.status}
+        </span>
+      </div>
+      {order.status.toLowerCase() === 'belum bayar' && (
+        <>
+          {/* Removed Complete Payment button as per user request */}
+        </>
+      )}
+      {order.status.toLowerCase() === 'dikirim' && (
+        <button
+          className="btn btn-success mt-2"
+          onClick={async (e) => {
+            e.stopPropagation();
+            try {
+              const token = await auth.currentUser.getIdToken();
+              const response = await axios.put(
+                `http://localhost:4000/api/payment/update-status/${order._id}`,
+                { status: 'selesai' },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              if (response.data.success) {
+                // Refresh orders list
+                const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
+                if (ordersRes.data.success) {
+                  setOrders(ordersRes.data.orders);
                 }
+              } else {
+                alert('Failed to update status');
+              }
+            } catch (error) {
+              console.error('Error updating status:', error);
+              alert('Error updating status');
+            }
+          }}
+        >
+          Telah Diterima
+        </button>
+      )}
+    </div>
+  ))
+}
               </div>
             )}
           </div>
