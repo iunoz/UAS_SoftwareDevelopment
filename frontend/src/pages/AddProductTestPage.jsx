@@ -71,8 +71,14 @@ const handleChange = (e) => {
     <div style={{ padding: '2rem' }}>
       <h2>Add Product (Test Page)</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data" style={{ marginBottom: '2rem' }}>
-        <input type="text" name="name" placeholder="Name" onChange={handleChange} required /><br />
-        <textarea name="description" placeholder="Description" onChange={handleChange} required /><br />
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Name" onChange={handleChange} required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea id="description" name="description" placeholder="Description" onChange={handleChange} required />
+        </div>
         <input type="number" name="price" placeholder="Price" onChange={handleChange} required /><br />
         <input type="number" name="quantity" placeholder="Quantity" onChange={handleChange} required /><br />
         <select name="category" onChange={handleChange} required>

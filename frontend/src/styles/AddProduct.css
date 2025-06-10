@@ -14,16 +14,19 @@
   letter-spacing: 0.05em;
 }
 .add-product-form {
-  max-width: 1800px;
+  max-width: 900px;
   margin: 0 auto;
   background: #2e3a6c;
   border-radius: 12px;
-  padding: 2em 2.5rem 2rem 2.5rem;
+  padding: 1.5em 1.5rem 1.5rem 1.5rem;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .add-product-grid {
   display: flex;
-  gap: 2.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 .add-product-image-section {
   flex: 1;
@@ -74,6 +77,7 @@
   flex-direction: column;
   gap: 0.3rem;
   margin-bottom: 0.7rem;
+  width: 150%;
 }
 .form-row {
   display: flex;
@@ -83,16 +87,32 @@
   color: #e0c69a;
   font-size: 1.1rem;
   font-family: 'Cinzel', serif;
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  margin-left: -0.5rem;
 }
 .form-group input,
 .form-group textarea {
   background: #222d52;
   color: #fff;
-  border: 1.5px solid #e0c69a;
+  border: 1.1px solid #fff;
   border-radius: 6px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-family: inherit;
+  width: 204%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  box-sizing: border-box;
+}
+.form-group label {
+  text-align: center;
+  width: 100%;
+  display: block;
 }
 .form-group textarea {
   min-height: 100px;
