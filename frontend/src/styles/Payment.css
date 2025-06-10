@@ -77,7 +77,8 @@
 }
 
 .form-group {
-  margin-bottom: 2rem;
+  position: relative;
+  margin-bottom: 1.5rem;
   width: 420px;
   font-size: 1.2rem;
 }
@@ -165,12 +166,12 @@
   top: auto;
   transform: none;
   margin-left: 0;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   background: #e6d5b8;
   color: #222d52;
   border: none;
   border-radius: 6px;
-  padding: 0.5rem 2rem;
+  padding: 0.3rem 1.3rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
@@ -544,6 +545,7 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-item {

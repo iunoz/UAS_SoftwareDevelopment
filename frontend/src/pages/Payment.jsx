@@ -857,7 +857,7 @@ const Payment = () => {
               onChange={e => setTempStreet(e.target.value)}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group style={{ position: 'relative' }}>
             <Form.Label>Province</Form.Label>
             <Form.Control
               type="text"
