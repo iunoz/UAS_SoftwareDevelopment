@@ -17,7 +17,6 @@ const courierList = [
 ];
 
 const Payment = () => {
-  const [selectedMethod, setSelectedMethod] = useState(null);
   const [address, setAddress] = useState(null);
   const [cartTotal, setCartTotal] = useState(0);
   const navigate = useNavigate();
@@ -377,10 +376,6 @@ const Payment = () => {
     }
   };
 
-  const handleMethodSelect = (method) => {
-    setSelectedMethod(method);
-  };
-
   // Fetch shipping cost when courier or zipcode changes
   useEffect(() => {
     // Debug: log state
@@ -544,10 +539,21 @@ const Payment = () => {
     if (paymentInProgress) {
       return; // Prevent multiple payment popups
     }
+
+    // Validasi input
+    if (!address) {
+      alert('Please set your delivery address first.');
+      return;
+    }
     if (!selectedCourier) {
       alert('Please select a courier before making an order.');
       return;
     }
+    if (!selectedShippingService) {
+      alert('Please select a shipping service before making an order.');
+      return;
+    }
+
     setPaymentInProgress(true);
     try {
       const currentUser = auth.currentUser;
@@ -560,6 +566,7 @@ const Payment = () => {
       // Prepare order data
       const orderData = {
         userId: currentUser.uid,
+        userName: currentUser.displayName || 'Customer',
         items: buyNowState && buyNowProduct ? [{
           product: buyNowProduct.id || buyNowProduct._id,
           quantity: buyNowProduct.quantity,
@@ -579,11 +586,18 @@ const Payment = () => {
         address: address ? `${address.street}, ${address.subdistrict}, ${address.district}, ${address.city}, ${address.province}, ${address.zipCode}` : '',
         courier: selectedCourier,
         totalAmount: (buyNowState ? buyNowTotal : cartTotal) + shippingCost,
-        status: 'Belum Bayar' // Set initial status as Unpaid
+        status: 'Belum Bayar'
       };
+
+      console.log('Saving order with data:', orderData); // Debug log
 
       // Save order to backend immediately with status 'Belum Bayar'
       const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+      console.log('Order saved:', saveRes.data); // Debug log
+
+      if (!saveRes.data.success) {
+        throw new Error('Failed to save order');
+      }
 
       // Proceed with Midtrans payment
       await loadMidtransScript();
@@ -596,11 +610,18 @@ const Payment = () => {
         email: currentUser.email || ''
       });
 
+      console.log('Payment response:', response.data); // Debug log
+
+      if (!response.data.token) {
+        throw new Error('Failed to get payment token');
+      }
+
       const token = response.data.token;
 
       // Open Midtrans payment popup
       window.snap.pay(token, {
         onSuccess: async function(result) {
+          console.log('Payment success:', result); // Debug log
           alert('Payment success!');
           try {
             // Update order status to 'Sedang Dikemas' after successful payment
@@ -622,6 +643,7 @@ const Payment = () => {
           }
         },
         onPending: async function(result) {
+          console.log('Payment pending:', result); // Debug log
           alert('Payment pending!');
           setPaymentInProgress(false);
           // Remove Midtrans overlay
@@ -633,8 +655,8 @@ const Payment = () => {
           navigate(`/${currentUser.uid}/orders`, { state: { newOrderId: saveRes.data.order._id } });
         },
         onError: function(result) {
+          console.error('Payment error:', result); // Debug log
           alert('Payment failed!');
-          console.error(result);
           setPaymentInProgress(false);
           // Remove Midtrans overlay
           const overlay = document.querySelector('.midtrans-overlay');
@@ -643,6 +665,7 @@ const Payment = () => {
           }
         },
         onClose: function() {
+          console.log('Payment popup closed'); // Debug log
           alert('You closed the payment popup without finishing the payment');
           setPaymentInProgress(false);
           // Remove Midtrans overlay
