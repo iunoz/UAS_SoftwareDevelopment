@@ -7,7 +7,8 @@ import productRoutes from './routes/productRoutes.js';
 import cartRouter from './routes/cartRoute.js';
 import connectCloudinary from './configs/cloudinary.js';
 import shipRouter from './routes/shipRoute.js';
-import paymentRouter from './routes/paymentRoute.js'; // tambah ini
+import paymentRouter from './routes/paymentRoute.js'; 
+import adminRouter from './routes/adminRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -28,6 +29,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRouter);
 app.use('/api/ship', shipRouter);
 app.use('/api/payment', paymentRouter);
+app.use('/api/admin', adminRouter); 
 /* Removed import and usage of orderRoute.js since the file was deleted */
 // import orderRouter from './routes/orderRoute.js';
 

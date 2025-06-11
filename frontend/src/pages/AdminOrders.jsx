@@ -51,7 +51,7 @@ const AdminOrders = () => {
       <div className="dashboard-admin">
         <AdminNavbar />
         <div className="dashboard-content admin-orders-content">
-          <h1 className="orders-title">ON GOING ORDERS</h1>
+          <h1 className="admin-page-title">ON GOING ORDERS</h1>
           <p>Loading orders...</p>
         </div>
       </div>

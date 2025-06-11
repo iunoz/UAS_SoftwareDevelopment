@@ -1,4 +1,14 @@
 /* SetRolePage.css */
+.admin-page-title {
+  color: #e0c69a;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
 
 .set-role-page {
   display: flex;

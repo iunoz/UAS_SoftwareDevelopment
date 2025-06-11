@@ -72,8 +72,8 @@ const SetRolePage = () => {
   return (
     <div className="set-role-page">
       <AdminNavbar />
+      <h1 className='admin-page-title'>SET ADMIN ROLE</h1>
       <div className="set-role-content">
-        <h2>Set Admin Role</h2>
         {error && <div className="error-text">{error}</div>}
         {info && <div className="info-text">{info}</div>}
         <table className="set-role-table">

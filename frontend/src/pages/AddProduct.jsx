@@ -76,7 +76,7 @@ const AddProduct = () => {
     <div className="dashboard-admin">
       <AdminNavbar />
       <div className="dashboard-content add-product-content">
-        <h1 className="add-product-title">ADD PRODUCT</h1>
+        <h1 className="admin-page-title">ADD PRODUCT</h1>
         <form className="add-product-form" onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="add-product-grid">
             <div className="add-product-image-section">

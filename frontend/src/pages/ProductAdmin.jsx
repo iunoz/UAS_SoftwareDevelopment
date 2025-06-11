@@ -130,7 +130,7 @@ const ProductAdmin = () => {
     <div className="dashboard-admin">
       <AdminNavbar />
       <div className="dashboard-content product-admin-content">
-        <h1 className="product-title">PRODUCT</h1>
+        <h1 className="admin-page-title">PRODUCT</h1>
         <button
           className="add-product-btn"
           style={{ marginLeft: 0, marginBottom: '1.5rem', display: 'block' }}
