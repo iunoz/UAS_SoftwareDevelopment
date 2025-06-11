@@ -142,16 +142,15 @@ const Cart = () => {
     const item = cartItems.find(i => i.id === id);
     if (!item) return;
 
-    let newValue = value;
-    // Konversi ke number untuk validasi
-    const numValue = Number(newValue);
+    let newValue = Number(value);
     const maxStock = Number(item.stock);
-    
-    // Validasi stok
-    if (!isNaN(numValue) && numValue > maxStock) {
+
+    // Batasi input agar tidak melebihi stok
+    if (!isNaN(newValue) && newValue > maxStock) {
       newValue = maxStock;
       toast.error(`Stock tidak mencukupi. Maksimal ${maxStock}`);
     }
+    if (newValue < 1 || isNaN(newValue)) newValue = 1;
 
     setCartItems(items =>
       items.map(item =>
@@ -426,11 +425,12 @@ const Cart = () => {
                       onFocus={() => handleInputFocus(item.id, item.quantity)}
                       onBlur={(e) => handleInputBlur(item.id, e.target.value)}
                       onChange={(e) => {
-                        const newValue = Number(e.target.value);
+                        let newValue = Number(e.target.value);
                         if (newValue > item.stock) {
+                          newValue = item.stock;
                           toast.error(`Stock tidak mencukupi. Maksimal ${item.stock}`);
-                          return;
                         }
+                        if (newValue < 1 || isNaN(newValue)) newValue = 1;
                         handleInputChange(item.id, newValue);
                       }}
                       className="cart-qty-num"
