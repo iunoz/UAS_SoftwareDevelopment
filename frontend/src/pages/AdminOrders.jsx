@@ -138,10 +138,11 @@ const AdminOrders = () => {
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 1.5rem 0 0', fontFamily: 'Arial, Helvetica, sans-serif' }}>
                   <div><strong>Ordered By:</strong> {order.userName}</div>
                   <div><strong>Status:</strong> {order.status}</div>
+                  <div><strong>Total Price:</strong> Rp {order.totalAmount?.toLocaleString('id-ID')}</div>
                 </div>
                 {/* Order ID di kanan */}
                 <div className="order-id-col">
-                  <span className="order-id-label">ORDER ID:</span><br />
+                  <span className="order-id-label">ORDER ID</span><br />
                   <span className="order-id-value">{order._id}</span>
                 </div>
               </div>

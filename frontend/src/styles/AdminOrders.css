@@ -148,7 +148,9 @@
   min-height: 110px;
 } 
 .order-id-col {
-  min-width: 200px;
+  width: 400px;                /* Lebar tetap, sesuaikan sesuai kebutuhan */
+  min-width: 0;                /* Hilangkan min-width besar */
+  max-width: 400px;            /* Pastikan tidak melebar */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -162,6 +164,7 @@
   border-bottom-right-radius: 12px;
   color: #222a4d;
   box-shadow: -2px 0 8px 0 #00000010 inset;
+  box-sizing: border-box;      /* Agar padding tidak menambah lebar */
 }
 .order-id-label {
   font-size: 1.13rem;
@@ -169,6 +172,9 @@
   color: #222a4d;
   letter-spacing: 1px;
   margin-bottom: 0.2rem;
+  border-bottom: 2px solid #1c1b1a; /* Tambahkan garis bawah */
+  display: inline-block;            /* Agar border hanya sepanjang teks */
+  padding-bottom: 1px;              /* Jarak antara teks dan garis */
 }
 .order-id-value {
   font-size: 1.22rem;
