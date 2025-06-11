@@ -108,7 +108,7 @@ const ProductDetailPage = () => {
       setAddingToCart(false);
     }
   };
-
+// Handle WhatsApp order
   const handleWhatsAppOrder = () => {
     const message = `Halo, saya tertarik dengan produk ${product.name}. Apakah masih tersedia?`;
     const whatsappUrl = `https://wa.me/+6281234567890?text=${encodeURIComponent(message)}`;
@@ -286,7 +286,7 @@ const ProductDetailPage = () => {
         </Row>
       </Container>
 
-      {/* Success Modal */}
+      {/* Success Modall */}
       <Modal 
         show={showSuccessModal} 
         onHide={() => setShowSuccessModal(false)} 
