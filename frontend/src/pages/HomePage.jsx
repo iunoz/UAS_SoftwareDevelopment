@@ -9,7 +9,7 @@ import chandelier from '../assets/images/chandelier.jpg';
 import { toast } from 'react-toastify';
 import { auth } from '../firebase.config';
 import { useCart } from '../contexts/CartContext';
-
+// Importing the necessary components and styles
 const HomePage = () => {
   const { uid } = useParams();
   const [products, setProducts] = useState([]);
