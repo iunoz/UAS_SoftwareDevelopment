@@ -51,7 +51,7 @@ const AdminOrders = () => {
       <div className="dashboard-admin">
         <AdminNavbar />
         <div className="dashboard-content admin-orders-content">
-          <h1 className="admin-page-title">ON GOING ORDERS</h1>
+          <h1 className="orders-title">ON GOING ORDERS</h1>
           <p>Loading orders...</p>
         </div>
       </div>
@@ -138,21 +138,6 @@ const AdminOrders = () => {
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 1.5rem 0 0', fontFamily: 'Arial, Helvetica, sans-serif' }}>
                   <div><strong>Ordered By:</strong> {order.userName}</div>
                   <div><strong>Status:</strong> {order.status}</div>
-                  <div>
-                    <strong>Items:</strong>
-                    <ul style={{ marginBottom: 0 }}>
-                      {order.items.map((item) => (
-                        <li key={item._id} style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>
-                          Product: {item.product?.name || item.product} - Quantity: {item.quantity} - Price: {item.priceAtPurchase}
-                          {item.receipt && (
-                            <div>
-                              Receipt: <a href={item.receipt} target="_blank" rel="noopener noreferrer">View</a>
-                            </div>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </div>
                 {/* Order ID di kanan */}
                 <div className="order-id-col">
