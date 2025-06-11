@@ -21,6 +21,10 @@
   padding: 2rem;
 }
 
+.dashboard-content > header {
+  margin-bottom: 5rem; /* atau lebih besar sesuai kebutuhan */
+}
+
 .dashboard-header {
   margin-bottom: 2rem;
 }
@@ -37,20 +41,29 @@
 
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(6, 1fr); /* 6 kolom */
+  grid-template-rows: repeat(2, auto);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .stat-card {
   display: flex;
-  align-items: center;
-  justify-content: center; /* Tengah horizontal */
-  background: #2E3A6C;
+  flex-direction: column;   /* <-- tambahkan ini */
+  align-items: center;      /* tetap tengah vertikal */
+  justify-content: center;  /* tetap tengah horizontal */
+  background: #262f60;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   gap: 0.8rem; /* Jarak antar icon dan info lebih rapat */
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.stat-card:hover {
+  box-shadow: 0 6px 18px rgba(224, 198, 154, 0.12);
+  transform: translateY(-4px);
+  border: 1.5px solid #e0c69a;
 }
 
 .stat-icon {
@@ -83,18 +96,19 @@
 }
 
 .stat-label {
-  color: #e0c69a;
+  color: #ba9b65;
   font-size: 1.2rem;
   font-weight: 600;
   font-family: 'Cinzel', serif;
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #e0c69a;
-  margin: 0.3rem 0;
-   font-family: 'Cinzel', serif;
+  font-size: 1.5rem;         /* Lebih kecil dari judul */
+  font-weight: 500;          /* Lebih ringan dari judul */
+  color: #9c8355;
+  margin: 0.2rem 0;
+  font-family: 'Cinzel', serif;
+  text-align: center;
 }
 
 .stat-change {
@@ -220,4 +234,15 @@
   .stat-card.visitor .stat-sublabel {
     text-align: left;
   }
+}
+
+.admin-section-title {
+  color: #c9ae7e;
+  font-size: 1.3rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
 }

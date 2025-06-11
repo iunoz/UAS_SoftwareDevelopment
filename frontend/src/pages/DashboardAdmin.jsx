@@ -58,30 +58,32 @@ const DashboardAdmin = () => {
           <h1 className='admin-page-title'>DASHBOARD PENJUALAN</h1>
         </header>
         <div className="dashboard-stats">
-          <div className="stat-card">
-            <div className="stat-label">Total Penjualan</div>
+          {/* Baris pertama: 2 card, masing-masing span 2 kolom, di tengah */}
+          <div className="stat-card" style={{ gridColumn: '2 / 4', gridRow: '1' }}>
+            <div className="admin-section-title">Total Penjualan</div>
             <div className="stat-value">Rp {stats.totalSales.toLocaleString('id-ID')}</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-label">Produk Terjual</div>
+          <div className="stat-card" style={{ gridColumn: '4 / 6', gridRow: '1' }}>
+            <div className="admin-section-title">Produk Terjual</div>
             <div className="stat-value">{stats.totalProductsSold}</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-label">Order Berjalan</div>
+          {/* Baris kedua: 3 card, masing-masing span 2 kolom, saling tumpang tindih setengah */}
+          <div className="stat-card" style={{ gridColumn: '1 / 3', gridRow: '2' }}>
+            <div className="admin-section-title">Order Berjalan</div>
             <div className="stat-value">{stats.ongoingOrders}</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-label">Order Selesai</div>
+          <div className="stat-card" style={{ gridColumn: '3 / 5', gridRow: '2' }}>
+            <div className="admin-section-title">Order Selesai</div>
             <div className="stat-value">{stats.finishedOrders}</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-label">Produk Terlaku</div>
+          <div className="stat-card" style={{ gridColumn: '5 / 7', gridRow: '2' }}>
+            <div className="admin-section-title">Produk Terlaku</div>
             <div className="stat-value">{stats.bestProductName}</div>
           </div>
         </div>
-        <div className="dashboard-main">
+        <div className="dashboard-main" style={{ background: '#262f60', borderRadius: 10, padding: '1.5rem' }}>
           <div className="dashboard-section">
-            {/* Judul di tengah & dropdown di kanan, satu baris */}
+            {/* Judul dan dropdown */}
             <div
               style={{
                 display: 'flex',
@@ -90,13 +92,10 @@ const DashboardAdmin = () => {
                 position: 'relative'
               }}
             >
-              {/* Spacer kiri */}
               <div style={{ flex: 1 }} />
-              {/* Judul di tengah */}
-              <h2 style={{ margin: 0, flex: 2, textAlign: 'center' }}>
+              <h2 className="admin-section-title" style={{ margin: 0, flex: 2, textAlign: 'center' }}>
                 Grafik Pendapatan per Hari
               </h2>
-              {/* Dropdown di kanan */}
               <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                 <select value={month} onChange={e => setMonth(e.target.value)}>
                   {monthOptions.map(m => (
@@ -105,16 +104,33 @@ const DashboardAdmin = () => {
                 </select>
               </div>
             </div>
-            <Bar data={chartData} options={{
-              responsive: true,
-              plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => `Rp ${ctx.parsed.y.toLocaleString('id-ID')}` } }
-              },
-              scales: {
-                y: { beginAtZero: true, ticks: { callback: v => `Rp ${v.toLocaleString('id-ID')}` } }
-              }
-            }} />
+            <Bar
+              data={chartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: ctx => `Rp ${ctx.parsed.y.toLocaleString('id-ID')}` } },
+                  background: {
+                    color: '#262f60'
+                  }
+                },
+                scales: {
+                  y: { beginAtZero: true, ticks: { callback: v => `Rp ${v.toLocaleString('id-ID')}` } }
+                }
+              }}
+              plugins={[{
+                id: 'customBackgroundColor',
+                beforeDraw: (chart) => {
+                  const ctx = chart.ctx;
+                  ctx.save();
+                  ctx.globalCompositeOperation = 'destination-over';
+                  ctx.fillStyle = '#262f60';
+                  ctx.fillRect(0, 0, chart.width, chart.height);
+                  ctx.restore();
+                }
+              }]}
+            />
           </div>
         </div>
       </div>

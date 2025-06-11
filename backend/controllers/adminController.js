@@ -43,8 +43,10 @@ export const getDashboardStats = async (req, res) => {
       bestProductName = '(Belum ada penjualan selesai)';
     }
 
-    // Order berjalan = status 'pending'
-    const ongoingOrders = await Order.countDocuments({ status: 'pending' });
+    // Order berjalan = status 'Sedang Dikemas' atau 'Sedang Dikirim'
+    const ongoingOrders = await Order.countDocuments({
+      status: { $in: ['Sedang Dikemas', 'dikirim'] }
+    });
     // Order selesai
     const finishedOrders = finishedOrdersArr.length;
 
