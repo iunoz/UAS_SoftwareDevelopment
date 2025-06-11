@@ -19,5 +19,9 @@ const productSchema = new mongoose.Schema({
   weight: { type: Number, required: true }
 }, { timestamps: true });
 
+productSchema.virtual('soldOut').get(function() {
+  return this.quantity <= 0;
+});
+
 const Product = mongoose.model('Product', productSchema);
 export default Product;

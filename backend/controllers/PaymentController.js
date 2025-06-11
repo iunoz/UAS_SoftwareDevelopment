@@ -87,6 +87,21 @@ export const saveOrder = async (req, res) => {
 
         await newOrder.save();
 
+        // Update product stock after order is created
+        for (const item of orderItems) {
+            // Use findOneAndUpdate for atomicity and to avoid race conditions
+            const updatedProduct = await mongoose.model('Product').findOneAndUpdate(
+                { _id: item.product, quantity: { $gte: item.quantity } },
+                { $inc: { quantity: -item.quantity } },
+                { new: true }
+            );
+            if (!updatedProduct) {
+                // Rollback: delete the order if stock is not enough (should not happen if frontend already checks)
+                await Order.findByIdAndDelete(newOrder._id);
+                return res.status(400).json({ success: false, message: 'Stock tidak mencukupi untuk produk.' });
+            }
+        }
+
         res.status(201).json({ success: true, order: newOrder });
     } catch (error) {
         console.error('Error saving order:', error);

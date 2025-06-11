@@ -195,6 +195,11 @@ const ProductDetailPage = () => {
           <Col md={6} className="product-info">
             <div className="product-info-container">
               <h1 className="product-title">{product.name}</h1>
+              {product.quantity === 0 && (
+                <div className="soldout-label" style={{ color: '#e74c3c', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 12 }}>
+                  Sold Out
+                </div>
+              )}
               
               <div className="product-description">
                 <h3 className="description-title">Deskripsi Produk</h3>
@@ -332,4 +337,4 @@ const ProductDetailPage = () => {
   );
 };
 
-export default ProductDetailPage; 
+export default ProductDetailPage;

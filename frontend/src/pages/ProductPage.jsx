@@ -235,6 +235,11 @@ const ProductPage = () => {
                     <Card.Text className="price">
                       Rp {parseInt(product.price).toLocaleString()}
                     </Card.Text>
+                    {product.quantity === 0 && (
+                      <div className="soldout-label" style={{ color: '#e74c3c', fontWeight: 'bold', fontSize: '1.1rem', marginTop: 8 }}>
+                        Sold Out
+                      </div>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
