@@ -6,6 +6,8 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
+import Lampubrok from '../assets/images/Lampubrok.jpg';
+import Lampubrok1 from '../assets/images/Lampubrok1.jpg';
 import { toast } from 'react-toastify';
 import { auth } from '../firebase.config';
 import { useCart } from '../contexts/CartContext';
@@ -44,13 +46,13 @@ const HomePage = () => {
   const carouselItems = [
     {
       id: 1,
-      image: chandelier,
+      image: Lampubrok, // Ganti dengan gambar baru
       title: "Modern Elegance",
       description: "Transform your space with our signature chandelier collection. Handcrafted with precision and designed for luxury living.",
     },
     {
       id: 2,
-      image: chandelier,
+      image: Lampubrok1, // Ganti dengan gambar baru
       title: "Contemporary Class",
       description: "Minimalist designs meet maximum impact. Perfect for modern homes and sophisticated office spaces.",
     },
@@ -529,4 +531,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage; 
+export default HomePage;
