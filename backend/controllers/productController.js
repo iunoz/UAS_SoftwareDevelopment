@@ -21,6 +21,17 @@ export const addProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: 'All fields including image are required' });
     }
 
+    // Check if product with the same name already exists
+    const existingProduct = await Product.findOne({ name: name.trim() });
+    if (existingProduct) {
+      // Respond with special status and existing product data
+      return res.status(409).json({
+        success: false,
+        message: 'Product with this name already exists',
+        product: existingProduct,
+      });
+    }
+
     // Upload image ke Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'products',

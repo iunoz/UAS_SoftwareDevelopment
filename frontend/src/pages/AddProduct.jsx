@@ -18,10 +18,13 @@ const AddProduct = () => {
     quantity: '',
     category: '',
     collection: '',
+    weight: '',
     image: null,
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [existingProduct, setExistingProduct] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -37,6 +40,42 @@ const AddProduct = () => {
       }
     } else {
       setForm({ ...form, [name]: value });
+    }
+  };
+
+  const handleAddQuantity = async () => {
+    if (!existingProduct) return;
+    setLoading(true);
+    try {
+      const updatedQuantity = parseInt(existingProduct.quantity) + parseInt(form.quantity);
+      const updateData = {
+        quantity: updatedQuantity,
+        name: existingProduct.name,
+        description: existingProduct.description,
+        price: existingProduct.price,
+        category: existingProduct.category,
+        collection: existingProduct.collection,
+        weight: existingProduct.weight,
+      };
+      await axios.put(`http://localhost:4000/api/products/edit/${existingProduct._id}`, updateData);
+      alert('Quantity updated successfully!');
+      setForm({
+        name: '',
+        description: '',
+        price: '',
+        quantity: '',
+        category: '',
+        collection: '',
+        weight: '',
+        image: null,
+      });
+      setImagePreview(null);
+      setShowConfirm(false);
+      setExistingProduct(null);
+    } catch (error) {
+      alert('Failed to update quantity: ' + error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,10 +105,21 @@ const AddProduct = () => {
       });
       setImagePreview(null);
     } catch (error) {
-      alert(error);
+      if (error.response && error.response.status === 409) {
+        // Product exists, show confirmation modal
+        setExistingProduct(error.response.data.product);
+        setShowConfirm(true);
+      } else {
+        alert(error);
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    setShowConfirm(false);
+    setExistingProduct(null);
   };
 
   return (
@@ -167,6 +217,25 @@ const AddProduct = () => {
             </div>
           </div>
         </form>
+
+        {showConfirm && (
+          <div className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-desc">
+            <div className="confirm-content">
+              <h2 id="confirm-title" className="confirm-title">Confirm Quantity Addition</h2>
+              <p id="confirm-desc" className="confirm-message">
+                Product with the name <strong>"{existingProduct.name}"</strong> already exists with quantity <strong>{existingProduct.quantity}</strong>.
+              </p>
+              <p className="confirm-message">
+                Do you want to add the new quantity (<strong>{form.quantity}</strong>) to the existing stock?
+              </p>
+              <div className="confirm-buttons">
+                <button className="confirm-btn yes-btn" onClick={handleAddQuantity} disabled={loading}>Yes</button>
+                <button className="confirm-btn no-btn" onClick={handleCancel} disabled={loading}>No</button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
