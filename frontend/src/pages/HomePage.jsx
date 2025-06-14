@@ -8,6 +8,11 @@ import '../styles/HomePage.css';
 import chandelier from '../assets/images/chandelier.jpg';
 import Lampubrok from '../assets/images/Lampubrok.jpg';
 import Lampubrok1 from '../assets/images/Lampubrok1.jpg';
+import handyman from '../assets/images/handyman.jpg';
+import delivery from '../assets/images/delivery.jpg';
+import consultation from '../assets/images/consultation.jpg';
+import store from '../assets/images/store.jpg';
+import pickup from '../assets/images/pickup.jpg';
 import { toast } from 'react-toastify';
 import { auth } from '../firebase.config';
 import { useCart } from '../contexts/CartContext';
@@ -353,73 +358,47 @@ const HomePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Layanan Terbaik untuk Memberikan
-            <br />
-            Anda Kenyamanan Maksimal
+            Layanan Terbaik untuk Memberikan<br />Anda Kenyamanan Maksimal
           </motion.h2>
-
-          <div className="services-grid">
-            <motion.div 
-              className="service-card"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="service-image">
-                <img src={chandelier} alt="Pengiriman" />
+          <div className="services-dashboard-grid">
+            {/* Baris pertama: 2 card di tengah */}
+            <div className="service-card-dashboard" style={{ gridColumn: '2 / 4', gridRow: '1' }}>
+              <div className="service-image"><img src={delivery} alt="Pengiriman" /></div>
+              <div className="service-text">
+                <h3>PENGIRIMAN</h3>
+                <p>Mengantar belanjaan anda ke tempat tujuan</p>
               </div>
-              <h3>Pengiriman</h3>
-              <p>Mengantar belanjaan anda ke tempat tujuan</p>
-            </motion.div>
-
-            <motion.div 
-              className="service-card"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="service-image">
-                <img src={chandelier} alt="Konsultasi" />
+            </div>
+            <div className="service-card-dashboard" style={{ gridColumn: '4 / 6', gridRow: '1' }}>
+              <div className="service-image"><img src={consultation} alt="Konsultasi" /></div>
+              <div className="service-text">
+                <h3>KONSULTASI</h3>
+                <p>Kami akan siap membantu apa yang diperlukan</p>
               </div>
-              <h3>KONSULTASI</h3>
-              <p>Kami akan siap membantu apa yang diperlukan</p>
-            </motion.div>
-
-            <motion.div 
-              className="service-card"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="service-image">
-                <img src={chandelier} alt="Pick and Collect" />
+            </div>
+            {/* Baris kedua: 3 card, tumpang tindah setengah */}
+            <div className="service-card-dashboard" style={{ gridColumn: '1 / 3', gridRow: '2' }}>
+              <div className="service-image"><img src={pickup} alt="Pick and Collect" /></div>
+              <div className="service-text">
+                <h3>PICK AND COLLECT</h3>
+                <p>Memesan Produk di Online atau WA dan ambil di toko</p>
               </div>
-              <h3>PICK and COLLECT</h3>
-              <p>Memesan Produk di Online atau WA dan ambil di toko</p>
-            </motion.div>
-
-            <motion.div 
-              className="service-card"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="service-image">
-                <img src={chandelier} alt="Kunjungi Showroom" />
+            </div>
+            <div className="service-card-dashboard" style={{ gridColumn: '3 / 5', gridRow: '2' }}>
+              <div className="service-image"><img src={store} alt="Kunjungi Showroom" /></div>
+              <div className="service-text">
+                <h3>KUNJUNGI SHOWROOM</h3>
+                <p>Visit our showroom untuk lihat koleksi lampu gantung terbaru</p>
               </div>
-              <h3>KUNJUNGI SHOWROOM</h3>
-              <p>Visit our showroom untuk lihat koleksi lampu gantung terbaru</p>
-            </motion.div>
-
-            <motion.div 
-              className="service-card"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="service-image">
-                <img src={chandelier} alt="Pemasangan" />
+            </div>
+            <div className="service-card-dashboard" style={{ gridColumn: '5 / 7', gridRow: '2' }}>
+              <div className="service-image"><img src={handyman} alt="Pemasangan" /></div>
+              <div className="service-text">
+                <h3>PEMASANGAN</h3>
+                <p>Kami dapat membantu pemasangan satu perabotan</p>
               </div>
-              <h3>PEMASANGAN</h3>
-              <p>Kami dapat membantu pemasangan satu perabotan</p>
-            </motion.div>
+            </div>
           </div>
-
           <motion.div 
             className="text-center mt-5"
             initial={{ opacity: 0, y: 20 }}
@@ -427,9 +406,7 @@ const HomePage = () => {
             transition={{ duration: 0.6 }}
           >
             <h3 className="elegance-text">
-              Add a touch of elegance to your
-              <br />
-              space with our stunning lighting pieces
+              Add a touch of elegance to your<br />space with our stunning lighting pieces
             </h3>
           </motion.div>
         </Container>
