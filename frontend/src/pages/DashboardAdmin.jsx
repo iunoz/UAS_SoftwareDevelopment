@@ -22,6 +22,8 @@ const DashboardAdmin = () => {
   });
   const [month, setMonth] = useState(getCurrentMonth());
   const [dailySales, setDailySales] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:4000/api/admin/dashboard-stats')
@@ -30,10 +32,21 @@ const DashboardAdmin = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/api/admin/daily-sales?month=${month}`)
+    let url = `http://localhost:4000/api/admin/daily-sales?month=${month}`;
+    if (selectedProduct) url += `&product=${selectedProduct}`;
+    fetch(url)
       .then(res => res.json())
-      .then(data => setDailySales(data.salesByDay || []));
-  }, [month]);
+      .then(data => {
+        console.log('dailySales:', data.salesByDay);
+        setDailySales(data.salesByDay || []);
+      });
+  }, [month, selectedProduct]);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/products')
+      .then(res => res.json())
+      .then(data => setProducts(data.products || []));
+  }, []);
 
   // Data untuk grafik harian
   const chartData = {
@@ -92,10 +105,24 @@ const DashboardAdmin = () => {
                 position: 'relative'
               }}
             >
-              <div style={{ flex: 1 }} />
+              {/* Dropdown produk di kiri */}
+              <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                <select
+                  value={selectedProduct}
+                  onChange={e => setSelectedProduct(e.target.value)}
+                  style={{ minWidth: 180 }}
+                >
+                  <option value="">Semua Produk</option>
+                  {products.map(p => (
+                    <option key={p._id} value={p._id}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+              {/* Judul grafik */}
               <h2 className="admin-section-title" style={{ margin: 0, flex: 2, textAlign: 'center' }}>
                 Grafik Pendapatan per Hari
               </h2>
+              {/* Dropdown bulan di kanan */}
               <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                 <select value={month} onChange={e => setMonth(e.target.value)}>
                   {monthOptions.map(m => (

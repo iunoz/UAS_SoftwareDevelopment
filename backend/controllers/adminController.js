@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 
@@ -75,29 +76,55 @@ export const getDashboardStats = async (req, res) => {
 
 export const getDailySales = async (req, res) => {
   try {
-    const { month } = req.query; // format: '2025-06'
+    const { month, product } = req.query; // tambahkan product
     if (!month) return res.status(400).json({ message: 'Month is required' });
 
-    // Cari order selesai di bulan yang dipilih
     const start = new Date(`${month}-01T00:00:00.000Z`);
     const end = new Date(start);
     end.setMonth(end.getMonth() + 1);
 
-    const salesByDay = await Order.aggregate([
-      {
-        $match: {
-          status: 'selesai',
-          orderedAt: { $gte: start, $lt: end }
-        }
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderedAt" } },
-          total: { $sum: "$totalAmount" }
-        }
-      },
-      { $sort: { _id: 1 } }
-    ]);
+    // Pipeline dasar
+    const matchStage = {
+      status: 'selesai',
+      orderedAt: { $gte: start, $lt: end }
+    };
+
+    // Jika ada filter produk, tambahkan filter pada items
+    let pipeline;
+    if (product) {
+      let productId;
+      try {
+        productId = new mongoose.Types.ObjectId(product);
+      } catch (e) {
+        productId = product; // fallback jika sudah string
+      }
+      pipeline = [
+        { $match: matchStage },
+        { $unwind: '$items' },
+        { $match: { 'items.product': productId } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderedAt" } },
+            total: { $sum: { $multiply: ['$items.priceAtPurchase', '$items.quantity'] } }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ];
+    } else {
+      pipeline = [
+        { $match: matchStage },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderedAt" } },
+            total: { $sum: "$totalAmount" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ];
+    }
+
+    const salesByDay = await Order.aggregate(pipeline);
+    console.log('salesByDay:', salesByDay);
 
     res.json({ salesByDay });
   } catch (err) {
