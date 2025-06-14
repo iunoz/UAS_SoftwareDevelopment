@@ -210,7 +210,6 @@ const ProductDetailPage = () => {
 
               <div className="order-section">
                 <div className="quantity-section">
-                  <span className="quantity-label">Quantity</span>
                   <div className="quantity-controls-wrapper">
                     <div className="quantity-controls">
                       <Button 

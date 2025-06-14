@@ -436,3 +436,78 @@
 .delete-product-btn:hover {
   background: #c0392b;
 }
+
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 30, 50, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-confirm {
+  background: #2e3a6c;
+  color: #e0c69a;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 320px;
+  text-align: center;
+}
+.modal-confirm.modal-success {
+  min-width: 420px;
+  min-height: 220px;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+.modal-checkmark {
+  font-size: 5rem;
+  color: #27ae60;
+  margin-bottom: 1.2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+.modal-success-text {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #e0c69a;
+  text-align: center;
+}
+.modal-actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+.modal-actions .cancel-btn,
+.modal-actions .delete-btn {
+  padding: 0.5rem 2.2rem;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.modal-actions .cancel-btn {
+  background: #c0392b;
+  color: #fff;
+}
+.modal-actions .cancel-btn:hover {
+  background: #e74c3c;
+}
+.modal-actions .delete-btn {
+  background: #e0c69a;
+  color: #2e3a6c;
+}
+.modal-actions .delete-btn:hover {
+  background: #bfa05a;
+}

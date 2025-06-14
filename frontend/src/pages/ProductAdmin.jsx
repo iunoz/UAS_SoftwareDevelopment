@@ -21,6 +21,9 @@ const ProductAdmin = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +47,22 @@ const ProductAdmin = () => {
     } catch (error) {
       alert('Failed to delete product');
     }
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:4000/api/products/delete/${deleteId}`);
+      setProducts(products.filter((p) => p._id !== deleteId));
+    } catch (error) {
+      alert('Failed to delete product');
+    }
+    setShowDeleteModal(false);
+    setDeleteId(null);
   };
 
   // Handle image change
@@ -120,7 +139,8 @@ const ProductAdmin = () => {
       setEditProduct(null);
       setImagePreview(null);
       fetchProducts();
-      alert('Product updated!');
+      setShowSuccessModal(true); // Tampilkan modal sukses
+      setTimeout(() => setShowSuccessModal(false), 1500); // Tutup otomatis setelah 1.5 detik
     } catch (error) {
       alert(error, 'Failed to update product');
     }
@@ -145,7 +165,7 @@ const ProductAdmin = () => {
             <button
               className="delete-product-btn"
               style={{ position: 'absolute', top: 10, right: 10, zIndex: 2 }}
-              onClick={() => handleDelete(product._id)}
+              onClick={() => handleDeleteClick(product._id)}
               title="Delete Product"
             >
               &#10006;
@@ -354,6 +374,25 @@ const ProductAdmin = () => {
             )}
           </div>
         ))}
+        {showDeleteModal && (
+          <div className="modal-backdrop">
+            <div className="modal-confirm">
+              <div className="modal-title">Delete this product</div>
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+                <button className="delete-btn" onClick={confirmDelete}>Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showSuccessModal && (
+          <div className="modal-backdrop">
+            <div className="modal-confirm modal-success">
+              <div className="modal-checkmark">&#10004;</div>
+              <div className="modal-success-text">Product updated successfully!</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
