@@ -21,6 +21,11 @@
   color: #000000 !important;
 }
 
+.search-input::placeholder {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
 .search-button {
   background-color: #d4af37 !important;
   border-color: #d4af37 !important;
@@ -223,4 +228,4 @@
   .product-icon {
     height: 180px !important;
   }
-} 
+}
