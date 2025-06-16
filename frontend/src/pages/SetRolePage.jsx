@@ -35,7 +35,7 @@ const SetRolePage = () => {
     const fetchUsers = async () => {
       try {
         const token = getToken();
-        const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/user/all', {
+        const res = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app/api/user/all', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(res.data.users);
@@ -53,7 +53,7 @@ const SetRolePage = () => {
     try {
       const token = getToken();
       await axios.put(
-        `https://uassoftwaredevelopment-production.up.railway.app/api/user/${targetUid}/set-role`,
+        `uassoftwaredevelopment-production-b783.up.railway.app/api/user/${targetUid}/set-role`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );

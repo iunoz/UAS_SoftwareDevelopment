@@ -16,7 +16,7 @@ const handleCompletePayment = async (order) => {
       return;
     }
     // Call backend to get Midtrans snap token for existing order
-    const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/payment/create-payment', {
+    const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/payment/create-payment', {
       orderId: order._id,
       amount: order.totalAmount,
       name: currentUser.displayName || 'Customer',
@@ -46,11 +46,11 @@ const handleCompletePayment = async (order) => {
         alert('Payment success!');
         try {
           // Update order status to 'Sedang Dikemas' after successful payment
-          await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${order._id}`, {
+          await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/update-status/${order._id}`, {
             status: 'Sedang Dikemas'
           });
           // Refresh orders list
-          const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${order.user}`);
+          const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${order.user}`);
           if (ordersRes.data.success) {
             setOrders(ordersRes.data.orders);
           }
@@ -65,7 +65,7 @@ const handleCompletePayment = async (order) => {
         alert('Payment pending!');
         setPaymentInProgress(false);
         // Refresh orders list
-        const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${order.user}`);
+        const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${order.user}`);
         if (ordersRes.data.success) {
           setOrders(ordersRes.data.orders);
         }

@@ -39,7 +39,7 @@ const Cart = () => {
       }
 
       const token = await currentUser.getIdToken();
-      const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
+      const res = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app/api/cart', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -108,7 +108,7 @@ const Cart = () => {
       }
 
       const token = await currentUser.getIdToken();
-      const response = await axios.put('https://uassoftwaredevelopment-production.up.railway.app/api/cart/update', {
+      const response = await axios.put('uassoftwaredevelopment-production-b783.up.railway.app/api/cart/update', {
         productId: id,
         quantity: newQty
       }, {
@@ -211,7 +211,7 @@ const Cart = () => {
       }
 
       const token = await currentUser.getIdToken();
-      const response = await axios.put('https://uassoftwaredevelopment-production.up.railway.app/api/cart/update', {
+      const response = await axios.put('uassoftwaredevelopment-production-b783.up.railway.app/api/cart/update', {
         productId: id,
         quantity: qty
       }, {
@@ -242,7 +242,7 @@ const Cart = () => {
       }
 
       const token = await currentUser.getIdToken();
-      const response = await axios.delete(`https://uassoftwaredevelopment-production.up.railway.app/api/cart/remove/${id}`, {
+      const response = await axios.delete(`uassoftwaredevelopment-production-b783.up.railway.app/api/cart/remove/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

@@ -61,7 +61,7 @@ const AddProduct = () => {
         collection: existingProduct.collection,
         weight: existingProduct.weight,
       };
-      await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/products/edit/${existingProduct._id}`, updateData);
+      await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/products/edit/${existingProduct._id}`, updateData);
       setSuccessMessage('Quantity updated successfully!');
       setShowSuccessModal(true);
       setForm({
@@ -112,7 +112,7 @@ const AddProduct = () => {
       }
     }
     try {
-      await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/products/add', productData);
+      await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/add', productData);
       setShowSuccessModal(true); // Tampilkan modal sukses
       setForm({
         name: '',

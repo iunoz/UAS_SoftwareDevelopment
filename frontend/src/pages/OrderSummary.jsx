@@ -22,7 +22,7 @@ const OrderSummary = () => {
         }
         const token = await currentUser.getIdToken();
         // Fetch cart
-        const cartRes = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
+        const cartRes = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app/api/cart', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (cartRes.data.success) {
@@ -37,7 +37,7 @@ const OrderSummary = () => {
           setTotal(totalPrice);
         }
         // Fetch address
-        const userRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${currentUser.uid}`);
+        const userRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${currentUser.uid}`);
         if (userRes.data.success) {
           setAddress(userRes.data.user.address || '');
         }

@@ -24,7 +24,7 @@ const ProductDetailPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/products/detail/${id}`);
+        const response = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/products/detail/${id}`);
         if (response.data.success) {
           setProduct(response.data.product);
           setError(null);
@@ -82,7 +82,7 @@ const ProductDetailPage = () => {
     try {
       setAddingToCart(true);
       const token = await currentUser.getIdToken();
-      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/cart/add', {
+      const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/cart/add', {
         productId: product._id,
         quantity: quantity
       }, {

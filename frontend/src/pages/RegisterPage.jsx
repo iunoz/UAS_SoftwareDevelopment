@@ -32,7 +32,7 @@ const RegisterPage = () => {
       const idToken = await userCredential.user.getIdToken();
 
       // Ambil data user dari backend
-      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/user/register', {
+      const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/user/register', {
         fname: firstName,
         lname: lastName,
       }, {
@@ -74,7 +74,7 @@ const RegisterPage = () => {
       const lname = lnameArr.join(' ');
 
       // Ambil data user dari backend
-      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/user/register', {
+      const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/user/register', {
         fname: fname || '',
         lname: lname || '',
       }, {

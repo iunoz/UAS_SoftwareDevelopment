@@ -14,7 +14,7 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('https://uassoftwaredevelopment-production.up.railway.app/api/payment/orders/admin');
+        const response = await fetch('uassoftwaredevelopment-production-b783.up.railway.app/api/payment/orders/admin');
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }

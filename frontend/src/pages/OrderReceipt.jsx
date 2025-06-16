@@ -25,7 +25,7 @@ function OrderReceipt() {
         return;
       }
       // Call backend to get Midtrans snap token for existing order
-      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/payment/create-payment', {
+      const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/payment/create-payment', {
         orderId: order._id,
         amount: order.totalAmount,
         name: currentUser.displayName || 'Customer',
@@ -55,11 +55,11 @@ function OrderReceipt() {
           alert('Payment success!');
           try {
             // Update order status to 'Sedang Dikemas' after successful payment
-            await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${order._id}`, {
+            await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/update-status/${order._id}`, {
               status: 'Sedang Dikemas'
             });
             // Refresh orders list
-            const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${order.user}`);
+            const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${order.user}`);
             if (ordersRes.data.success) {
               setCurrentStatus('Sedang Dikemas');
             }
@@ -115,7 +115,7 @@ function OrderReceipt() {
         const orderId = orderData.orderId;
         if (!orderId) return;
 
-        const response = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${orderData.userId}`);
+        const response = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${orderData.userId}`);
         if (response.data.success) {
           const order = response.data.orders.find(o => o._id === orderId);
           if (order) {
@@ -147,7 +147,7 @@ function OrderReceipt() {
 
   const handleSend = async () => {
     try {
-      const response = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${orderId}`, {
+      const response = await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/update-status/${orderId}`, {
         status: 'dikirim'
       });
       if (response.data.success) {

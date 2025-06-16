@@ -32,7 +32,7 @@ const ProductAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/products');
+      const res = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app/api/products');
       setProducts(res.data.products);
     } catch (error) {
       alert('Failed to fetch products');
@@ -42,7 +42,7 @@ const ProductAdmin = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
     try {
-      await axios.delete(`https://uassoftwaredevelopment-production.up.railway.app/api/products/delete/${id}`);
+      await axios.delete(`uassoftwaredevelopment-production-b783.up.railway.app/api/products/delete/${id}`);
       setProducts(products.filter((p) => p._id !== id));
     } catch (error) {
       alert('Failed to delete product');
@@ -56,7 +56,7 @@ const ProductAdmin = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`https://uassoftwaredevelopment-production.up.railway.app/api/products/delete/${deleteId}`);
+      await axios.delete(`uassoftwaredevelopment-production-b783.up.railway.app/api/products/delete/${deleteId}`);
       setProducts(products.filter((p) => p._id !== deleteId));
     } catch (error) {
       alert('Failed to delete product');
@@ -132,7 +132,7 @@ const ProductAdmin = () => {
       }
     }
     try {
-      await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/products/edit/${editProduct._id}`, formData, {
+      await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/products/edit/${editProduct._id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setEditIndex(null);

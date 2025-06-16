@@ -162,7 +162,7 @@ const Payment = () => {
           navigate('/login');
           return;
         }
-        const userRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${currentUser.uid}`);
+        const userRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${currentUser.uid}`);
         if (userRes.data.success) {
           setAddress(userRes.data.user.address || null);
         }
@@ -208,7 +208,7 @@ const Payment = () => {
         } else {
           const token = await currentUser.getIdToken();
           // Fetch cart
-          const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
+          const res = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app.app/api/cart', {
             headers: { Authorization: `Bearer ${token}` }
           });
           
@@ -247,7 +247,7 @@ const Payment = () => {
   // Province autocomplete
   useEffect(() => {
     if (provinceInput.length > 1) {
-        axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
+        axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
         .then(res => {
           const filtered = res.data.filter(opt =>
             opt.name.toLowerCase().includes(provinceInput.toLowerCase())
@@ -263,7 +263,7 @@ const Payment = () => {
   // Fetch all city/district/subdistrict/zipcode when province selected
   useEffect(() => {
     if (selectedProvince) {
-      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
+      axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -363,7 +363,7 @@ const Payment = () => {
         subdistrict: subdistrictOptions.find(s => s.id === selectedSubdistrict)?.name || '',
         zipCode: zipcodeOptions.find(z => z.id === selectedZipcode)?.name || ''
       };
-      const res = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${currentUser.uid}/update-address`, {
+      const res = await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${currentUser.uid}/update-address`, {
         address: updatedAddress
       });
       if (res.data.success) {
@@ -445,7 +445,7 @@ const Payment = () => {
       setSelectedProvince(address.province);
   
       // Fetch city/district/subdistrict/zipcode options dari backend
-      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${address.province}`)
+      axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/ship/cities-by-province?province=${address.province}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -497,7 +497,7 @@ const Payment = () => {
             return;
           }
           const token = await currentUser.getIdToken();
-          const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
+          const res = await axios.get('uassoftwaredevelopment-production-b783.up.railway.app/api/cart', {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.data.success) {

@@ -72,7 +72,7 @@ const handleCompletePayment = async (order) => {
       return;
     }
     // Call backend to get Midtrans snap token for existing order
-    const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/payment/create-payment', {
+    const response = await axios.post('uassoftwaredevelopment-production-b783.up.railway.app/api/payment/create-payment', {
       orderId: order._id,
       amount: order.totalAmount,
       name: currentUser.displayName || 'Customer',
@@ -102,11 +102,11 @@ const handleCompletePayment = async (order) => {
         alert('Payment success!');
         try {
           // Update order status to 'Sedang Dikemas' after successful payment
-          await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${order._id}`, {
+          await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/update-status/${order._id}`, {
             status: 'Sedang Dikemas'
           });
           // Refresh orders list
-          const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${order.user}`);
+          const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${order.user}`);
           if (ordersRes.data.success) {
             setOrders(ordersRes.data.orders);
           }
@@ -121,7 +121,7 @@ const handleCompletePayment = async (order) => {
         alert('Payment pending!');
         setPaymentInProgress(false);
         // Refresh orders list
-        const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${order.user}`);
+        const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${order.user}`);
         if (ordersRes.data.success) {
           setOrders(ordersRes.data.orders);
         }
@@ -146,7 +146,7 @@ const handleCompletePayment = async (order) => {
     const fetchData = async () => {
       try {
         // Fetch user
-        const userRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}`);
+        const userRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${uid}`);
         if (userRes.data.success) {
           setUser(userRes.data.user);
           setNewAddress({
@@ -163,7 +163,7 @@ const handleCompletePayment = async (order) => {
           });
         }
         // Fetch orders from backend API
-        const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${uid}`);
+        const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${uid}`);
         if (ordersRes.data.success) {
           console.log('Fetched orders:', ordersRes.data.orders);
           setOrders(ordersRes.data.orders);
@@ -181,7 +181,7 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (provinceInput.length > 1) {
-      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
+      axios.get(`https://uassoftwaredevelopment-production-b783.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
         .then(res => {
           const filtered = res.data.filter(opt =>
             opt.name.toLowerCase().includes(provinceInput.toLowerCase())
@@ -196,7 +196,7 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (selectedProvince) {
-      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
+      axios.get(`https://uassoftwaredevelopment-production-b783.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -284,7 +284,7 @@ const handleCompletePayment = async (order) => {
         zipCode: zipCodeName
       };
 
-      const response = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/update-address`, {
+      const response = await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${uid}/update-address`, {
         address: updatedAddress
       });
 
@@ -311,7 +311,7 @@ const handleCompletePayment = async (order) => {
       formData.append('image', file);
 
       const response = await axios.put(
-        `https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/profile-image`,
+        `uassoftwaredevelopment-production-b783.up.railway.app/api/user/${uid}/profile-image`,
         formData,
         {
           headers: {
@@ -500,13 +500,13 @@ const handleCompletePayment = async (order) => {
               try {
                 const token = await auth.currentUser.getIdToken();
                 const response = await axios.put(
-                  `https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${order._id}`,
+                  `uassoftwaredevelopment-production-b783.up.railway.app/api/payment/update-status/${order._id}`,
                   { status: 'selesai' },
                   { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (response.data.success) {
                   // Refresh orders list
-                  const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${uid}`);
+                  const ordersRes = await axios.get(`uassoftwaredevelopment-production-b783.up.railway.app/api/payment/user-orders/${uid}`);
                   if (ordersRes.data.success) {
                     setOrders(ordersRes.data.orders);
                   }
