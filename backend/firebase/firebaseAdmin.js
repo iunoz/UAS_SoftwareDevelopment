@@ -1,10 +1,13 @@
 import admin from 'firebase-admin';
 
-// Load Firebase service account from environment variable
 let serviceAccount = {};
 try {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  console.log('Firebase service account loaded:', serviceAccount.project_id ? 'project_id found' : 'project_id missing');
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    console.log('Firebase service account loaded:', serviceAccount.project_id ? 'project_id found' : 'project_id missing');
+  } else {
+    console.warn('FIREBASE_SERVICE_ACCOUNT environment variable is not set.');
+  }
 } catch (error) {
   console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable:', error);
 }
