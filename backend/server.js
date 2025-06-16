@@ -13,8 +13,28 @@ import adminRouter from './routes/adminRoute.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception thrown:', error);
+    process.exit(1);
+});
+
 await connectDB()
+    .then(() => console.log('Database connected successfully'))
+    .catch((err) => {
+        console.error('Database connection error:', err);
+        process.exit(1);
+    });
+
 await connectCloudinary()
+    .then(() => console.log('Cloudinary connected successfully'))
+    .catch((err) => {
+        console.error('Cloudinary connection error:', err);
+        process.exit(1);
+    });
 
 app.use(express.json());
 app.use(cors({
