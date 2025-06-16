@@ -41,13 +41,13 @@ const ForgotPassword = () => {
     try {
       if (uid) {
         // User sudah login, gunakan uid
-        await axios.put(`http://localhost:4000/api/user/${uid}/forgot-password`, {
+        await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/forgot-password`, {
           oldPassword,
           newPassword,
         });
       } else {
         // User belum login, gunakan email
-        await axios.put(`http://localhost:4000/api/user/forgot-password`, {
+        await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/forgot-password`, {
           email,
           newPassword,
         });

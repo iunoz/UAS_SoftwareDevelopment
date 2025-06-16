@@ -181,7 +181,7 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (provinceInput.length > 1) {
-      axios.get(`http://localhost:4000/api/ship/search-destination?type=province&search=${provinceInput}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
         .then(res => {
           const filtered = res.data.filter(opt =>
             opt.name.toLowerCase().includes(provinceInput.toLowerCase())
@@ -196,7 +196,7 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (selectedProvince) {
-      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${selectedProvince}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -284,7 +284,7 @@ const handleCompletePayment = async (order) => {
         zipCode: zipCodeName
       };
 
-      const response = await axios.put(`http://localhost:4000/api/user/${uid}/update-address`, {
+      const response = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/update-address`, {
         address: updatedAddress
       });
 
@@ -311,7 +311,7 @@ const handleCompletePayment = async (order) => {
       formData.append('image', file);
 
       const response = await axios.put(
-        `http://localhost:4000/api/user/${uid}/profile-image`,
+        `https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/profile-image`,
         formData,
         {
           headers: {
@@ -500,13 +500,13 @@ const handleCompletePayment = async (order) => {
               try {
                 const token = await auth.currentUser.getIdToken();
                 const response = await axios.put(
-                  `http://localhost:4000/api/payment/update-status/${order._id}`,
+                  `https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${order._id}`,
                   { status: 'selesai' },
                   { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (response.data.success) {
                   // Refresh orders list
-                  const ordersRes = await axios.get(`http://localhost:4000/api/payment/user-orders/${uid}`);
+                  const ordersRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/user-orders/${uid}`);
                   if (ordersRes.data.success) {
                     setOrders(ordersRes.data.orders);
                   }

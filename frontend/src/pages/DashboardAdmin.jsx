@@ -26,13 +26,13 @@ const DashboardAdmin = () => {
   const [selectedProduct, setSelectedProduct] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/admin/dashboard-stats')
+    fetch('https://uassoftwaredevelopment-production.up.railway.app/api/admin/dashboard-stats')
       .then(res => res.json())
       .then(data => setStats(data));
   }, []);
 
   useEffect(() => {
-    let url = `http://localhost:4000/api/admin/daily-sales?month=${month}`;
+    let url = `https://uassoftwaredevelopment-production.up.railway.app/api/admin/daily-sales?month=${month}`;
     if (selectedProduct) url += `&product=${selectedProduct}`;
     fetch(url)
       .then(res => res.json())
@@ -43,7 +43,7 @@ const DashboardAdmin = () => {
   }, [month, selectedProduct]);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/products')
+    fetch('https://uassoftwaredevelopment-production.up.railway.app/api/products')
       .then(res => res.json())
       .then(data => setProducts(data.products || []));
   }, []);

@@ -21,7 +21,7 @@ const LoginPage = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      const response = await axios.post('http://localhost:4000/api/user/login', {}, {
+      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
@@ -68,7 +68,7 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      const response = await axios.post('http://localhost:4000/api/user/login', {}, {
+      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/user/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 

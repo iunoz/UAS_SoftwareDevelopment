@@ -445,7 +445,7 @@ const Payment = () => {
       setSelectedProvince(address.province);
   
       // Fetch city/district/subdistrict/zipcode options dari backend
-      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${address.province}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${address.province}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -497,7 +497,7 @@ const Payment = () => {
             return;
           }
           const token = await currentUser.getIdToken();
-          const res = await axios.get('http://localhost:4000/api/cart', {
+          const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.data.success) {
