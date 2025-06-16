@@ -162,7 +162,7 @@ const Payment = () => {
           navigate('/login');
           return;
         }
-        const userRes = await axios.get(`http://localhost:4000/api/user/${currentUser.uid}`);
+        const userRes = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${currentUser.uid}`);
         if (userRes.data.success) {
           setAddress(userRes.data.user.address || null);
         }
@@ -208,7 +208,7 @@ const Payment = () => {
         } else {
           const token = await currentUser.getIdToken();
           // Fetch cart
-          const res = await axios.get('http://localhost:4000/api/cart', {
+          const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
             headers: { Authorization: `Bearer ${token}` }
           });
           
@@ -247,7 +247,7 @@ const Payment = () => {
   // Province autocomplete
   useEffect(() => {
     if (provinceInput.length > 1) {
-      axios.get(`http://localhost:4000/api/ship/search-destination?type=province&search=${provinceInput}`)
+        axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
         .then(res => {
           const filtered = res.data.filter(opt =>
             opt.name.toLowerCase().includes(provinceInput.toLowerCase())
@@ -263,7 +263,7 @@ const Payment = () => {
   // Fetch all city/district/subdistrict/zipcode when province selected
   useEffect(() => {
     if (selectedProvince) {
-      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${selectedProvince}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -363,7 +363,7 @@ const Payment = () => {
         subdistrict: subdistrictOptions.find(s => s.id === selectedSubdistrict)?.name || '',
         zipCode: zipcodeOptions.find(z => z.id === selectedZipcode)?.name || ''
       };
-      const res = await axios.put(`http://localhost:4000/api/user/${currentUser.uid}/update-address`, {
+      const res = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${currentUser.uid}/update-address`, {
         address: updatedAddress
       });
       if (res.data.success) {
@@ -592,7 +592,7 @@ const Payment = () => {
       console.log('Saving order with data:', orderData); // Debug log
 
       // Save order to backend immediately with status 'Belum Bayar'
-      const saveRes = await axios.post('http://localhost:4000/api/payment/save-order', orderData);
+        const saveRes = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/payment/save-order', orderData);
       console.log('Order saved:', saveRes.data); // Debug log
 
       if (!saveRes.data.success) {
@@ -603,7 +603,7 @@ const Payment = () => {
       await loadMidtransScript();
 
       // Call backend to get Snap token
-      const response = await axios.post('http://localhost:4000/api/payment/create-payment', {
+      const response = await axios.post('https://uassoftwaredevelopment-production.up.railway.app/api/payment/create-payment', {
         orderId: saveRes.data.order._id,
         amount: orderData.totalAmount,
         name: currentUser.displayName || 'Customer',
@@ -625,7 +625,7 @@ const Payment = () => {
           alert('Payment success!');
           try {
             // Update order status to 'Sedang Dikemas' after successful payment
-            await axios.put(`http://localhost:4000/api/payment/update-status/${saveRes.data.order._id}`, {
+            await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/payment/update-status/${saveRes.data.order._id}`, {
               status: 'Sedang Dikemas'
             });
             setPaymentInProgress(false);

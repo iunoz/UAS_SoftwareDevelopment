@@ -35,7 +35,7 @@ const SetRolePage = () => {
     const fetchUsers = async () => {
       try {
         const token = getToken();
-        const res = await axios.get('http://localhost:4000/api/user/all', {
+        const res = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/user/all', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(res.data.users);
@@ -53,7 +53,7 @@ const SetRolePage = () => {
     try {
       const token = getToken();
       await axios.put(
-        `http://localhost:4000/api/user/${targetUid}/set-role`,
+        `https://uassoftwaredevelopment-production.up.railway.app/api/user/${targetUid}/set-role`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -121,37 +121,19 @@ const SetRolePage = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-          {[...Array(totalPages)].map((_, idx) => (
-            <button
-              key={idx}
-              className="set-role-btn"
-              style={{
-                background: currentPage === idx + 1 ? '#222d52' : '#e0c69a',
-                color: currentPage === idx + 1 ? '#e0c69a' : '#222d52',
-                fontWeight: currentPage === idx + 1 ? 700 : 500,
-                width: 36,
-                height: 36,
-                padding: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              onClick={() => setCurrentPage(idx + 1)}
-            >
-              {idx + 1}
-            </button>
-          ))}
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+        >
+          {'<'}
+        </button>
+        {[...Array(totalPages)].map((_, idx) => (
           <button
+            key={idx}
             className="set-role-btn"
-            style={{ 
-              background: '#e0c69a', 
-              color: '#222d52', 
-              fontWeight: 1000, 
+            style={{
+              background: currentPage === idx + 1 ? '#222d52' : '#e0c69a',
+              color: currentPage === idx + 1 ? '#e0c69a' : '#222d52',
+              fontWeight: currentPage === idx + 1 ? 700 : 500,
               width: 36,
               height: 36,
               padding: 0,
@@ -159,11 +141,29 @@ const SetRolePage = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(idx + 1)}
           >
-            &gt;
+            {idx + 1}
           </button>
+        ))}
+        <button
+          className="set-role-btn"
+          style={{ 
+            background: '#e0c69a', 
+            color: '#222d52', 
+            fontWeight: 1000, 
+            width: 36,
+            height: 36,
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+        >
+          {'>'}
+        </button>
         </div>
       </div>
     </div>

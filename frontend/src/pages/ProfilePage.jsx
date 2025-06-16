@@ -145,7 +145,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/user/${uid}`);
+        const response = await axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}`);
         if (response.data.success) {
           setUser(response.data.user);
           setNewAddress({
@@ -176,7 +176,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (provinceInput.length > 1) {
-      axios.get(`http://localhost:4000/api/ship/search-destination?type=province&search=${provinceInput}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
         .then(res => {
           // Filter hasil agar hanya yang mengandung kata kunci secara case-insensitive
           const filtered = res.data.filter(opt =>
@@ -193,7 +193,7 @@ const ProfilePage = () => {
   // Fetch all city/district/subdistrict/zipcode when province selected
   useEffect(() => {
     if (selectedProvince) {
-      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${selectedProvince}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -288,7 +288,7 @@ const ProfilePage = () => {
         zipCode: zipCodeName
       };
 
-      const response = await axios.put(`http://localhost:4000/api/user/${uid}/update-address`, {
+      const response = await axios.put(`https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/update-address`, {
         address: updatedAddress
       });
 
@@ -316,7 +316,7 @@ const ProfilePage = () => {
 
       // Fix: Change endpoint from 'user' to 'users'
       const response = await axios.put(
-        `http://localhost:4000/api/user/${uid}/profile-image`,
+        `https://uassoftwaredevelopment-production.up.railway.app/api/user/${uid}/profile-image`,
         formData,
         {
           headers: {
@@ -370,7 +370,7 @@ const ProfilePage = () => {
       setSelectedProvince(user.address.province || '');
   
       // Fetch city/district/subdistrict/zipcode options dari backend
-      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${user.address.province}`)
+      axios.get(`https://uassoftwaredevelopment-production.up.railway.app/api/ship/cities-by-province?province=${user.address.province}`)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);

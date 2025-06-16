@@ -34,7 +34,7 @@ const ProductPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:4000/api/products');
+        const response = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/products');
         if (response.data.success) {
           // Log the received products for debugging
           console.log('Received products:', response.data.products);

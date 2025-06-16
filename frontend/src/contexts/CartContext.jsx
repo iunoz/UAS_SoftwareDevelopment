@@ -20,7 +20,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const token = await currentUser.getIdToken();
-      const response = await axios.get('http://localhost:4000/api/cart', {
+      const response = await axios.get('https://uassoftwaredevelopment-production.up.railway.app/api/cart', {
         headers: {
           Authorization: `Bearer ${token}`
         }
