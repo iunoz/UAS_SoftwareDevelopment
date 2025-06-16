@@ -7,20 +7,18 @@ import productRoutes from './routes/productRoutes.js';
 import cartRouter from './routes/cartRoute.js';
 import connectCloudinary from './configs/cloudinary.js';
 import shipRouter from './routes/shipRoute.js';
-import paymentRouter from './routes/paymentRoute.js'; 
+import paymentRouter from './routes/paymentRouter.js'; 
 import adminRouter from './routes/adminRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const origins = ['http://localhost:5173']
 
 await connectDB()
 await connectCloudinary()
 
 app.use(express.json());
 app.use(cors({
-    origin: origins,
-    credentials: true,
+    origin: 'http://www.decorlighting.xyz',
 }));
 
 app.get('/', (req, res) => res.send("API is Working"));

@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
   const [selectedProduct, setSelectedProduct] = useState('');
 
   useEffect(() => {
-    fetch('https://uassoftwaredevelopment-production.up.railway.app/api/admin/dashboard-stats')
+    fetch('https://uassoftwaredevelopment-production-b783.up.railway.app/api/admin/dashboard-stats')
       .then(res => res.json())
       .then(data => setStats(data));
   }, []);
