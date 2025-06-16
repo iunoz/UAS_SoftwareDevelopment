@@ -4,7 +4,11 @@ let serviceAccount = {};
 try {
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
     console.log('Firebase service account loaded:', serviceAccount.project_id ? 'project_id found' : 'project_id missing');
+    console.log('Parsed serviceAccount object:', serviceAccount);
   } else {
     console.warn('FIREBASE_SERVICE_ACCOUNT environment variable is not set.');
   }
