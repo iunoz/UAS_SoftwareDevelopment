@@ -7,7 +7,7 @@ import productRoutes from './routes/productRoutes.js';
 import cartRouter from './routes/cartRoute.js';
 import connectCloudinary from './configs/cloudinary.js';
 import shipRouter from './routes/shipRoute.js';
-import paymentRouter from './routes/paymentRouter.js'; 
+import paymentRouter from './routes/paymentRoute.js'; 
 import adminRouter from './routes/adminRoute.js';
 
 const app = express();
