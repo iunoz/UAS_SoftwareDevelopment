@@ -12,6 +12,10 @@ import adminRouter from './routes/adminRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
@@ -35,6 +39,8 @@ await connectCloudinary()
         console.error('Cloudinary connection error:', err);
         process.exit(1);
     });
+
+
 
 app.use(express.json());
 app.use(cors({
