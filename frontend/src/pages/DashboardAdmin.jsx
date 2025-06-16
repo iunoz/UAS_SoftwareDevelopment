@@ -32,7 +32,7 @@ const DashboardAdmin = () => {
   }, []);
 
   useEffect(() => {
-    let url = `https://uassoftwaredevelopment-production.up.railway.app/api/admin/daily-sales?month=${month}`;
+    let url = `http://localhost:4000/api/admin/daily-sales?month=${month}`;
     if (selectedProduct) url += `&product=${selectedProduct}`;
     fetch(url)
       .then(res => res.json())
@@ -43,7 +43,7 @@ const DashboardAdmin = () => {
   }, [month, selectedProduct]);
 
   useEffect(() => {
-    fetch('https://uassoftwaredevelopment-production.up.railway.app/api/products')
+    fetch('http://localhost:4000/api/products')
       .then(res => res.json())
       .then(data => setProducts(data.products || []));
   }, []);

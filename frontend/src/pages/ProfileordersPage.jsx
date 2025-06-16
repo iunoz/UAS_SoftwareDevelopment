@@ -181,7 +181,11 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (provinceInput.length > 1) {
+<<<<<<< HEAD
       axios.get(`https://uassoftwaredevelopment-production-b783.up.railway.app/api/ship/search-destination?type=province&search=${provinceInput}`)
+=======
+      axios.get(`http://localhost:4000/api/ship/search-destination?type=province&search=${provinceInput}`)
+>>>>>>> parent of 7d980b2 (Ubah local host menjadi railway api)
         .then(res => {
           const filtered = res.data.filter(opt =>
             opt.name.toLowerCase().includes(provinceInput.toLowerCase())
@@ -196,7 +200,11 @@ const handleCompletePayment = async (order) => {
 
   useEffect(() => {
     if (selectedProvince) {
+<<<<<<< HEAD
       axios.get(`https://uassoftwaredevelopment-production-b783.up.railway.app/api/ship/cities-by-province?province=${selectedProvince}`)
+=======
+      axios.get(`http://localhost:4000/api/ship/cities-by-province?province=${selectedProvince}`)
+>>>>>>> parent of 7d980b2 (Ubah local host menjadi railway api)
         .then(res => {
           setCityOptions(res.data.cities);
           setAllDistricts(res.data.districts);
@@ -284,7 +292,11 @@ const handleCompletePayment = async (order) => {
         zipCode: zipCodeName
       };
 
+<<<<<<< HEAD
       const response = await axios.put(`uassoftwaredevelopment-production-b783.up.railway.app/api/user/${uid}/update-address`, {
+=======
+      const response = await axios.put(`http://localhost:4000/api/user/${uid}/update-address`, {
+>>>>>>> parent of 7d980b2 (Ubah local host menjadi railway api)
         address: updatedAddress
       });
 
@@ -311,7 +323,11 @@ const handleCompletePayment = async (order) => {
       formData.append('image', file);
 
       const response = await axios.put(
+<<<<<<< HEAD
         `uassoftwaredevelopment-production-b783.up.railway.app/api/user/${uid}/profile-image`,
+=======
+        `http://localhost:4000/api/user/${uid}/profile-image`,
+>>>>>>> parent of 7d980b2 (Ubah local host menjadi railway api)
         formData,
         {
           headers: {
